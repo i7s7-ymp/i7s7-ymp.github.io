@@ -1,0 +1,63 @@
+# section information
+section:
+  name: スキル
+  id: skills
+  enable: true
+  weight: 2
+  showOnNavbar: true
+  # Can optionally hide the title in sections
+  # hideTitle: true
+
+# Your Skills.
+# Give a summary of you each skill in the summary section.
+skills:
+  - name: Go
+    logo: '/images/sections/skills/go.png'
+    summary: 'Goのイディオムやベストプラクティスに沿った、読みやすく保守性の高いコードを書くことを心がけています。レイヤードアーキテクチャをはじめ、複数のアーキテクチャパターンでの実装経験があり、プロジェクトの規模や目的に応じた設計・開発が可能です。'
+    url: 'https://github.com/golang/go'
+
+  - name: Linux
+    logo: '/images/sections/skills/linux.png'
+    summary: 'Linux環境での開発経験があり、プロセス管理やネットワーク周りの挙動についても理解があります。straceやnetstat、tcpdumpなどのツールを活用しながら、プロセスやネットワーク機能に関するデバッグ対応も行ってきました。'
+    url: 'https://www.kernel.org/'
+
+  - name: AWS Solutions Architect
+    logo: '/images/sections/skills/aws.png'
+    summary: 'AWSソリューションを用いてサービス要件を満たすシステム構成を設計することが出来ます。'
+    url: 'https://aws.amazon.com/jp/'
+
+  - name: Ruby on Rails
+    logo: '/images/sections/skills/ruby.png'
+    # summary: "RoR is the framework I use the most for web service development. I can also work with ecosystems such as Rspec."
+    summary: 'RoRを使ってWEBアプリケーションを開発出来ます。Rspecなどのエコシステムも扱うことができます.'
+    url: 'https://rubyonrails.org/'
+
+  - name: Vue.js
+    logo: '/images/sections/skills/vuejs.png'
+    summary: 'Vue.jsを使って，SPA, SSR, SSGなどのWEBアプリを開発することが出来ます。'
+    url: 'https://jp.vuejs.org/index.html'
+
+  - name: Docker
+    logo: '/images/sections/skills/docker.png'
+    summary: 'コンテナ環境での開発，デプロイの経験があります。ビルドキャッシュを使ったチューニング経験等もあります。'
+    url: 'https://www.docker.com/'
+
+  - name: PostgreSQL
+    logo: '/images/sections/skills/pg.png'
+    summary: 'データベース操作に加えて、スロークエリの洗い出しや改善、インデックスの最適化など、パフォーマンスチューニングにも対応できます。'
+    url: 'https://www.postgresql.org/'
+
+  - name: Oracle Database
+    logo: '/images/sections/skills/oracle.png'
+    summary: 'データベース操作に加えて、スロークエリの洗い出しや改善、インデックスの最適化など、パフォーマンスチューニングにも対応できます。'
+    url: 'https://www.oracle.com/jp/database/'
+
+  - name: Scrum
+    logo: '/images/sections/skills/scrum.png'
+    summary: 'スクラムの原則である「透明性，検査，適応」に沿ってアジャイル開発を行うことができます。'
+    url: 'https://ja.wikipedia.org/wiki/%E3%82%B9%E3%82%AF%E3%83%A9%E3%83%A0_(%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E9%96%8B%E7%99%BA)'
+
+  - name: GitHub
+    logo: '/images/sections/skills/git.png'
+    summary: 'Git戦略を理解して高速なチーム開発を問題なく行うことが出来ます。GitHub ActionsでのCD開発も経験等もあります。'
+    url: 'https://github.com/'

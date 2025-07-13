@@ -1,1 +1,12 @@
 node_modules
+
+# os
+.DS_Store
+
+# node
+node_modules/
+package-lock.json
+
+# build
+public
+resources
