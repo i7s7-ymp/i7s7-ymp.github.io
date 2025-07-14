@@ -15,3 +15,9 @@ tar -xzf $HUGO_TAR hugo
 sudo mv hugo /usr/local/bin/
 sudo chmod +x /usr/local/bin/hugo
 rm -f $HUGO_TAR
+
+# setup hugo modules
+hugo mod get -u
+hugo mod tidy
+hugo mod npm pack
+npm install

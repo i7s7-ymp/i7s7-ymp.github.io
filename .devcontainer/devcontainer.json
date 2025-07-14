@@ -17,7 +17,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-"postCreateCommand": ".devcontainer/bootstrap.sh"
+"postCreateCommand": "sh .devcontainer/bootstrap.sh"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
