@@ -24,7 +24,7 @@ projects:
     role: ソフトウェアエンジニア
     timeline: '2024年 7月 - 2025年 2月'
     # repo: https://github.com/kubernetes/kubernetes # If your project is a public repo on GitHub, then provide this link. it will show star count.
-    url: 'https://www.youtube.com/watch?v=NrhEwHkqO5A&t=1172s' # If your project is not a public repo but it has a website or any external details url then provide it here. don't provide "repo" and "url" simultaneously.
+    url: 'https://speakerdeck.com/niftycorp/20250208-nifty-tech-day-2025-lt-yamashita' # If your project is not a public repo but it has a website or any external details url then provide it here. don't provide "repo" and "url" simultaneously.
     summary: メタバース関連技術の業務有用性を実務内でで評価する。脳波解析や会話データ解析を用いて定量的に解析を行なった。
     tags: ['メタバース', '解析']
 
@@ -33,6 +33,6 @@ projects:
     role: ソフトウェアエンジニア
     timeline: '2024年 12月 - 2025年 1月'
     # repo: https://github.com/kubernetes/kubernetes # If your project is a public repo on GitHub, then provide this link. it will show star count.
-    url: 'https://techbookfest.org/organization/rQmHiTX2JZVSg0qpRrxAYQ' # If your project is not a public repo but it has a website or any external details url then provide it here. don't provide "repo" and "url" simultaneously.
+    url: 'https://techbookfest.org/product/ndL7Trj25niEKEHtgjVqsN?productVariantID=4hqBZW3kNCY9dv7Dei2yNB' # If your project is not a public repo but it has a website or any external details url then provide it here. don't provide "repo" and "url" simultaneously.
     summary: ニフティ社の有志エンジニアによる総合技術本の執筆。
     tags: ['技術書']
