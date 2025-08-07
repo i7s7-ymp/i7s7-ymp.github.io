@@ -18,6 +18,12 @@
 	"forwardPorts": [
 		3000
 	],
+	"portsAttributes": {
+		"3000": {
+			"label": "Astro Dev Server",
+			"onAutoForward": "notify"
+		}
+	},
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "sh .devcontainer/bootstrap.sh",
 	// Configure tool-specific properties.
