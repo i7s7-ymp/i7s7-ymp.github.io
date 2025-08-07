@@ -5,165 +5,167 @@ import Layout from '../layouts/Layout.astro';
 <Layout title="Achievements - i7s7-ymp Portfolio">
   <div class="space-y-6">
     <!-- ページタイトル -->
-    <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4">
-      <div class="text-green-400 mb-2">
+    <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
+      <div class="mb-2 text-green-400">
         <span class="text-gray-400">$</span> cat achievements.json | jq '.'
       </div>
-      <h2 class="text-2xl font-bold text-green-400">
-        # Achievements & Experience
-      </h2>
-      <p class="text-gray-300 mt-2">
-        > Professional milestones and technical accomplishments
-      </p>
+      <h2 class="text-2xl font-bold text-green-400"># Achievements & Experience</h2>
+      <p class="mt-2 text-gray-300">> Professional milestones and technical accomplishments</p>
     </div>
-    
+
     <!-- 統計情報 -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4 text-center">
-        <div class="text-2xl font-bold text-green-400 mb-1">50+</div>
-        <div class="text-gray-300 text-sm">Projects</div>
+    <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+      <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4 text-center">
+        <div class="mb-1 text-2xl font-bold text-green-400">50+</div>
+        <div class="text-sm text-gray-300">Projects</div>
       </div>
-      <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4 text-center">
-        <div class="text-2xl font-bold text-yellow-400 mb-1">3+</div>
-        <div class="text-gray-300 text-sm">Years Exp.</div>
+      <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4 text-center">
+        <div class="mb-1 text-2xl font-bold text-yellow-400">3+</div>
+        <div class="text-sm text-gray-300">Years Exp.</div>
       </div>
-      <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4 text-center">
-        <div class="text-2xl font-bold text-blue-400 mb-1">15+</div>
-        <div class="text-gray-300 text-sm">Technologies</div>
+      <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4 text-center">
+        <div class="mb-1 text-2xl font-bold text-blue-400">15+</div>
+        <div class="text-sm text-gray-300">Technologies</div>
       </div>
-      <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4 text-center">
-        <div class="text-2xl font-bold text-purple-400 mb-1">100k+</div>
-        <div class="text-gray-300 text-sm">Lines of Code</div>
+      <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4 text-center">
+        <div class="mb-1 text-2xl font-bold text-purple-400">100k+</div>
+        <div class="text-sm text-gray-300">Lines of Code</div>
       </div>
     </div>
-    
+
     <!-- 職歴・経験 -->
-    <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4">
-      <h3 class="text-lg font-semibold text-green-400 mb-4">
+    <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
+      <h3 class="mb-4 text-lg font-semibold text-green-400">
         <span class="text-gray-400">></span> work_history.log
       </h3>
       <div class="space-y-4">
         <div class="border-l-2 border-green-400/30 pl-4">
           <h4 class="font-semibold text-green-400">Senior Full Stack Developer</h4>
-          <p class="text-yellow-400 text-sm">Tech Startup Inc. • 2022 - Present</p>
-          <p class="text-gray-300 text-sm mt-2">
+          <p class="text-sm text-yellow-400">Tech Startup Inc. • 2022 - Present</p>
+          <p class="mt-2 text-sm text-gray-300">
             フルスタック開発チームのリード。React/Node.jsを使用したWebアプリケーションの設計・開発。
             CI/CDパイプラインの構築とDevOps環境の整備。
           </p>
-          <div class="flex flex-wrap gap-2 mt-2">
-            <span class="px-2 py-1 bg-green-400/20 text-green-400 rounded text-xs">React</span>
-            <span class="px-2 py-1 bg-blue-400/20 text-blue-400 rounded text-xs">Node.js</span>
-            <span class="px-2 py-1 bg-purple-400/20 text-purple-400 rounded text-xs">AWS</span>
+          <div class="mt-2 flex flex-wrap gap-2">
+            <span class="rounded bg-green-400/20 px-2 py-1 text-xs text-green-400">React</span>
+            <span class="rounded bg-blue-400/20 px-2 py-1 text-xs text-blue-400">Node.js</span>
+            <span class="rounded bg-purple-400/20 px-2 py-1 text-xs text-purple-400">AWS</span>
           </div>
         </div>
-        
+
         <div class="border-l-2 border-green-400/30 pl-4">
           <h4 class="font-semibold text-green-400">Frontend Developer</h4>
-          <p class="text-yellow-400 text-sm">Digital Agency Ltd. • 2021 - 2022</p>
-          <p class="text-gray-300 text-sm mt-2">
+          <p class="text-sm text-yellow-400">Digital Agency Ltd. • 2021 - 2022</p>
+          <p class="mt-2 text-sm text-gray-300">
             企業向けWebサイトの開発。レスポンシブデザインの実装とパフォーマンス最適化。
             モダンなフロントエンド技術を活用したユーザーエクスペリエンスの向上。
           </p>
-          <div class="flex flex-wrap gap-2 mt-2">
-            <span class="px-2 py-1 bg-yellow-400/20 text-yellow-400 rounded text-xs">Vue.js</span>
-            <span class="px-2 py-1 bg-cyan-400/20 text-cyan-400 rounded text-xs">Nuxt.js</span>
-            <span class="px-2 py-1 bg-pink-400/20 text-pink-400 rounded text-xs">SCSS</span>
+          <div class="mt-2 flex flex-wrap gap-2">
+            <span class="rounded bg-yellow-400/20 px-2 py-1 text-xs text-yellow-400">Vue.js</span>
+            <span class="rounded bg-cyan-400/20 px-2 py-1 text-xs text-cyan-400">Nuxt.js</span>
+            <span class="rounded bg-pink-400/20 px-2 py-1 text-xs text-pink-400">SCSS</span>
           </div>
         </div>
-        
+
         <div class="border-l-2 border-green-400/30 pl-4">
           <h4 class="font-semibold text-green-400">Junior Developer</h4>
-          <p class="text-yellow-400 text-sm">Software Solutions Co. • 2020 - 2021</p>
-          <p class="text-gray-300 text-sm mt-2">
+          <p class="text-sm text-yellow-400">Software Solutions Co. • 2020 - 2021</p>
+          <p class="mt-2 text-sm text-gray-300">
             Webアプリケーションの開発サポート。バグ修正と新機能の実装。
             コードレビューとテスト駆動開発の学習。
           </p>
-          <div class="flex flex-wrap gap-2 mt-2">
-            <span class="px-2 py-1 bg-orange-400/20 text-orange-400 rounded text-xs">JavaScript</span>
-            <span class="px-2 py-1 bg-red-400/20 text-red-400 rounded text-xs">PHP</span>
-            <span class="px-2 py-1 bg-teal-400/20 text-teal-400 rounded text-xs">MySQL</span>
+          <div class="mt-2 flex flex-wrap gap-2">
+            <span class="rounded bg-orange-400/20 px-2 py-1 text-xs text-orange-400"
+              >JavaScript</span
+            >
+            <span class="rounded bg-red-400/20 px-2 py-1 text-xs text-red-400">PHP</span>
+            <span class="rounded bg-teal-400/20 px-2 py-1 text-xs text-teal-400">MySQL</span>
           </div>
         </div>
       </div>
     </div>
-    
+
     <!-- 技術的成果 -->
-    <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4">
-      <h3 class="text-lg font-semibold text-green-400 mb-4">
+    <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
+      <h3 class="mb-4 text-lg font-semibold text-green-400">
         <span class="text-gray-400">></span> technical_achievements --list
       </h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div class="space-y-3">
           <div class="flex items-start space-x-3">
-            <span class="text-green-400 mt-1">✓</span>
+            <span class="mt-1 text-green-400">✓</span>
             <div>
-              <h4 class="text-green-400 font-medium">OSS Contribution</h4>
-              <p class="text-gray-300 text-sm">人気オープンソースプロジェクトへのコントリビューション</p>
+              <h4 class="font-medium text-green-400">OSS Contribution</h4>
+              <p class="text-sm text-gray-300">
+                人気オープンソースプロジェクトへのコントリビューション
+              </p>
             </div>
           </div>
           <div class="flex items-start space-x-3">
-            <span class="text-green-400 mt-1">✓</span>
+            <span class="mt-1 text-green-400">✓</span>
             <div>
-              <h4 class="text-green-400 font-medium">Performance Optimization</h4>
-              <p class="text-gray-300 text-sm">Webアプリケーションの読み込み速度を50%改善</p>
+              <h4 class="font-medium text-green-400">Performance Optimization</h4>
+              <p class="text-sm text-gray-300">Webアプリケーションの読み込み速度を50%改善</p>
             </div>
           </div>
           <div class="flex items-start space-x-3">
-            <span class="text-green-400 mt-1">✓</span>
+            <span class="mt-1 text-green-400">✓</span>
             <div>
-              <h4 class="text-green-400 font-medium">Microservices Architecture</h4>
-              <p class="text-gray-300 text-sm">モノリスからマイクロサービスへの移行プロジェクトをリード</p>
+              <h4 class="font-medium text-green-400">Microservices Architecture</h4>
+              <p class="text-sm text-gray-300">
+                モノリスからマイクロサービスへの移行プロジェクトをリード
+              </p>
             </div>
           </div>
         </div>
         <div class="space-y-3">
           <div class="flex items-start space-x-3">
-            <span class="text-green-400 mt-1">✓</span>
+            <span class="mt-1 text-green-400">✓</span>
             <div>
-              <h4 class="text-green-400 font-medium">CI/CD Pipeline</h4>
-              <p class="text-gray-300 text-sm">GitHub ActionsとAWSを活用した自動デプロイ環境構築</p>
+              <h4 class="font-medium text-green-400">CI/CD Pipeline</h4>
+              <p class="text-sm text-gray-300">GitHub ActionsとAWSを活用した自動デプロイ環境構築</p>
             </div>
           </div>
           <div class="flex items-start space-x-3">
-            <span class="text-green-400 mt-1">✓</span>
+            <span class="mt-1 text-green-400">✓</span>
             <div>
-              <h4 class="text-green-400 font-medium">Team Leadership</h4>
-              <p class="text-gray-300 text-sm">5人の開発チームのテクニカルリーダーとして従事</p>
+              <h4 class="font-medium text-green-400">Team Leadership</h4>
+              <p class="text-sm text-gray-300">5人の開発チームのテクニカルリーダーとして従事</p>
             </div>
           </div>
           <div class="flex items-start space-x-3">
-            <span class="text-green-400 mt-1">✓</span>
+            <span class="mt-1 text-green-400">✓</span>
             <div>
-              <h4 class="text-green-400 font-medium">Tech Conference Speaker</h4>
-              <p class="text-gray-300 text-sm">技術カンファレンスでの登壇経験</p>
+              <h4 class="font-medium text-green-400">Tech Conference Speaker</h4>
+              <p class="text-sm text-gray-300">技術カンファレンスでの登壇経験</p>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
+
     <!-- 資格・認定 -->
-    <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4">
-      <h3 class="text-lg font-semibold text-green-400 mb-4">
+    <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
+      <h3 class="mb-4 text-lg font-semibold text-green-400">
         <span class="text-gray-400">></span> certificates.list()
       </h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="flex items-center space-x-3 p-3 bg-gray-900/50 rounded">
-          <div class="w-12 h-12 bg-orange-400/20 rounded-lg flex items-center justify-center">
-            <span class="text-orange-400 font-bold">AWS</span>
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div class="flex items-center space-x-3 rounded bg-gray-900/50 p-3">
+          <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-400/20">
+            <span class="font-bold text-orange-400">AWS</span>
           </div>
           <div>
-            <h4 class="text-green-400 font-medium">AWS Certified Solutions Architect</h4>
-            <p class="text-gray-400 text-sm">Associate Level • 2023</p>
+            <h4 class="font-medium text-green-400">AWS Certified Solutions Architect</h4>
+            <p class="text-sm text-gray-400">Associate Level • 2023</p>
           </div>
         </div>
-        <div class="flex items-center space-x-3 p-3 bg-gray-900/50 rounded">
-          <div class="w-12 h-12 bg-blue-400/20 rounded-lg flex items-center justify-center">
-            <span class="text-blue-400 font-bold">JS</span>
+        <div class="flex items-center space-x-3 rounded bg-gray-900/50 p-3">
+          <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-400/20">
+            <span class="font-bold text-blue-400">JS</span>
           </div>
           <div>
-            <h4 class="text-green-400 font-medium">JavaScript Developer Certification</h4>
-            <p class="text-gray-400 text-sm">Advanced Level • 2022</p>
+            <h4 class="font-medium text-green-400">JavaScript Developer Certification</h4>
+            <p class="text-sm text-gray-400">Advanced Level • 2022</p>
           </div>
         </div>
       </div>

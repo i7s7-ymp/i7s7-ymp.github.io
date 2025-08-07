@@ -5,138 +5,158 @@ import Layout from '../layouts/Layout.astro';
 <Layout title="Design - i7s7-ymp Portfolio">
   <div class="space-y-6">
     <!-- ページタイトル -->
-    <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4">
-      <div class="text-green-400 mb-2">
+    <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
+      <div class="mb-2 text-green-400">
         <span class="text-gray-400">$</span> ls -la design/
       </div>
-      <h2 class="text-2xl font-bold text-green-400">
-        # Design Portfolio
-      </h2>
-      <p class="text-gray-300 mt-2">
-        > Creative projects and design experiments
-      </p>
+      <h2 class="text-2xl font-bold text-green-400"># Design Portfolio</h2>
+      <p class="mt-2 text-gray-300">> Creative projects and design experiments</p>
     </div>
-    
+
     <!-- デザインプロジェクト -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
       <!-- プロジェクト1 -->
-      <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4 hover:bg-gray-800/70 transition-colors cursor-pointer">
+      <div
+        class="cursor-pointer rounded-lg border border-green-400/30 bg-gray-800/50 p-4 transition-colors hover:bg-gray-800/70"
+      >
         <div class="mb-3">
           <h3 class="text-lg font-semibold text-green-400">
             <span class="text-gray-400">></span> modern_dashboard.vue
           </h3>
           <span class="text-xs text-yellow-400">Vue.js • Tailwind CSS</span>
         </div>
-        <div class="bg-gray-900 rounded p-3 mb-3">
-          <div class="w-full h-32 bg-gradient-to-br from-green-400/20 to-blue-400/20 rounded flex items-center justify-center">
-            <span class="text-green-400 text-sm">Dashboard Preview</span>
+        <div class="mb-3 rounded bg-gray-900 p-3">
+          <div
+            class="flex h-32 w-full items-center justify-center rounded bg-gradient-to-br from-green-400/20 to-blue-400/20"
+          >
+            <span class="text-sm text-green-400">Dashboard Preview</span>
           </div>
         </div>
-        <p class="text-gray-300 text-sm">
+        <p class="text-sm text-gray-300">
           モダンなダッシュボードUIの設計と実装。レスポンシブデザインとダークモード対応。
         </p>
         <div class="mt-3 flex space-x-2">
-          <span class="px-2 py-1 bg-green-400/20 text-green-400 rounded text-xs">UI/UX</span>
-          <span class="px-2 py-1 bg-blue-400/20 text-blue-400 rounded text-xs">Frontend</span>
+          <span class="rounded bg-green-400/20 px-2 py-1 text-xs text-green-400">UI/UX</span>
+          <span class="rounded bg-blue-400/20 px-2 py-1 text-xs text-blue-400">Frontend</span>
         </div>
       </div>
-      
+
       <!-- プロジェクト2 -->
-      <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4 hover:bg-gray-800/70 transition-colors cursor-pointer">
+      <div
+        class="cursor-pointer rounded-lg border border-green-400/30 bg-gray-800/50 p-4 transition-colors hover:bg-gray-800/70"
+      >
         <div class="mb-3">
           <h3 class="text-lg font-semibold text-green-400">
             <span class="text-gray-400">></span> mobile_app.figma
           </h3>
           <span class="text-xs text-yellow-400">React Native • Figma</span>
         </div>
-        <div class="bg-gray-900 rounded p-3 mb-3">
-          <div class="w-full h-32 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded flex items-center justify-center">
-            <span class="text-purple-400 text-sm">Mobile App Design</span>
+        <div class="mb-3 rounded bg-gray-900 p-3">
+          <div
+            class="flex h-32 w-full items-center justify-center rounded bg-gradient-to-br from-purple-400/20 to-pink-400/20"
+          >
+            <span class="text-sm text-purple-400">Mobile App Design</span>
           </div>
         </div>
-        <p class="text-gray-300 text-sm">
+        <p class="text-sm text-gray-300">
           モバイルアプリのプロトタイプデザイン。ユーザビリティを重視したインターフェース設計。
         </p>
         <div class="mt-3 flex space-x-2">
-          <span class="px-2 py-1 bg-purple-400/20 text-purple-400 rounded text-xs">Mobile</span>
-          <span class="px-2 py-1 bg-pink-400/20 text-pink-400 rounded text-xs">Prototype</span>
+          <span class="rounded bg-purple-400/20 px-2 py-1 text-xs text-purple-400">Mobile</span>
+          <span class="rounded bg-pink-400/20 px-2 py-1 text-xs text-pink-400">Prototype</span>
         </div>
       </div>
-      
+
       <!-- プロジェクト3 -->
-      <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4 hover:bg-gray-800/70 transition-colors cursor-pointer">
+      <div
+        class="cursor-pointer rounded-lg border border-green-400/30 bg-gray-800/50 p-4 transition-colors hover:bg-gray-800/70"
+      >
         <div class="mb-3">
           <h3 class="text-lg font-semibold text-green-400">
             <span class="text-gray-400">></span> web_components.ts
           </h3>
           <span class="text-xs text-yellow-400">TypeScript • Web Components</span>
         </div>
-        <div class="bg-gray-900 rounded p-3 mb-3">
-          <div class="w-full h-32 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 rounded flex items-center justify-center">
-            <span class="text-yellow-400 text-sm">Component Library</span>
+        <div class="mb-3 rounded bg-gray-900 p-3">
+          <div
+            class="flex h-32 w-full items-center justify-center rounded bg-gradient-to-br from-yellow-400/20 to-orange-400/20"
+          >
+            <span class="text-sm text-yellow-400">Component Library</span>
           </div>
         </div>
-        <p class="text-gray-300 text-sm">
+        <p class="text-sm text-gray-300">
           再利用可能なWebコンポーネントライブラリの設計と開発。TypeScript完全対応。
         </p>
         <div class="mt-3 flex space-x-2">
-          <span class="px-2 py-1 bg-yellow-400/20 text-yellow-400 rounded text-xs">Components</span>
-          <span class="px-2 py-1 bg-orange-400/20 text-orange-400 rounded text-xs">TypeScript</span>
+          <span class="rounded bg-yellow-400/20 px-2 py-1 text-xs text-yellow-400">Components</span>
+          <span class="rounded bg-orange-400/20 px-2 py-1 text-xs text-orange-400">TypeScript</span>
         </div>
       </div>
-      
+
       <!-- プロジェクト4 -->
-      <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4 hover:bg-gray-800/70 transition-colors cursor-pointer">
+      <div
+        class="cursor-pointer rounded-lg border border-green-400/30 bg-gray-800/50 p-4 transition-colors hover:bg-gray-800/70"
+      >
         <div class="mb-3">
           <h3 class="text-lg font-semibold text-green-400">
             <span class="text-gray-400">></span> ai_interface.py
           </h3>
           <span class="text-xs text-yellow-400">Python • Streamlit</span>
         </div>
-        <div class="bg-gray-900 rounded p-3 mb-3">
-          <div class="w-full h-32 bg-gradient-to-br from-cyan-400/20 to-teal-400/20 rounded flex items-center justify-center">
-            <span class="text-cyan-400 text-sm">AI Interface</span>
+        <div class="mb-3 rounded bg-gray-900 p-3">
+          <div
+            class="flex h-32 w-full items-center justify-center rounded bg-gradient-to-br from-cyan-400/20 to-teal-400/20"
+          >
+            <span class="text-sm text-cyan-400">AI Interface</span>
           </div>
         </div>
-        <p class="text-gray-300 text-sm">
+        <p class="text-sm text-gray-300">
           AIとのインタラクション用インターフェース。機械学習モデルとの連携UI。
         </p>
         <div class="mt-3 flex space-x-2">
-          <span class="px-2 py-1 bg-cyan-400/20 text-cyan-400 rounded text-xs">AI/ML</span>
-          <span class="px-2 py-1 bg-teal-400/20 text-teal-400 rounded text-xs">Python</span>
+          <span class="rounded bg-cyan-400/20 px-2 py-1 text-xs text-cyan-400">AI/ML</span>
+          <span class="rounded bg-teal-400/20 px-2 py-1 text-xs text-teal-400">Python</span>
         </div>
       </div>
     </div>
-    
+
     <!-- デザインツール -->
-    <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4">
-      <h3 class="text-lg font-semibold text-green-400 mb-3">
+    <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
+      <h3 class="mb-3 text-lg font-semibold text-green-400">
         <span class="text-gray-400">></span> design_tools --version
       </h3>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
         <div class="text-center">
-          <div class="w-12 h-12 bg-orange-400/20 rounded-lg flex items-center justify-center mx-auto mb-2">
-            <span class="text-orange-400 font-bold">F</span>
+          <div
+            class="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-orange-400/20"
+          >
+            <span class="font-bold text-orange-400">F</span>
           </div>
-          <span class="text-gray-300 text-sm">Figma</span>
+          <span class="text-sm text-gray-300">Figma</span>
         </div>
         <div class="text-center">
-          <div class="w-12 h-12 bg-purple-400/20 rounded-lg flex items-center justify-center mx-auto mb-2">
-            <span class="text-purple-400 font-bold">Ai</span>
+          <div
+            class="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-400/20"
+          >
+            <span class="font-bold text-purple-400">Ai</span>
           </div>
-          <span class="text-gray-300 text-sm">Illustrator</span>
+          <span class="text-sm text-gray-300">Illustrator</span>
         </div>
         <div class="text-center">
-          <div class="w-12 h-12 bg-blue-400/20 rounded-lg flex items-center justify-center mx-auto mb-2">
-            <span class="text-blue-400 font-bold">Ps</span>
+          <div
+            class="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-400/20"
+          >
+            <span class="font-bold text-blue-400">Ps</span>
           </div>
-          <span class="text-gray-300 text-sm">Photoshop</span>
+          <span class="text-sm text-gray-300">Photoshop</span>
         </div>
         <div class="text-center">
-          <div class="w-12 h-12 bg-green-400/20 rounded-lg flex items-center justify-center mx-auto mb-2">
-            <span class="text-green-400 font-bold">SK</span>
+          <div
+            class="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-green-400/20"
+          >
+            <span class="font-bold text-green-400">SK</span>
           </div>
-          <span class="text-gray-300 text-sm">Sketch</span>
+          <span class="text-sm text-gray-300">Sketch</span>
         </div>
       </div>
     </div>
