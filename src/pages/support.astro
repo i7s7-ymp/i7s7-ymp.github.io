@@ -1,0 +1,305 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Architecture - i7s7-ymp Portfolio">
+  <div class="space-y-6">
+    <!-- ページタイトル -->
+    <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
+      <div class="mb-2 text-green-400">
+        <span class="text-gray-400">$</span> ls -la architecture/
+      </div>
+      <h2 class="text-2xl font-bold text-green-400"># Architecture Experience</h2>
+      <p class="mt-2 text-gray-300">> Cloud & Application Architecture Design</p>
+    </div>
+
+    <!-- クラウドアーキテクチャプロジェクト -->
+    <div class="space-y-6">
+      <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
+        <h3 class="mb-4 text-lg font-semibold text-green-400">
+          <span class="text-gray-400">></span> cloud_architectures.yml
+        </h3>
+
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <!-- AWS マイクロサービス -->
+          <div class="rounded-lg border border-blue-400/30 bg-gray-900/50 p-4">
+            <div class="mb-3">
+              <h4 class="font-semibold text-blue-400">
+                <span class="text-gray-400">></span> aws_microservices.yaml
+              </h4>
+              <span class="text-xs text-yellow-400">AWS • Kubernetes • Docker</span>
+            </div>
+            <div class="mb-3 rounded bg-gray-800 p-3">
+              <pre
+                class="text-xs text-green-400">
+┌─────────────────────────────────────────┐
+│  CloudFront + Route53                   │
+├─────────────────────────────────────────┤
+│  ALB → EKS Cluster                      │
+│  ├─ API Gateway Service                 │
+│  ├─ User Service (RDS)                  │
+│  ├─ Order Service (DynamoDB)            │
+│  └─ Payment Service (ElastiCache)       │
+├─────────────────────────────────────────┤
+│  Monitoring: CloudWatch + X-Ray         │
+└─────────────────────────────────────────┘</pre>
+            </div>
+            <p class="text-sm text-gray-300">
+              AWSを活用したマイクロサービスアーキテクチャ。EKSとAPI
+              Gatewayによるスケーラブルな構成。
+            </p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              <span class="rounded bg-blue-400/20 px-2 py-1 text-xs text-blue-400">AWS</span>
+              <span class="rounded bg-green-400/20 px-2 py-1 text-xs text-green-400"
+                >Kubernetes</span
+              >
+              <span class="rounded bg-orange-400/20 px-2 py-1 text-xs text-orange-400"
+                >Microservices</span
+              >
+            </div>
+          </div>
+
+          <!-- GCP データパイプライン -->
+          <div class="rounded-lg border border-yellow-400/30 bg-gray-900/50 p-4">
+            <div class="mb-3">
+              <h4 class="font-semibold text-yellow-400">
+                <span class="text-gray-400">></span> gcp_data_pipeline.yaml
+              </h4>
+              <span class="text-xs text-yellow-400">GCP • BigQuery • Dataflow</span>
+            </div>
+            <div class="mb-3 rounded bg-gray-800 p-3">
+              <pre
+                class="text-xs text-green-400">
+┌─────────────────────────────────────────┐
+│  Cloud Storage (Data Lake)              │
+├─────────────────────────────────────────┤
+│  Dataflow → BigQuery                    │
+│  ├─ ETL Processing                      │
+│  ├─ Real-time Analytics                 │
+│  └─ ML Pipeline (Vertex AI)             │
+├─────────────────────────────────────────┤
+│  Visualization: Data Studio             │
+└─────────────────────────────────────────┘</pre>
+            </div>
+            <p class="text-sm text-gray-300">
+              GCPベースのデータパイプライン。リアルタイム分析とML統合のアーキテクチャ。
+            </p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              <span class="rounded bg-yellow-400/20 px-2 py-1 text-xs text-yellow-400">GCP</span>
+              <span class="rounded bg-purple-400/20 px-2 py-1 text-xs text-purple-400"
+                >BigQuery</span
+              >
+              <span class="rounded bg-cyan-400/20 px-2 py-1 text-xs text-cyan-400">ML Pipeline</span
+              >
+            </div>
+          </div>
+
+          <!-- Azure DevOps -->
+          <div class="rounded-lg border border-cyan-400/30 bg-gray-900/50 p-4">
+            <div class="mb-3">
+              <h4 class="font-semibold text-cyan-400">
+                <span class="text-gray-400">></span> azure_devops.yaml
+              </h4>
+              <span class="text-xs text-yellow-400">Azure • AKS • DevOps</span>
+            </div>
+            <div class="mb-3 rounded bg-gray-800 p-3">
+              <pre
+                class="text-xs text-green-400">
+┌─────────────────────────────────────────┐
+│  Azure DevOps Pipelines                 │
+├─────────────────────────────────────────┤
+│  AKS Cluster                            │
+│  ├─ App Gateway                         │
+│  ├─ Container Instances                 │
+│  └─ Azure SQL Database                  │
+├─────────────────────────────────────────┤
+│  Monitoring: Azure Monitor              │
+└─────────────────────────────────────────┘</pre>
+            </div>
+            <p class="text-sm text-gray-300">
+              Azure環境でのCI/CD統合アーキテクチャ。AKSとDevOpsパイプラインの組み合わせ。
+            </p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              <span class="rounded bg-cyan-400/20 px-2 py-1 text-xs text-cyan-400">Azure</span>
+              <span class="rounded bg-green-400/20 px-2 py-1 text-xs text-green-400">AKS</span>
+              <span class="rounded bg-orange-400/20 px-2 py-1 text-xs text-orange-400">CI/CD</span>
+            </div>
+          </div>
+
+          <!-- サーバーレス -->
+          <div class="rounded-lg border border-purple-400/30 bg-gray-900/50 p-4">
+            <div class="mb-3">
+              <h4 class="font-semibold text-purple-400">
+                <span class="text-gray-400">></span> serverless_arch.yaml
+              </h4>
+              <span class="text-xs text-yellow-400">AWS Lambda • API Gateway • DynamoDB</span>
+            </div>
+            <div class="mb-3 rounded bg-gray-800 p-3">
+              <pre
+                class="text-xs text-green-400">
+┌─────────────────────────────────────────┐
+│  API Gateway + CloudFront               │
+├─────────────────────────────────────────┤
+│  Lambda Functions                       │
+│  ├─ Authentication (Cognito)            │
+│  ├─ Business Logic                      │
+│  └─ Data Processing                     │
+├─────────────────────────────────────────┤
+│  Storage: DynamoDB + S3                 │
+└─────────────────────────────────────────┘</pre>
+            </div>
+            <p class="text-sm text-gray-300">
+              完全サーバーレス構成のWebアプリケーション。コスト効率とスケーラビリティを両立。
+            </p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              <span class="rounded bg-purple-400/20 px-2 py-1 text-xs text-purple-400"
+                >Serverless</span
+              >
+              <span class="rounded bg-yellow-400/20 px-2 py-1 text-xs text-yellow-400">Lambda</span>
+              <span class="rounded bg-blue-400/20 px-2 py-1 text-xs text-blue-400">DynamoDB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- アプリケーションアーキテクチャ -->
+      <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
+        <h3 class="mb-4 text-lg font-semibold text-green-400">
+          <span class="text-gray-400">></span> application_patterns.js
+        </h3>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <!-- Clean Architecture -->
+          <div class="rounded-lg border border-green-400/20 bg-gray-900/30 p-4">
+            <h4 class="mb-2 font-semibold text-green-400">Clean Architecture</h4>
+            <div class="mb-2 rounded bg-gray-800 p-2">
+              <pre
+                class="text-xs text-gray-300">
+Controllers
+  ↓
+Use Cases
+  ↓
+Entities
+  ↓
+Infrastructure</pre>
+            </div>
+            <p class="text-xs text-gray-400">依存関係逆転による保守性の高いアーキテクチャ</p>
+          </div>
+
+          <!-- CQRS Pattern -->
+          <div class="rounded-lg border border-blue-400/20 bg-gray-900/30 p-4">
+            <h4 class="mb-2 font-semibold text-blue-400">CQRS Pattern</h4>
+            <div class="mb-2 rounded bg-gray-800 p-2">
+              <pre
+                class="text-xs text-gray-300">
+Commands ─┐
+          ├─ Write DB
+Queries ──┘
+          ├─ Read DB
+Events ───┘</pre>
+            </div>
+            <p class="text-xs text-gray-400">読み取りと書き込みの分離によるパフォーマンス最適化</p>
+          </div>
+
+          <!-- Event Sourcing -->
+          <div class="rounded-lg border border-purple-400/20 bg-gray-900/30 p-4">
+            <h4 class="mb-2 font-semibold text-purple-400">Event Sourcing</h4>
+            <div class="mb-2 rounded bg-gray-800 p-2">
+              <pre class="text-xs text-gray-300">
+Events Store
+  ↓
+Projections
+  ↓
+View Models</pre>
+            </div>
+            <p class="text-xs text-gray-400">イベント駆動による監査可能なシステム設計</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 技術スタック -->
+      <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
+        <h3 class="mb-3 text-lg font-semibold text-green-400">
+          <span class="text-gray-400">></span> tech_stack --list
+        </h3>
+        <div class="grid grid-cols-2 gap-6 md:grid-cols-4">
+          <!-- クラウドプロバイダー -->
+          <div>
+            <h4 class="mb-3 text-sm font-semibold text-yellow-400">Cloud Providers</h4>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <div class="h-2 w-2 rounded bg-orange-400"></div>
+                <span class="text-sm text-gray-300">AWS</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div class="h-2 w-2 rounded bg-blue-400"></div>
+                <span class="text-sm text-gray-300">Google Cloud</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div class="h-2 w-2 rounded bg-cyan-400"></div>
+                <span class="text-sm text-gray-300">Azure</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- コンテナ・オーケストレーション -->
+          <div>
+            <h4 class="mb-3 text-sm font-semibold text-yellow-400">Container</h4>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <div class="h-2 w-2 rounded bg-blue-400"></div>
+                <span class="text-sm text-gray-300">Docker</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div class="h-2 w-2 rounded bg-purple-400"></div>
+                <span class="text-sm text-gray-300">Kubernetes</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div class="h-2 w-2 rounded bg-green-400"></div>
+                <span class="text-sm text-gray-300">Helm</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- データベース -->
+          <div>
+            <h4 class="mb-3 text-sm font-semibold text-yellow-400">Database</h4>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <div class="h-2 w-2 rounded bg-blue-400"></div>
+                <span class="text-sm text-gray-300">PostgreSQL</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div class="h-2 w-2 rounded bg-orange-400"></div>
+                <span class="text-sm text-gray-300">DynamoDB</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div class="h-2 w-2 rounded bg-red-400"></div>
+                <span class="text-sm text-gray-300">Redis</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 監視・運用 -->
+          <div>
+            <h4 class="mb-3 text-sm font-semibold text-yellow-400">Monitoring</h4>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <div class="h-2 w-2 rounded bg-orange-400"></div>
+                <span class="text-sm text-gray-300">Prometheus</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div class="h-2 w-2 rounded bg-yellow-400"></div>
+                <span class="text-sm text-gray-300">Grafana</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div class="h-2 w-2 rounded bg-purple-400"></div>
+                <span class="text-sm text-gray-300">Jaeger</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

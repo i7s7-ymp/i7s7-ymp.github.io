@@ -67,7 +67,7 @@ npm run dev
 │   │   └── Layout.astro   # メインレイアウト
 │   ├── pages/             # ページファイル
 │   │   ├── index.astro    # Home
-│   │   ├── design.astro   # Design Portfolio
+│   │   ├── support.astro  # Architecture & Support
 │   │   ├── achievements.astro # Achievements
 │   │   ├── social.astro   # Social Media
 │   │   └── agent.astro    # AI Agent
@@ -163,13 +163,13 @@ npm run check
 
 ## 📄 Pages Overview
 
-| Page         | Route           | Description              |
-| ------------ | --------------- | ------------------------ |
-| Home         | `/`             | プロフィールとスキル概要 |
-| Design       | `/design`       | デザインポートフォリオ   |
-| Achievements | `/achievements` | 職歴・資格・実績         |
-| Social Media | `/social`       | SNSリンクとコンタクト    |
-| AI Agent     | `/agent`        | インタラクティブチャット |
+| Page         | Route           | Description                              |
+| ------------ | --------------- | ---------------------------------------- |
+| Home         | `/`             | プロフィールとスキル概要                 |
+| Architecture | `/support`      | クラウド・アプリケーションアーキテクチャ |
+| Achievements | `/achievements` | 職歴・資格・実績                         |
+| Social Media | `/social`       | SNSリンクとコンタクト                    |
+| AI Agent     | `/agent`        | インタラクティブチャット                 |
 
 ## 🎨 Design System
 
