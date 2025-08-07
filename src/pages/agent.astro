@@ -1,0 +1,278 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Agent - i7s7-ymp Portfolio">
+  <div class="space-y-6">
+    <!-- ページタイトル -->
+    <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4">
+      <div class="text-green-400 mb-2">
+        <span class="text-gray-400">$</span> python agent.py --status
+      </div>
+      <h2 class="text-2xl font-bold text-green-400">
+        # AI Agent & Automation
+      </h2>
+      <p class="text-gray-300 mt-2">
+        > Intelligent systems and automated workflows
+      </p>
+    </div>
+    
+    <!-- エージェント状態 -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-green-400 font-semibold">System Status</h3>
+          <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+        </div>
+        <p class="text-gray-300 text-sm">All systems operational</p>
+      </div>
+      
+      <div class="border border-yellow-400/30 rounded-lg bg-gray-800/50 p-4">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-yellow-400 font-semibold">Active Processes</h3>
+          <span class="text-yellow-400 font-bold">7</span>
+        </div>
+        <p class="text-gray-300 text-sm">Background tasks running</p>
+      </div>
+      
+      <div class="border border-blue-400/30 rounded-lg bg-gray-800/50 p-4">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-blue-400 font-semibold">ML Models</h3>
+          <span class="text-blue-400 font-bold">3</span>
+        </div>
+        <p class="text-gray-300 text-sm">Deployed and serving</p>
+      </div>
+    </div>
+    
+    <!-- 対話型エージェント -->
+    <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4">
+      <h3 class="text-lg font-semibold text-green-400 mb-4">
+        <span class="text-gray-400">></span> interactive_agent.py
+      </h3>
+      <div class="bg-gray-900 rounded-lg p-4 min-h-96">
+        <div class="flex items-center space-x-2 mb-4">
+          <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+          <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+          <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+          <span class="ml-4 text-sm text-gray-400">AI Agent Terminal</span>
+        </div>
+        
+        <div id="chat-container" class="space-y-3 mb-4 max-h-64 overflow-y-auto">
+          <div class="flex items-start space-x-2">
+            <span class="text-blue-400 font-mono">Agent:</span>
+            <span class="text-gray-300">こんにちは！i7s7-ympのAIアシスタントです。何かお手伝いできることはありますか？</span>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <span class="text-green-400 font-mono">You:</span>
+          <input 
+            type="text" 
+            id="user-input" 
+            placeholder="メッセージを入力してください..." 
+            class="flex-1 bg-transparent border-none outline-none text-green-400 placeholder-gray-500"
+            autocomplete="off"
+          />
+          <button 
+            id="send-button" 
+            class="text-green-400 hover:text-green-300 transition-colors"
+          >
+            送信
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- AI プロジェクト -->
+    <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4">
+      <h3 class="text-lg font-semibold text-green-400 mb-4">
+        <span class="text-gray-400">></span> ls ai_projects/
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- プロジェクト1 -->
+        <div class="border border-blue-400/30 rounded-lg bg-gray-900/50 p-4">
+          <h4 class="text-blue-400 font-semibold mb-2">Code Review Bot</h4>
+          <p class="text-gray-300 text-sm mb-3">
+            GitHubプルリクエストを自動でレビューし、コード品質をチェックするボット
+          </p>
+          <div class="flex flex-wrap gap-2 mb-3">
+            <span class="px-2 py-1 bg-blue-400/20 text-blue-400 rounded text-xs">Python</span>
+            <span class="px-2 py-1 bg-green-400/20 text-green-400 rounded text-xs">GPT-4</span>
+            <span class="px-2 py-1 bg-purple-400/20 text-purple-400 rounded text-xs">GitHub API</span>
+          </div>
+          <div class="text-xs text-gray-400">
+            Status: <span class="text-green-400">Active</span> • Uptime: 99.8%
+          </div>
+        </div>
+        
+        <!-- プロジェクト2 -->
+        <div class="border border-purple-400/30 rounded-lg bg-gray-900/50 p-4">
+          <h4 class="text-purple-400 font-semibold mb-2">Smart Task Scheduler</h4>
+          <p class="text-gray-300 text-sm mb-3">
+            機械学習を使ってタスクの優先度を自動判定し、最適なスケジュールを提案
+          </p>
+          <div class="flex flex-wrap gap-2 mb-3">
+            <span class="px-2 py-1 bg-purple-400/20 text-purple-400 rounded text-xs">TensorFlow</span>
+            <span class="px-2 py-1 bg-yellow-400/20 text-yellow-400 rounded text-xs">ML</span>
+            <span class="px-2 py-1 bg-cyan-400/20 text-cyan-400 rounded text-xs">FastAPI</span>
+          </div>
+          <div class="text-xs text-gray-400">
+            Status: <span class="text-yellow-400">Beta</span> • Accuracy: 87%
+          </div>
+        </div>
+        
+        <!-- プロジェクト3 -->
+        <div class="border border-cyan-400/30 rounded-lg bg-gray-900/50 p-4">
+          <h4 class="text-cyan-400 font-semibold mb-2">Data Analysis Agent</h4>
+          <p class="text-gray-300 text-sm mb-3">
+            自然言語でデータ分析のクエリを受け取り、自動でレポートを生成
+          </p>
+          <div class="flex flex-wrap gap-2 mb-3">
+            <span class="px-2 py-1 bg-cyan-400/20 text-cyan-400 rounded text-xs">Pandas</span>
+            <span class="px-2 py-1 bg-orange-400/20 text-orange-400 rounded text-xs">LangChain</span>
+            <span class="px-2 py-1 bg-red-400/20 text-red-400 rounded text-xs">Plotly</span>
+          </div>
+          <div class="text-xs text-gray-400">
+            Status: <span class="text-green-400">Production</span> • Queries: 1.2k/day
+          </div>
+        </div>
+        
+        <!-- プロジェクト4 -->
+        <div class="border border-green-400/30 rounded-lg bg-gray-900/50 p-4">
+          <h4 class="text-green-400 font-semibold mb-2">DevOps Automation</h4>
+          <p class="text-gray-300 text-sm mb-3">
+            インフラの監視とトラブルシューティングを自動化するAIエージェント
+          </p>
+          <div class="flex flex-wrap gap-2 mb-3">
+            <span class="px-2 py-1 bg-green-400/20 text-green-400 rounded text-xs">Kubernetes</span>
+            <span class="px-2 py-1 bg-blue-400/20 text-blue-400 rounded text-xs">Prometheus</span>
+            <span class="px-2 py-1 bg-pink-400/20 text-pink-400 rounded text-xs">Slack Bot</span>
+          </div>
+          <div class="text-xs text-gray-400">
+            Status: <span class="text-green-400">Running</span> • Incidents: -73%
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- システムログ -->
+    <div class="border border-green-400/30 rounded-lg bg-gray-800/50 p-4">
+      <h3 class="text-lg font-semibold text-green-400 mb-4">
+        <span class="text-gray-400">></span> tail -f system.log
+      </h3>
+      <div class="bg-black rounded-lg p-4 font-mono text-xs space-y-1 max-h-48 overflow-y-auto">
+        <div id="log-container">
+          <div class="text-gray-400">[2024-01-15 15:30:01] INFO: Agent initialized successfully</div>
+          <div class="text-green-400">[2024-01-15 15:30:02] SUCCESS: ML models loaded</div>
+          <div class="text-blue-400">[2024-01-15 15:30:03] INFO: API endpoints ready</div>
+          <div class="text-yellow-400">[2024-01-15 15:30:04] WARN: High CPU usage detected</div>
+          <div class="text-green-400">[2024-01-15 15:30:05] SUCCESS: Auto-scaling triggered</div>
+          <div class="text-gray-400">[2024-01-15 15:30:06] INFO: Backup completed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // チャット機能
+    const chatContainer = document.getElementById('chat-container');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+    
+    const responses = [
+      "面白い質問ですね！技術的な詳細についてお話ししましょう。",
+      "それは私の専門分野の一つです。どの部分について詳しく知りたいですか？",
+      "良いポイントですね。実際のプロジェクトでも同様の課題に取り組んでいます。",
+      "プログラミングについてなら何でもお任せください！",
+      "その技術については実装経験があります。具体的にどんなことを知りたいですか？",
+      "AIと機械学習について話すのは大好きです！",
+      "コードレビューも得意です。何かお手伝いできることはありますか？"
+    ];
+    
+    function addMessage(sender: string, message: string, isUser = false) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'flex items-start space-x-2';
+      messageDiv.innerHTML = `
+        <span class="font-mono ${isUser ? 'text-green-400' : 'text-blue-400'}">${sender}:</span>
+        <span class="text-gray-300">${message}</span>
+      `;
+      if (chatContainer) {
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+    }
+    
+    function sendMessage() {
+      if (!userInput) return;
+      
+      const message = (userInput as HTMLInputElement).value.trim();
+      if (!message) return;
+      
+      addMessage('You', message, true);
+      (userInput as HTMLInputElement).value = '';
+      
+      // 簡単なレスポンス生成
+      setTimeout(() => {
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        addMessage('Agent', randomResponse);
+      }, 500 + Math.random() * 1000);
+    }
+    
+    if (sendButton) {
+      sendButton.addEventListener('click', sendMessage);
+    }
+    
+    if (userInput) {
+      userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          sendMessage();
+        }
+      });
+    }
+    
+    // ログの動的更新
+    const logContainer = document.getElementById('log-container');
+    const logMessages = [
+      { level: 'INFO', message: 'Processing user request' },
+      { level: 'SUCCESS', message: 'Task completed successfully' },
+      { level: 'INFO', message: 'System health check passed' },
+      { level: 'WARN', message: 'Memory usage high' },
+      { level: 'SUCCESS', message: 'Garbage collection completed' },
+      { level: 'INFO', message: 'New model deployed' },
+    ];
+    
+    function addLogEntry() {
+      if (!logContainer) return;
+      
+      const now = new Date();
+      const timestamp = now.toISOString().replace('T', ' ').substring(0, 19);
+      const randomLog = logMessages[Math.floor(Math.random() * logMessages.length)];
+      
+      const logDiv = document.createElement('div');
+      const colors: Record<string, string> = {
+        'INFO': 'text-gray-400',
+        'SUCCESS': 'text-green-400',
+        'WARN': 'text-yellow-400',
+        'ERROR': 'text-red-400'
+      };
+      
+      logDiv.className = colors[randomLog.level] || 'text-gray-400';
+      logDiv.textContent = `[${timestamp}] ${randomLog.level}: ${randomLog.message}`;
+      
+      logContainer.appendChild(logDiv);
+      
+      // 古いログエントリを削除
+      if (logContainer.children.length > 20) {
+        const firstChild = logContainer.firstChild;
+        if (firstChild) {
+          logContainer.removeChild(firstChild);
+        }
+      }
+      
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }
+    
+    // 定期的にログを追加
+    setInterval(addLogEntry, 3000);
+  </script>
+</Layout>
