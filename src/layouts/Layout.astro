@@ -25,20 +25,20 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
       rel="stylesheet"
     />
   </head>
-  <body class="h-screen overflow-hidden bg-purple-gradient font-sans text-white">
+  <body class="h-screen overflow-hidden bg-cyber-gradient font-sans text-white">
     <!-- 背景パーティクル -->
     <div class="pointer-events-none fixed inset-0 overflow-hidden">
       <div
-        class="absolute -right-40 -top-40 h-80 w-80 animate-float rounded-full bg-accent-pink opacity-20 blur-3xl"
+        class="absolute -right-40 -top-40 h-80 w-80 animate-float rounded-full bg-accent-cyan opacity-15 blur-3xl"
       >
       </div>
       <div
-        class="absolute -left-40 top-1/3 h-64 w-64 animate-float rounded-full bg-accent-cyan opacity-20 blur-3xl"
+        class="absolute -left-40 top-1/3 h-64 w-64 animate-float rounded-full bg-accent-blue opacity-15 blur-3xl"
         style="animation-delay: -1s;"
       >
       </div>
       <div
-        class="absolute bottom-20 right-1/3 h-48 w-48 animate-float rounded-full bg-primary-400 opacity-20 blur-3xl"
+        class="absolute bottom-20 right-1/3 h-48 w-48 animate-float rounded-full bg-accent-neon opacity-15 blur-3xl"
         style="animation-delay: -2s;"
       >
       </div>
@@ -47,10 +47,10 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
     <div class="relative z-10 flex h-screen">
       <!-- サイドバー -->
       <aside
-        class="flex w-72 flex-col border-r border-primary-500/30 bg-dark-900/80 shadow-2xl backdrop-blur-md"
+        class="flex w-72 flex-col border-r border-primary-600/30 bg-dark-900/80 shadow-2xl backdrop-blur-md"
       >
         <div
-          class="border-b border-primary-500/30 bg-gradient-to-r from-primary-600/20 to-accent-pink/20 p-6"
+          class="border-b border-primary-600/30 bg-gradient-to-r from-primary-700/20 to-accent-cyan/20 p-6"
         >
           <div class="flex items-center space-x-3">
             <div
@@ -63,7 +63,7 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
                 i7s7-ymp
                 <span class="animate-pulse text-accent-cyan">◆</span>
               </h1>
-              <p class="font-mono text-sm text-primary-300">./creative.portfolio</p>
+              <p class="font-mono text-sm text-primary-400">./creative.portfolio</p>
             </div>
           </div>
         </div>
@@ -76,7 +76,7 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
                   <div class="h-2 w-2 rounded-full bg-accent-neon group-hover:animate-pulse"></div>
                   <span class="font-medium">Home</span>
                 </div>
-                <span class="font-mono text-xs text-primary-300 opacity-60">index.tsx</span>
+                <span class="font-mono text-xs text-primary-400 opacity-60">index.tsx</span>
               </a>
             </li>
             <li>
@@ -85,7 +85,7 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
                   <div class="h-2 w-2 rounded-full bg-accent-cyan group-hover:animate-pulse"></div>
                   <span class="font-medium">Architecture</span>
                 </div>
-                <span class="font-mono text-xs text-primary-300 opacity-60">system.config</span>
+                <span class="font-mono text-xs text-primary-400 opacity-60">system.config</span>
               </a>
             </li>
             <li>
@@ -94,7 +94,7 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
                   <div class="h-2 w-2 rounded-full bg-accent-gold group-hover:animate-pulse"></div>
                   <span class="font-medium">Achievements</span>
                 </div>
-                <span class="font-mono text-xs text-primary-300 opacity-60">records.json</span>
+                <span class="font-mono text-xs text-primary-400 opacity-60">records.json</span>
               </a>
             </li>
             <li>
@@ -103,16 +103,16 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
                   <div class="h-2 w-2 rounded-full bg-accent-pink group-hover:animate-pulse"></div>
                   <span class="font-medium">Social</span>
                 </div>
-                <span class="font-mono text-xs text-primary-300 opacity-60">connect.links</span>
+                <span class="font-mono text-xs text-primary-400 opacity-60">connect.links</span>
               </a>
             </li>
             <li>
               <a href="/agent" class="nav-link group" data-page="agent">
                 <div class="flex items-center space-x-3">
-                  <div class="h-2 w-2 rounded-full bg-accent-coral group-hover:animate-pulse"></div>
+                  <div class="h-2 w-2 rounded-full bg-accent-blue group-hover:animate-pulse"></div>
                   <span class="font-medium">AI Agent</span>
                 </div>
-                <span class="font-mono text-xs text-primary-300 opacity-60">agent.ai</span>
+                <span class="font-mono text-xs text-primary-400 opacity-60">agent.ai</span>
               </a>
             </li>
           </ul>
