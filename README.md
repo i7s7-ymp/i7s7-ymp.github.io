@@ -5,18 +5,26 @@
 [![Astro](https://img.shields.io/badge/Astro-5.12-orange.svg)](https://astro.build/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-blue.svg)](https://tailwindcss.com/)
 
-Geekスタイルのポートフォリオサイト。ターミナル風UIとダークモードを特徴とするモダンなWebサイトです。
+# i7s7-ymp Portfolio
+
+[![Deploy Status](https://github.com/i7s7-ymp/i7s7-ymp.github.io/workflows/Deploy%20Astro%20site%20to%20GitHub%20Pages/badge.svg)](https://github.com/i7s7-ymp/i7s7-ymp.github.io/actions)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+[![Astro](https://img.shields.io/badge/Astro-5.12-orange.svg)](https://astro.build/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-blue.svg)](https://tailwindcss.com/)
+
+YOASOBI風ポップでシティ系デザインのポートフォリオサイト。紫とネオンカラーを基調とした現代的なWebサイトです。
 
 🌐 **Live Site**: [https://i7s7-ymp.github.io](https://i7s7-ymp.github.io)
 
 ## ✨ Features
 
-- 🖥️ **ターミナル風UI** - 本格的なコマンドライン体験
-- 🌙 **ダークモード** - 目に優しいダークテーマ
+- 🎨 **ポップデザイン** - YOASOBI風の鮮やかなカラーパレット
+- 🌆 **シティ風UI** - 紫とネオンのグラデーション背景
+- � **アニメーション** - グロー効果とフローティング要素
 - 📱 **レスポンシブデザイン** - すべてのデバイスで最適表示
 - ⚡ **高速パフォーマンス** - Astroの静的サイト生成
-- 🤖 **インタラクティブチャット** - AIエージェント風UI
-- 🎨 **モダンスタイリング** - Tailwind CSSベース
+- 🔮 **インタラクティブUI** - ホバー効果とアニメーション
+- � **現代的スタイリング** - グラデーション&ガラスモーフィズム
 - 🔧 **開発者フレンドリー** - TypeScript + ESLint + Prettier
 
 ## 🏗️ Tech Stack
@@ -24,7 +32,7 @@ Geekスタイルのポートフォリオサイト。ターミナル風UIとダ�
 - **Framework**: [Astro](https://astro.build/) - 静的サイトジェネレーター
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) - ユーティリティファーストCSS
 - **Language**: [TypeScript](https://www.typescriptlang.org/) - 型安全なJavaScript
-- **Font**: [JetBrains Mono](https://www.jetbrains.com/mono/) - プログラミング用フォント
+- **Font**: [JetBrains Mono](https://www.jetbrains.com/mono/) + [Inter](https://rsms.me/inter/) - モダンフォント
 - **Deployment**: [GitHub Pages](https://pages.github.com/) - 自動デプロイ
 - **CI/CD**: [GitHub Actions](https://github.com/features/actions) - 継続的インテグレーション
 
