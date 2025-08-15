@@ -119,19 +119,7 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
           </ul>
         </nav>
 
-        <!-- モードトグル -->
-        <div class="border-t border-primary-500/30 p-6">
-          <button
-            id="theme-toggle"
-            class="group flex w-full items-center justify-between rounded-lg border border-primary-500/30 bg-gradient-to-r from-primary-600/20 to-accent-pink/20 p-3 backdrop-blur-sm transition-all hover:scale-105 hover:shadow-lg"
-          >
-            <div class="flex items-center space-x-3">
-              <div class="h-3 w-3 animate-pulse rounded-full bg-pop-gradient"></div>
-              <span class="font-medium text-white">シティモード</span>
-            </div>
-            <span class="text-sm text-accent-cyan">◇</span>
-          </button>
-        </div>
+        <!-- モードトグル削除（ライトモード廃止） -->
 
         <!-- ステータス -->
         <div
@@ -239,35 +227,6 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
         background-attachment: fixed;
       }
 
-      html.light body {
-        background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 40%, #bfdbfe 100%);
-        color: #1e293b;
-      }
-      html.light .section-card {
-        border-color: rgba(99, 102, 241, 0.25);
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(224, 231, 255, 0.7));
-        color: #1e293b;
-      }
-      html.light .stat-card h4 {
-        color: #2563eb;
-      }
-      html.light .panel-title,
-      html.light .gradient-heading-sm {
-        @apply from-indigo-600 to-blue-500;
-      }
-      html.light .badge-pill {
-        background: linear-gradient(90deg, rgba(99, 102, 241, 0.15), rgba(59, 130, 246, 0.08));
-      }
-      html.light .nav-link {
-        color: #1e293b;
-      }
-      html.light .nav-link.active {
-        box-shadow: 0 0 15px rgba(59, 130, 246, 0.35);
-      }
-      html.light #theme-toggle span.font-medium {
-        color: #1e293b;
-      }
-
       /* ================= New Global Utility Styles (Geek + Pop) ================= */
       :root {
         --panel-border: rgba(168, 85, 247, 0.3);
@@ -292,11 +251,6 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
           radial-gradient(circle at 15% 85%, rgba(236, 72, 153, 0.15), transparent 55%);
         opacity: 0.6;
         pointer-events: none;
-      }
-      html.light .section-card::before {
-        background:
-          radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.25), transparent 60%),
-          radial-gradient(circle at 15% 85%, rgba(59, 130, 246, 0.2), transparent 55%);
       }
       .panel-title {
         @apply bg-gradient-to-r from-white to-primary-200 bg-clip-text text-xl font-bold text-transparent;
@@ -369,18 +323,11 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
         top: 0;
         outline: 2px solid #22d3ee;
       }
-      html.light .skip-link {
-        background: #1e293b;
-        color: #fff;
-      }
 
       /* Focus styles */
       .nav-link:focus-visible {
         outline: 2px solid #22d3ee;
         outline-offset: 2px;
-      }
-      html.light .nav-link:focus-visible {
-        outline-color: #2563eb;
       }
 
       /* Reduced motion preference */
@@ -440,39 +387,6 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
         });
       }
 
-      // テーマトグル（将来的な拡張用）
-      function toggleTheme() {
-        const root = document.documentElement;
-        const isDark = root.classList.contains('dark');
-        if (isDark) {
-          root.classList.remove('dark');
-          root.classList.add('light');
-          localStorage.setItem('theme', 'light');
-        } else {
-          root.classList.remove('light');
-          root.classList.add('dark');
-          localStorage.setItem('theme', 'dark');
-        }
-        updateThemeLabel();
-      }
-
-      function applyStoredTheme() {
-        const stored = localStorage.getItem('theme');
-        if (stored === 'light') {
-          document.documentElement.classList.remove('dark');
-          document.documentElement.classList.add('light');
-        }
-        updateThemeLabel();
-      }
-
-      function updateThemeLabel() {
-        const btn = document.getElementById('theme-toggle');
-        if (!btn) return;
-        const isDark = document.documentElement.classList.contains('dark');
-        const span = btn.querySelector('span.font-medium');
-        if (span) span.textContent = isDark ? 'シティモード' : 'ライトモード';
-      }
-
       // パーティクルアニメーション
       function createParticles() {
         const container = document.querySelector('.fixed.inset-0');
@@ -497,7 +411,7 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
 
       // イベントリスナー
       document.addEventListener('DOMContentLoaded', () => {
-        applyStoredTheme();
+        // ライトモード廃止のためテーマ適用処理削除（常時ダーク）
         updateTime();
         updateUptime();
         updateActiveNav();
@@ -506,8 +420,7 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
         setInterval(updateUptime, 1000);
         setInterval(createParticles, 8000);
 
-        const themeToggle = document.getElementById('theme-toggle');
-        if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+        // テーマトグル要素なし
 
         // 初回パーティクル生成
         createParticles();

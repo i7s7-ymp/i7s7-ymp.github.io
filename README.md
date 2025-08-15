@@ -5,13 +5,6 @@
 [![Astro](https://img.shields.io/badge/Astro-5.12-orange.svg)](https://astro.build/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-blue.svg)](https://tailwindcss.com/)
 
-# i7s7-ymp Portfolio
-
-[![Deploy Status](https://github.com/i7s7-ymp/i7s7-ymp.github.io/workflows/Deploy%20Astro%20site%20to%20GitHub%20Pages/badge.svg)](https://github.com/i7s7-ymp/i7s7-ymp.github.io/actions)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
-[![Astro](https://img.shields.io/badge/Astro-5.12-orange.svg)](https://astro.build/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-blue.svg)](https://tailwindcss.com/)
-
 YOASOBI風ポップでシティ系デザインのポートフォリオサイト。紫とネオンカラーを基調とした現代的なWebサイトです。
 
 🌐 **Live Site**: [https://i7s7-ymp.github.io](https://i7s7-ymp.github.io)
@@ -20,11 +13,11 @@ YOASOBI風ポップでシティ系デザインのポートフォリオサイト�
 
 - 🎨 **ポップデザイン** - YOASOBI風の鮮やかなカラーパレット
 - 🌆 **シティ風UI** - 紫とネオンのグラデーション背景
-- � **アニメーション** - グロー効果とフローティング要素
+- ✨ **アニメーション** - グロー効果とフローティング要素
 - 📱 **レスポンシブデザイン** - すべてのデバイスで最適表示
 - ⚡ **高速パフォーマンス** - Astroの静的サイト生成
 - 🔮 **インタラクティブUI** - ホバー効果とアニメーション
-- � **現代的スタイリング** - グラデーション&ガラスモーフィズム
+- 🧊 **現代的スタイリング** - グラデーション & ガラスモーフィズム
 - 🔧 **開発者フレンドリー** - TypeScript + ESLint + Prettier
 
 ## 🏗️ Tech Stack
@@ -171,13 +164,14 @@ npm run check
 
 ## 📄 Pages Overview
 
-| Page         | Route           | Description                              |
-| ------------ | --------------- | ---------------------------------------- |
-| Home         | `/`             | プロフィールとスキル概要                 |
-| Architecture | `/support`      | クラウド・アプリケーションアーキテクチャ |
-| Achievements | `/achievements` | 職歴・資格・実績                         |
-| Social Media | `/social`       | SNSリンクとコンタクト                    |
-| AI Agent     | `/agent`        | インタラクティブチャット                 |
+| Page          | Route           | Description                                  |
+| ------------- | --------------- | -------------------------------------------- |
+| Home          | `/`             | プロフィール概要と最近のハイライト           |
+| Architecture  | `/support`      | クラウド / アプリケーションアーキテクチャ    |
+| Achievements  | `/achievements` | 職歴・資格・実績                             |
+| Social Media  | `/social`       | SNSリンクとコンタクト                        |
+| AI Agent      | `/agent`        | シングルスクリーンのインタラクティブチャット |
+| Design System | `/design`       | デザインユーティリティ & ガイド              |
 
 ## 🎨 Design System
 
@@ -203,9 +197,9 @@ npm run check
 
 例: `text-accent-cyan`, `from-accent-pink to-accent-cyan`, `bg-accent-neon/30`
 
-### テーマ切替
+### テーマ
 
-`Theme Toggle` ボタンで `dark` / `light` クラスを `<html>` に付け替え。ユーザー選択は `localStorage.theme` に保存。
+本サイトは現在 **ダークモード固定** です。以前存在したライトモードおよびテーマトグルUI/スクリプトは削除し、スタイルは `dark` 前提で最適化されています。
 
 ### 設計原則
 
@@ -348,7 +342,7 @@ npm run check
 5. **レビュー**: テンプレート項目に基づくレビュー
 6. **マージ**: 品質基準を満たした後にマージ
 
-## �📝 License
+## 📝 License
 
 このプロジェクトは[MIT License](LICENSE)の下で公開されています。
 
