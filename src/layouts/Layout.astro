@@ -150,17 +150,45 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
-              <div class="flex space-x-2">
-                <div class="h-4 w-4 animate-pulse rounded-full bg-red-400 shadow-lg"></div>
-                <div
-                  class="h-4 w-4 animate-pulse rounded-full bg-yellow-400 shadow-lg"
-                  style="animation-delay: 0.5s;"
-                >
+              <!-- ヘッダーインジケータ: 複数バリアント -->
+              <div
+                id="headerIndicator"
+                class="header-indicator"
+                data-variant="eq"
+                role="img"
+                aria-label="system activity indicator"
+                title="Click / Tap to change indicator"
+              >
+                <!-- Equalizer Variant -->
+                <div class="hi-variant hi-eq">
+                  <div class="eq-bar" style="--i:0"></div>
+                  <div class="eq-bar" style="--i:1"></div>
+                  <div class="eq-bar" style="--i:2"></div>
+                  <div class="eq-bar" style="--i:3"></div>
+                  <div class="eq-bar" style="--i:4"></div>
                 </div>
-                <div
-                  class="h-4 w-4 animate-pulse rounded-full bg-green-400 shadow-lg"
-                  style="animation-delay: 1s;"
-                >
+                <!-- Orbit Variant -->
+                <div class="hi-variant hi-orbit" hidden>
+                  <div class="orbit-core"></div>
+                  <div class="orbit-ring r1"></div>
+                  <div class="orbit-ring r2"></div>
+                  <div class="orbit-dot d1"></div>
+                  <div class="orbit-dot d2"></div>
+                  <div class="orbit-dot d3"></div>
+                </div>
+                <!-- Wave Variant -->
+                <div class="hi-variant hi-wave" hidden>
+                  <svg viewBox="0 0 120 40" class="wave-svg" preserveAspectRatio="none">
+                    <path class="wave-path" d="M0 20 Q 15 5 30 20 T 60 20 T 90 20 T 120 20"></path>
+                    <path class="wave-path delayed" d="M0 20 Q 15 35 30 20 T 60 20 T 90 20 T 120 20"
+                    ></path>
+                  </svg>
+                </div>
+                <!-- Scan Variant -->
+                <div class="hi-variant hi-scan" hidden>
+                  <div class="scan-frame">
+                    <div class="scan-line"></div>
+                  </div>
                 </div>
               </div>
               <div
@@ -335,11 +363,274 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
         .animate-glow,
         .animate-float,
         .animate-ping,
-        .animate-pulse {
+        .animate-pulse,
+        .eq-bar {
           animation: none !important;
         }
         * {
           scroll-behavior: auto !important;
+        }
+      }
+      /* ========================================================================== */
+      /* ================= Header Indicator (Multi Variants) ================= */
+      .header-indicator {
+        --hi-border: rgba(255, 255, 255, 0.15);
+        --hi-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        min-width: 3.75rem;
+        height: 1.4rem;
+        padding: 0 0.4rem;
+        border: 1px solid var(--hi-border);
+        border-radius: 0.85rem;
+        background: var(--hi-bg);
+        box-shadow:
+          0 4px 12px -2px rgba(0, 0, 0, 0.45),
+          0 0 0 1px rgba(168, 85, 247, 0.18) inset;
+        cursor: pointer;
+        overflow: hidden;
+        user-select: none;
+      }
+      .header-indicator:focus-visible {
+        outline: 2px solid #22d3ee;
+        outline-offset: 2px;
+      }
+      .hi-variant {
+        position: relative;
+        display: none;
+        width: 100%;
+        height: 100%;
+      }
+      .header-indicator[data-variant='eq'] .hi-eq,
+      .header-indicator[data-variant='orbit'] .hi-orbit,
+      .header-indicator[data-variant='wave'] .hi-wave,
+      .header-indicator[data-variant='scan'] .hi-scan {
+        display: flex;
+      }
+      /* Equalizer */
+      .hi-eq {
+        align-items: flex-end;
+        gap: 0.35rem;
+        justify-content: center;
+      }
+      .eq-bar {
+        --bar-w: 0.32rem;
+        width: var(--bar-w);
+        border-radius: 9999px;
+        background: linear-gradient(180deg, #22d3ee, #a855f7 55%, #ec4899);
+        box-shadow:
+          0 0 6px -1px #22d3ee,
+          0 0 16px -4px #a855f7,
+          0 0 20px -6px #ec4899;
+        animation: eq-pulse 1.9s ease-in-out infinite;
+        animation-delay: calc(var(--i) * 0.18s);
+        position: relative;
+        overflow: hidden;
+      }
+      .eq-bar::after {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 38%;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), transparent);
+        filter: blur(2px);
+        opacity: 0.9;
+        mix-blend-mode: screen;
+      }
+      @keyframes eq-pulse {
+        0% {
+          height: 25%;
+          transform: translateY(75%);
+        }
+        20% {
+          height: 90%;
+          transform: translateY(10%);
+        }
+        40% {
+          height: 45%;
+          transform: translateY(55%);
+        }
+        60% {
+          height: 70%;
+          transform: translateY(30%);
+        }
+        80% {
+          height: 35%;
+          transform: translateY(65%);
+        }
+        100% {
+          height: 25%;
+          transform: translateY(75%);
+        }
+      }
+      /* Orbit */
+      .hi-orbit {
+        justify-content: center;
+        align-items: center;
+      }
+      .hi-orbit .orbit-core {
+        width: 0.55rem;
+        height: 0.55rem;
+        border-radius: 50%;
+        background: radial-gradient(circle, #a855f7 10%, #22d3ee 60%, transparent 70%);
+        box-shadow:
+          0 0 10px #a855f7,
+          0 0 18px -4px #22d3ee;
+        animation: core-pulse 3s ease-in-out infinite;
+      }
+      .orbit-ring {
+        position: absolute;
+        border: 1px solid rgba(168, 85, 247, 0.35);
+        border-radius: 50%;
+        animation: ring-spin linear infinite;
+      }
+      .orbit-ring.r1 {
+        width: 1.2rem;
+        height: 1.2rem;
+        animation-duration: 6s;
+      }
+      .orbit-ring.r2 {
+        width: 1.6rem;
+        height: 1.6rem;
+        animation-duration: 9s;
+        border-color: rgba(34, 211, 238, 0.35);
+      }
+      .orbit-dot {
+        position: absolute;
+        width: 0.35rem;
+        height: 0.35rem;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ec4899, #a855f7);
+        box-shadow: 0 0 6px #ec4899;
+        animation: orbit 5s linear infinite;
+      }
+      .orbit-dot.d1 {
+        animation-duration: 5s;
+      }
+      .orbit-dot.d2 {
+        animation-duration: 7s;
+      }
+      .orbit-dot.d3 {
+        animation-duration: 9s;
+      }
+      @keyframes ring-spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes orbit {
+        0% {
+          transform: rotate(0deg) translateX(0.8rem) rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg) translateX(0.8rem) rotate(-360deg);
+        }
+      }
+      @keyframes core-pulse {
+        0%,
+        100% {
+          transform: scale(0.9);
+          opacity: 0.9;
+        }
+        50% {
+          transform: scale(1.15);
+          opacity: 1;
+        }
+      }
+      /* Wave */
+      .hi-wave {
+        align-items: center;
+        justify-content: center;
+      }
+      .wave-svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+      .wave-path {
+        fill: none;
+        stroke: url(#);
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke: #22d3ee;
+        filter: drop-shadow(0 0 4px #22d3ee);
+        animation: wave-draw 2.8s ease-in-out infinite;
+      }
+      .wave-path.delayed {
+        stroke: #ec4899;
+        filter: drop-shadow(0 0 4px #ec4899);
+        animation-delay: 1.2s;
+      }
+      @keyframes wave-draw {
+        0% {
+          stroke-dasharray: 5 140;
+          stroke-dashoffset: 0;
+          opacity: 0.2;
+        }
+        40% {
+          stroke-dasharray: 55 90;
+          opacity: 1;
+        }
+        70% {
+          stroke-dasharray: 10 135;
+          opacity: 0.8;
+        }
+        100% {
+          stroke-dasharray: 5 140;
+          stroke-dashoffset: -30;
+          opacity: 0.2;
+        }
+      }
+      /* Scan */
+      .hi-scan {
+        align-items: center;
+        justify-content: center;
+      }
+      .scan-frame {
+        position: relative;
+        width: 3.2rem;
+        height: 0.8rem;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 0.4rem;
+        overflow: hidden;
+        background: linear-gradient(
+          90deg,
+          rgba(168, 85, 247, 0.15),
+          rgba(34, 211, 238, 0.08),
+          rgba(168, 85, 247, 0.15)
+        );
+      }
+      .scan-line {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), transparent);
+        width: 35%;
+        animation: scan-move 2.2s cubic-bezier(0.68, -0.4, 0.32, 1.4) infinite;
+      }
+      @keyframes scan-move {
+        0% {
+          transform: translateX(-120%);
+        }
+        55% {
+          transform: translateX(180%);
+        }
+        100% {
+          transform: translateX(180%);
+        }
+      }
+      /* Reduced motion adjustments for variants */
+      @media (prefers-reduced-motion: reduce) {
+        .orbit-ring,
+        .orbit-dot,
+        .eq-bar,
+        .wave-path,
+        .scan-line {
+          animation: none !important;
         }
       }
       /* ========================================================================== */
@@ -409,6 +700,21 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
         }
       }
 
+      // インジケータバリアント切替
+      const indicatorVariants = ['eq', 'orbit', 'wave', 'scan'];
+      function cycleIndicator() {
+        const el = document.getElementById('headerIndicator');
+        if (!el) return;
+        const attr = el.getAttribute('data-variant');
+        const current = attr && indicatorVariants.includes(attr) ? attr : 'eq';
+        const idx = indicatorVariants.indexOf(current);
+        const nextIdx = (idx + 1) % indicatorVariants.length;
+        const next = indicatorVariants[nextIdx] || 'eq';
+        el.setAttribute('data-variant', next as string);
+        // tooltip 更新
+        el.title = `Indicator variant: ${next} (click to change)`;
+      }
+
       // イベントリスナー
       document.addEventListener('DOMContentLoaded', () => {
         // ライトモード廃止のためテーマ適用処理削除（常時ダーク）
@@ -420,10 +726,21 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
         setInterval(updateUptime, 1000);
         setInterval(createParticles, 8000);
 
-        // テーマトグル要素なし
-
         // 初回パーティクル生成
         createParticles();
+
+        // インジケータクリック切替
+        const indicator = document.getElementById('headerIndicator');
+        if (indicator) {
+          indicator.addEventListener('click', cycleIndicator);
+          indicator.addEventListener('keypress', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              cycleIndicator();
+            }
+          });
+          indicator.tabIndex = 0;
+        }
       });
 
       // ページ遷移時のアクティブ状態更新
