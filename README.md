@@ -181,17 +181,39 @@ npm run check
 
 ## 🎨 Design System
 
-### カラーパレット
+詳細ガイド: `/design` ページにライブプレビュー。
 
-- **Primary**: Green (`#10b981`) - ターミナルテーマ
-- **Background**: Dark Gray (`#111827`, `#1f2937`)
-- **Text**: Light Gray (`#d1d5db`, `#9ca3af`)
-- **Accent**: Yellow (`#fbbf24`), Blue (`#3b82f6`)
+### コアユーティリティ
 
-### Typography
+- `section-card`: 主要セクションコンテナ（グラデ + border + blur + hover scale）
+- `stat-card`: KPI/数値指標カード (section-card 継承)
+- `panel-title` / `gradient-heading-sm`: 見出し用グラデテキスト
+- `badge-pill`: タグ/ラベル表示ピル
+- `subtle-divider`: グラデーション区切り線
+- `hide-scrollbar`: スクロールは保持しつつスクロールバー非表示
 
-- **Main**: JetBrains Mono (monospace)
-- **Fallback**: Inter (sans-serif)
+### コンポーネント (src/components)
+
+- `SectionCard.astro`: セマンティックタグ指定可能なラッパー
+- `StatCard.astro`: 数値 + ラベル表示用
+
+### カラートークン (Tailwind 拡張 `accent-*`)
+
+`pink | cyan | neon | gold | coral | blue | indigo | purple`
+
+例: `text-accent-cyan`, `from-accent-pink to-accent-cyan`, `bg-accent-neon/30`
+
+### テーマ切替
+
+`Theme Toggle` ボタンで `dark` / `light` クラスを `<html>` に付け替え。ユーザー選択は `localStorage.theme` に保存。
+
+### 設計原則
+
+1. レイアウト枠は再利用（section-card）で統一
+2. 動的クラスは `tailwind.config.mjs` の `safelist` へ追加
+3. 未使用クラス速やか削除で CSS を最小化
+4. 色コントラストを確保し可読性維持
+5. 追加ユーティリティは `/design` ページで文書化
 
 ## 🤝 Contributing
 

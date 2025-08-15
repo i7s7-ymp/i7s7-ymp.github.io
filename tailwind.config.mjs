@@ -1,6 +1,30 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+  safelist: [
+    // カスタム背景グラデーション / 未来の動的生成用
+    'bg-neon-gradient',
+    'bg-pop-gradient',
+    'bg-cyber-gradient',
+    'bg-purple-gradient',
+    // アニメーション（JSで付け替える可能性）
+    'animate-glow',
+    'animate-float',
+    'animate-ping',
+    // 状態クラス / Active highlight (JS付与)
+    'active',
+    // ユーティリティコンポーネント（Astro slot外で生成される可能性）
+    'section-card',
+    'panel-title',
+    'badge-pill',
+    'stat-card',
+    'stat-grid',
+    'gradient-heading-sm',
+    // パターン: text-accent-* / bg-accent-* の将来的な動的組み立てをパターンで確保
+    { pattern: /(text|bg|border)-accent-(pink|cyan|neon|gold|coral|blue|indigo|purple)/ },
+    { pattern: /from-accent-(pink|cyan|neon|gold|coral|blue|indigo|purple)/ },
+    { pattern: /to-accent-(pink|cyan|neon|gold|coral|blue|indigo|purple)/ },
+  ],
   darkMode: 'class',
   theme: {
     extend: {

@@ -1,0 +1,30 @@
+---
+/**
+ * Generic container card.
+ * Props:
+ *  - as (string) semantic tag (default 'div')
+ *  - class (string) extra classes
+ */
+export interface Props {
+  as?: string;
+  class?: string;
+  noWrapper?: boolean; // if true, just outputs slot content (for nested usage)
+}
+const { as = 'div', class: extra = '', noWrapper = false } = Astro.props;
+---
+
+{
+  noWrapper ? (
+    <slot />
+  ) : (
+    <Fragment
+      set:html={`<${as} class="section-card ${extra}">
+      <div class='sc-inner'>
+        <div class='sc-header'><slot name="header" /></div>
+        <div class='sc-body'><slot /></div>
+        <div class='sc-footer'><slot name="footer" /></div>
+      </div>
+    </${as}>`}
+    />
+  )
+}

@@ -1,30 +1,35 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
 ---
 
 <Layout title="Social Media - i7s7-ymp Portfolio">
-  <div class="space-y-6">
-    <!-- ページタイトル -->
-    <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
-      <div class="mb-2 text-green-400">
-        <span class="text-gray-400">$</span> curl -s social.links | grep -E "(github|twitter|linkedin)"
+  <div class="space-y-8">
+    <PageHeader
+      title="Social Media & Links"
+      subtitle="Connect with me across platforms"
+      icon="🌐"
+      iconBgClass="bg-gradient-to-r from-accent-blue to-accent-cyan"
+    >
+      <div slot="extra" class="flex flex-wrap gap-2 text-xs">
+        <span class="badge-pill">open source</span>
+        <span class="badge-pill">network</span>
+        <span class="badge-pill">community</span>
       </div>
-      <h2 class="text-2xl font-bold text-green-400"># Social Media & Links</h2>
-      <p class="mt-2 text-gray-300">> Connect with me across platforms</p>
-    </div>
+    </PageHeader>
 
     <!-- ソーシャルメディアリンク -->
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       <!-- GitHub -->
       <a
         href="https://github.com/i7s7-ymp"
         target="_blank"
         rel="noopener noreferrer"
-        class="group rounded-lg border border-green-400/30 bg-gray-800/50 p-4 transition-colors hover:bg-gray-800/70"
+        class="section-card group transition-all hover:scale-[1.02]"
       >
         <div class="mb-3 flex items-center space-x-3">
           <div
-            class="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-700 transition-colors group-hover:bg-gray-600"
+            class="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-gray-700 to-gray-600 transition-colors group-hover:from-accent-cyan/30 group-hover:to-gray-600"
           >
             <svg class="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path
@@ -37,10 +42,10 @@ import Layout from '../layouts/Layout.astro';
             <p class="text-sm text-gray-400">@i7s7-ymp</p>
           </div>
         </div>
-        <p class="text-sm text-gray-300">
+        <p class="text-sm text-primary-200">
           オープンソースプロジェクトとポートフォリオのコードを公開中
         </p>
-        <div class="mt-3 flex items-center space-x-4 text-xs text-gray-400">
+        <div class="mt-3 flex flex-wrap gap-4 font-mono text-xs text-primary-300">
           <span>50+ repos</span>
           <span>100+ commits</span>
           <span>Active</span>
@@ -52,11 +57,11 @@ import Layout from '../layouts/Layout.astro';
         href="https://twitter.com/i7s7_ymp"
         target="_blank"
         rel="noopener noreferrer"
-        class="group rounded-lg border border-blue-400/30 bg-gray-800/50 p-4 transition-colors hover:bg-gray-800/70"
+        class="section-card group transition-all hover:scale-[1.02]"
       >
         <div class="mb-3 flex items-center space-x-3">
           <div
-            class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/20 transition-colors group-hover:bg-blue-500/30"
+            class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/25 transition-colors group-hover:bg-blue-500/40"
           >
             <svg class="h-6 w-6 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
               <path
@@ -69,8 +74,8 @@ import Layout from '../layouts/Layout.astro';
             <p class="text-sm text-gray-400">@i7s7_ymp</p>
           </div>
         </div>
-        <p class="text-sm text-gray-300">技術情報の発信とコミュニティとの交流</p>
-        <div class="mt-3 flex items-center space-x-4 text-xs text-gray-400">
+        <p class="text-sm text-primary-200">技術情報の発信とコミュニティとの交流</p>
+        <div class="mt-3 flex flex-wrap gap-4 font-mono text-xs text-primary-300">
           <span>Tech tweets</span>
           <span>Daily updates</span>
         </div>
@@ -81,11 +86,11 @@ import Layout from '../layouts/Layout.astro';
         href="https://linkedin.com/in/i7s7-ymp"
         target="_blank"
         rel="noopener noreferrer"
-        class="group rounded-lg border border-blue-600/30 bg-gray-800/50 p-4 transition-colors hover:bg-gray-800/70"
+        class="section-card group transition-all hover:scale-[1.02]"
       >
         <div class="mb-3 flex items-center space-x-3">
           <div
-            class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-600/20 transition-colors group-hover:bg-blue-600/30"
+            class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-600/25 transition-colors group-hover:bg-blue-600/40"
           >
             <svg class="h-6 w-6 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
               <path
@@ -98,8 +103,8 @@ import Layout from '../layouts/Layout.astro';
             <p class="text-sm text-gray-400">i7s7-ymp</p>
           </div>
         </div>
-        <p class="text-sm text-gray-300">プロフェッショナルなネットワークとキャリア情報</p>
-        <div class="mt-3 flex items-center space-x-4 text-xs text-gray-400">
+        <p class="text-sm text-primary-200">プロフェッショナルなネットワークとキャリア情報</p>
+        <div class="mt-3 flex flex-wrap gap-4 font-mono text-xs text-primary-300">
           <span>Professional</span>
           <span>Networking</span>
         </div>
@@ -110,11 +115,11 @@ import Layout from '../layouts/Layout.astro';
         href="https://qiita.com/i7s7_ymp"
         target="_blank"
         rel="noopener noreferrer"
-        class="group rounded-lg border border-green-500/30 bg-gray-800/50 p-4 transition-colors hover:bg-gray-800/70"
+        class="section-card group transition-all hover:scale-[1.02]"
       >
         <div class="mb-3 flex items-center space-x-3">
           <div
-            class="flex h-12 w-12 items-center justify-center rounded-lg bg-green-500/20 transition-colors group-hover:bg-green-500/30"
+            class="flex h-12 w-12 items-center justify-center rounded-lg bg-green-500/25 transition-colors group-hover:bg-green-500/40"
           >
             <span class="text-lg font-bold text-green-500">Q</span>
           </div>
@@ -123,8 +128,8 @@ import Layout from '../layouts/Layout.astro';
             <p class="text-sm text-gray-400">@i7s7_ymp</p>
           </div>
         </div>
-        <p class="text-sm text-gray-300">技術記事の投稿と知識の共有</p>
-        <div class="mt-3 flex items-center space-x-4 text-xs text-gray-400">
+        <p class="text-sm text-primary-200">技術記事の投稿と知識の共有</p>
+        <div class="mt-3 flex flex-wrap gap-4 font-mono text-xs text-primary-300">
           <span>Tech articles</span>
           <span>Tutorials</span>
         </div>
@@ -135,11 +140,11 @@ import Layout from '../layouts/Layout.astro';
         href="https://stackoverflow.com/users/i7s7-ymp"
         target="_blank"
         rel="noopener noreferrer"
-        class="group rounded-lg border border-orange-500/30 bg-gray-800/50 p-4 transition-colors hover:bg-gray-800/70"
+        class="section-card group transition-all hover:scale-[1.02]"
       >
         <div class="mb-3 flex items-center space-x-3">
           <div
-            class="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-500/20 transition-colors group-hover:bg-orange-500/30"
+            class="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-500/25 transition-colors group-hover:bg-orange-500/40"
           >
             <svg class="h-6 w-6 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
               <path
@@ -152,8 +157,8 @@ import Layout from '../layouts/Layout.astro';
             <p class="text-sm text-gray-400">i7s7-ymp</p>
           </div>
         </div>
-        <p class="text-sm text-gray-300">技術的な質問への回答とコミュニティ貢献</p>
-        <div class="mt-3 flex items-center space-x-4 text-xs text-gray-400">
+        <p class="text-sm text-primary-200">技術的な質問への回答とコミュニティ貢献</p>
+        <div class="mt-3 flex flex-wrap gap-4 font-mono text-xs text-primary-300">
           <span>Q&A</span>
           <span>Community</span>
         </div>
@@ -164,11 +169,11 @@ import Layout from '../layouts/Layout.astro';
         href="https://blog.i7s7-ymp.dev"
         target="_blank"
         rel="noopener noreferrer"
-        class="group rounded-lg border border-purple-500/30 bg-gray-800/50 p-4 transition-colors hover:bg-gray-800/70"
+        class="section-card group transition-all hover:scale-[1.02]"
       >
         <div class="mb-3 flex items-center space-x-3">
           <div
-            class="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/20 transition-colors group-hover:bg-purple-500/30"
+            class="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/25 transition-colors group-hover:bg-purple-500/40"
           >
             <svg
               class="h-6 w-6 text-purple-500"
@@ -189,8 +194,8 @@ import Layout from '../layouts/Layout.astro';
             <p class="text-sm text-gray-400">blog.i7s7-ymp.dev</p>
           </div>
         </div>
-        <p class="text-sm text-gray-300">技術ブログとプロジェクトの詳細解説</p>
-        <div class="mt-3 flex items-center space-x-4 text-xs text-gray-400">
+        <p class="text-sm text-primary-200">技術ブログとプロジェクトの詳細解説</p>
+        <div class="mt-3 flex flex-wrap gap-4 font-mono text-xs text-primary-300">
           <span>Deep dives</span>
           <span>Tutorials</span>
         </div>
@@ -198,9 +203,9 @@ import Layout from '../layouts/Layout.astro';
     </div>
 
     <!-- Contact Information -->
-    <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
-      <h3 class="mb-4 text-lg font-semibold text-green-400">
-        <span class="text-gray-400">></span> contact_info --show
+    <div class="section-card">
+      <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
+        <span class="text-accent-cyan">&gt;</span><span>contact_info --show</span>
       </h3>
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div class="space-y-2">
@@ -227,11 +232,13 @@ import Layout from '../layouts/Layout.astro';
     </div>
 
     <!-- GitHubアクティビティ風 -->
-    <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
-      <h3 class="mb-4 text-lg font-semibold text-green-400">
-        <span class="text-gray-400">></span> git log --oneline --graph --since="1 week ago"
+    <div class="section-card">
+      <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
+        <span class="text-accent-cyan">&gt;</span><span
+          >git log --oneline --graph --since="1 week ago"</span
+        >
       </h3>
-      <div class="space-y-2 font-mono text-sm">
+      <div class="space-y-2 font-mono text-xs text-primary-200">
         <div class="flex items-center space-x-2">
           <span class="text-green-400">●</span>
           <span class="text-yellow-400">a1b2c3d</span>

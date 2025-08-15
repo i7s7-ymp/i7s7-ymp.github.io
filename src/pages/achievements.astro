@@ -1,42 +1,36 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import StatCard from '../components/StatCard.astro';
+import PageHeader from '../components/PageHeader.astro';
 ---
 
 <Layout title="Achievements - i7s7-ymp Portfolio">
-  <div class="space-y-6">
-    <!-- ページタイトル -->
-    <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
-      <div class="mb-2 text-green-400">
-        <span class="text-gray-400">$</span> cat achievements.json | jq '.'
+  <div class="space-y-10">
+    <PageHeader
+      title="Achievements & Experience"
+      subtitle="Professional milestones and technical accomplishments"
+      icon="🏆"
+      iconBgClass="bg-gradient-to-r from-accent-gold to-accent-pink"
+    >
+      <div slot="extra" class="flex flex-wrap gap-2 text-xs">
+        <span class="badge-pill">projects</span>
+        <span class="badge-pill">experience</span>
+        <span class="badge-pill">growth</span>
       </div>
-      <h2 class="text-2xl font-bold text-green-400"># Achievements & Experience</h2>
-      <p class="mt-2 text-gray-300">> Professional milestones and technical accomplishments</p>
-    </div>
+    </PageHeader>
 
     <!-- 統計情報 -->
-    <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
-      <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4 text-center">
-        <div class="mb-1 text-2xl font-bold text-green-400">50+</div>
-        <div class="text-sm text-gray-300">Projects</div>
-      </div>
-      <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4 text-center">
-        <div class="mb-1 text-2xl font-bold text-yellow-400">3+</div>
-        <div class="text-sm text-gray-300">Years Exp.</div>
-      </div>
-      <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4 text-center">
-        <div class="mb-1 text-2xl font-bold text-blue-400">15+</div>
-        <div class="text-sm text-gray-300">Technologies</div>
-      </div>
-      <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4 text-center">
-        <div class="mb-1 text-2xl font-bold text-purple-400">100k+</div>
-        <div class="text-sm text-gray-300">Lines of Code</div>
-      </div>
+    <div class="stat-grid">
+      <StatCard value="50+" label="Projects" />
+      <StatCard value="3+" label="Years Exp." accentClass="text-accent-pink" />
+      <StatCard value="15+" label="Technologies" accentClass="text-accent-cyan" />
+      <StatCard value="100k+" label="Lines of Code" accentClass="text-accent-gold" />
     </div>
 
     <!-- 職歴・経験 -->
-    <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
-      <h3 class="mb-4 text-lg font-semibold text-green-400">
-        <span class="text-gray-400">></span> work_history.log
+    <div class="section-card">
+      <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
+        <span class="text-accent-cyan">&gt;</span><span>work_history.log</span>
       </h3>
       <div class="space-y-4">
         <div class="border-l-2 border-green-400/30 pl-4">
@@ -86,9 +80,9 @@ import Layout from '../layouts/Layout.astro';
     </div>
 
     <!-- 技術的成果 -->
-    <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
-      <h3 class="mb-4 text-lg font-semibold text-green-400">
-        <span class="text-gray-400">></span> technical_achievements --list
+    <div class="section-card">
+      <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
+        <span class="text-accent-cyan">&gt;</span><span>technical_achievements --list</span>
       </h3>
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div class="space-y-3">
@@ -145,9 +139,9 @@ import Layout from '../layouts/Layout.astro';
     </div>
 
     <!-- 資格・認定 -->
-    <div class="rounded-lg border border-green-400/30 bg-gray-800/50 p-4">
-      <h3 class="mb-4 text-lg font-semibold text-green-400">
-        <span class="text-gray-400">></span> certificates.list()
+    <div class="section-card">
+      <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
+        <span class="text-accent-cyan">&gt;</span><span>certificates.list()</span>
       </h3>
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div class="flex items-center space-x-3 rounded bg-gray-900/50 p-3">

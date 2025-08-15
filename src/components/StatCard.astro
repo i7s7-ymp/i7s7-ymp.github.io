@@ -1,0 +1,21 @@
+---
+/** StatCard for numeric metrics.
+ * Props:
+ *  - value: string | number
+ *  - label: string
+ *  - accentClass?: optional extra class for value color
+ */
+export interface Props {
+  value: string | number;
+  label: string;
+  accentClass?: string;
+  class?: string;
+}
+const { value, label, accentClass = '', class: extra = '' } = Astro.props;
+---
+
+<div class={`stat-card ${extra}`}>
+  <h4 class={accentClass}>{value}</h4>
+  <span>{label}</span>
+  <slot />
+</div>
