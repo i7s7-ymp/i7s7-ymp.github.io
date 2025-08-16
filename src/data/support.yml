@@ -130,15 +130,6 @@ appPatterns:
     desc: イベント駆動による監査可能なシステム設計
 techStack:
   categories:
-    - title: Cloud Providers
-      color: yellow
-      items:
-        - name: AWS
-          color: orange
-        - name: Google Cloud
-          color: blue
-        - name: Azure
-          color: cyan
     - title: Container
       color: yellow
       items:

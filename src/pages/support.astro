@@ -103,29 +103,68 @@ import data from '../data/support.yml';
         </div>
       </div>
 
-      <!-- 技術スタック (シンプルグリッド再構築) -->
-      <div class="section-card">
+      <!-- 技術スタック (Marquee/電光掲示板) -->
+      <div class="section-card overflow-hidden">
         <h3 class="mb-4 text-lg font-semibold text-green-400">技術スタック</h3>
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {
-            data.techStack.categories.map((cat: any) => (
-              <div class="rounded border border-primary-600/30 bg-primary-800/30 p-4 backdrop-blur-xs">
-                <h4 class="mb-3 text-sm font-semibold tracking-wide text-yellow-400">
-                  {cat.title}
-                </h4>
-                <div class="flex flex-wrap gap-2">
-                  {cat.items.map((it: any) => (
-                    <span
-                      class={`flex items-center gap-1 rounded-full border border-${it.color}-400/30 bg-${it.color}-400/10 px-2.5 py-1 font-mono text-[11px] text-${it.color}-300`}
-                    >
-                      <span class={`h-2 w-2 rounded-full bg-${it.color}-400`} />
-                      {it.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))
-          }
+        <div class="relative">
+          <div
+            class="marquee-mask pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-dark-900 to-transparent"
+          >
+          </div>
+          <div
+            class="marquee-mask pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-dark-900 to-transparent"
+          >
+          </div>
+          <div class="marquee-track flex w-fit gap-12 py-2 will-change-transform" data-marquee>
+            <div class="flex flex-nowrap gap-12" data-segment aria-hidden="true">
+              {
+                data.techStack.categories.map((cat: any) => (
+                  <div class="min-w-[220px] shrink-0">
+                    <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-yellow-400">
+                      {cat.title}
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                      {cat.items.map((it: any) => (
+                        <span
+                          class={`flex items-center gap-1 rounded-full border border-${it.color}-400/30 bg-${it.color}-400/10 px-3 py-1 font-mono text-[11px] text-${it.color}-300 shadow-sm`}
+                        >
+                          <span class={`h-2 w-2 rounded-full bg-${it.color}-400`} />
+                          {it.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+            <!-- 1周目と2周目の間のスペース (以前: w-32) -->
+            <div class="w-16 shrink-0" aria-hidden="true"></div>
+            <div class="flex flex-nowrap gap-12" data-segment aria-hidden="true">
+              {
+                data.techStack.categories.map((cat: any) => (
+                  <div class="min-w-[220px] shrink-0">
+                    <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-yellow-400">
+                      {cat.title}
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                      {cat.items.map((it: any) => (
+                        <span
+                          class={`flex items-center gap-1 rounded-full border border-${it.color}-400/30 bg-${it.color}-400/10 px-3 py-1 font-mono text-[11px] text-${it.color}-300 shadow-sm`}
+                        >
+                          <span class={`h-2 w-2 rounded-full bg-${it.color}-400`} />
+                          {it.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center gap-3 text-[11px] text-primary-400">
+          <span class="h-2 w-2 animate-pulse rounded-full bg-accent-neon"></span>
+          <span>横スクロール自動再生 / ホバーで一時停止</span>
         </div>
       </div>
     </div>
@@ -151,9 +190,27 @@ import data from '../data/support.yml';
 </script>
 
 <style>
-  /* 技術スタック・グリッド調整 */
-  @media (min-width: 1280px) {
-    /* 3列で余白が空く場合は4列に自動拡張したい場合の例 (必要になれば) */
-    /* .tech-grid { grid-template-columns: repeat(4,minmax(0,1fr)); } */
+  /* Marquee animation */
+  [data-marquee] {
+    animation: marquee-scroll 40s linear infinite;
+  }
+  [data-marquee]:hover {
+    animation-play-state: paused;
+  }
+  @keyframes marquee-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  .marquee-mask {
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-marquee] {
+      animation: none;
+    }
   }
 </style>
