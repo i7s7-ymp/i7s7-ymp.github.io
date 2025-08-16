@@ -53,7 +53,8 @@ const logoUrlMap = {
           const glow = glowMap[icon] || glowMap[l.color] || glowMap.default;
           const logoSrc = (logoUrlMap as any)[icon] || logoUrlMap.default;
           const isWhiteBg = icon === 'zenn' || icon === 'linkedin';
-          const containerBase = 'flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl p-2 shadow-lg transition-all duration-300 group-hover:rotate-3 group-hover:scale-110';
+          const containerBase =
+            'flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl p-2 shadow-lg transition-all duration-300 group-hover:rotate-3 group-hover:scale-110';
           const containerClass = isWhiteBg
             ? `${containerBase} bg-white dark:bg-white ring-1 ring-black/5`
             : `${containerBase} bg-gradient-to-br ${grad}`;
