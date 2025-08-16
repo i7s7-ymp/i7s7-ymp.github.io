@@ -8,7 +8,11 @@ const homeMod = await import('../data/home.yml');
 const home = homeMod && homeMod.default ? homeMod.default : homeMod;
 ---
 
-<Layout title="Home - i7s7-ymp Portfolio">
+<Layout
+  title="Home - i7s7-ymp Portfolio"
+  headerTitle="home:overview"
+  headerPills={['creative', 'build:ok', 'home']}
+>
   <div
     class="cyber-home mx-auto w-full max-w-[min(1200px,calc(100vw-19rem))] space-y-10 overflow-x-hidden px-4 lg:px-6"
   >
@@ -17,7 +21,9 @@ const home = homeMod && homeMod.default ? homeMod.default : homeMod;
       title={home.header.title}
       subtitle={home.header.subtitle}
       icon="i7"
-      iconTextClass="text-2xl font-bold text-white"
+      iconTextClass="text-2xl font-bold text-white tracking-wider drop-shadow-[0_0_6px_#22d3ee]"
+      iconBgClass="bg-[radial-gradient(circle_at_30%_30%,#22d3ee_0%,#0f172a_70%)]"
+      class="cyber-sign"
     >
       <div slot="extra" class="flex flex-wrap gap-2 pt-2">
         {
@@ -433,6 +439,225 @@ const home = homeMod && homeMod.default ? homeMod.default : homeMod;
       .glitch-title::before,
       .glitch-title::after,
       .activity-row::after {
+        animation: none !important;
+      }
+    }
+
+    /* ====== ELECTRIC SIGN HEADER (PageHeader override) ====== */
+    .cyber-sign {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.65))
+        padding-box !important;
+    }
+    .cyber-sign::before,
+    .cyber-sign::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    /* LEDドットマトリクス */
+    .cyber-sign::before {
+      background:
+        repeating-radial-gradient(
+          circle at 2px 2px,
+          rgba(34, 211, 238, 0.08) 0 1px,
+          transparent 1px 8px
+        ),
+        linear-gradient(
+          120deg,
+          rgba(34, 211, 238, 0.12),
+          rgba(236, 72, 153, 0.1) 50%,
+          transparent 85%
+        );
+      mix-blend-mode: overlay;
+      opacity: 0.85;
+      filter: blur(0.3px);
+      animation: sign-pulse 9s ease-in-out infinite;
+    }
+    /* 走査ライン */
+    .cyber-sign::after {
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.25) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      mix-blend-mode: screen;
+      height: 40%;
+      top: -40%;
+      animation: sign-scan 7s linear infinite;
+    }
+    /* 枠コーナー装飾 */
+    .cyber-sign .flex.items-center:before,
+    .cyber-sign .flex.items-center:after {
+      content: '';
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      border: 2px solid rgba(34, 211, 238, 0.4);
+      opacity: 0.4;
+      filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.4));
+    }
+    .cyber-sign .flex.items-center:before {
+      top: -22px;
+      left: -22px;
+      border-right: none;
+      border-bottom: none;
+      border-radius: 14px 0 0 0;
+    }
+    .cyber-sign .flex.items-center:after {
+      bottom: -22px;
+      right: -22px;
+      border-left: none;
+      border-top: none;
+      border-radius: 0 0 14px 0;
+    }
+    /* タイトル文字 フリッカー + ネオングロー */
+    .cyber-sign h1 {
+      position: relative;
+      text-shadow:
+        0 0 6px #22d3ee,
+        0 0 14px rgba(34, 211, 238, 0.55),
+        0 0 28px rgba(236, 72, 153, 0.35);
+      animation: flicker 6.8s linear infinite;
+    }
+    .cyber-sign h1::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      mix-blend-mode: overlay;
+      color: #ec4899;
+      opacity: 0.22;
+      filter: blur(3px);
+      animation: flickerHue 5.4s linear infinite;
+    }
+    /* サブタイトル スクロールマルキー (溢れ時) */
+    .cyber-sign p {
+      position: relative;
+    }
+    .cyber-sign p.long {
+      overflow: hidden;
+      mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
+    }
+    .cyber-sign p.long span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 18s linear infinite;
+    }
+    /* 追加の下部電光ライン */
+    .cyber-sign .sign-bottom-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #22d3ee, #6366f1, #ec4899, #22d3ee);
+      background-size: 300% 100%;
+      animation: bar-shift 12s linear infinite;
+      filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.6));
+    }
+    .cyber-sign .sign-bottom-bar::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.4) 0 2px,
+        transparent 2px 6px
+      );
+      mix-blend-mode: overlay;
+      opacity: 0.18;
+    }
+
+    @keyframes sign-scan {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(240%);
+      }
+    }
+    @keyframes sign-pulse {
+      0%,
+      100% {
+        opacity: 0.85;
+      }
+      50% {
+        opacity: 0.65;
+      }
+    }
+    @keyframes flicker {
+      0%,
+      9%,
+      11%,
+      100% {
+        opacity: 1;
+      }
+      10% {
+        opacity: 0.78;
+      }
+      20% {
+        opacity: 0.9;
+      }
+      21% {
+        opacity: 1;
+      }
+      40% {
+        opacity: 0.92;
+      }
+      41% {
+        opacity: 1;
+      }
+      60% {
+        opacity: 0.84;
+      }
+      61% {
+        opacity: 1;
+      }
+      72% {
+        opacity: 0.95;
+      }
+      73% {
+        opacity: 1;
+      }
+    }
+    @keyframes flickerHue {
+      0% {
+        filter: blur(3px) hue-rotate(0deg);
+      }
+      50% {
+        filter: blur(3px) hue-rotate(40deg);
+      }
+      100% {
+        filter: blur(3px) hue-rotate(0deg);
+      }
+    }
+    @keyframes marquee {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+    @keyframes bar-shift {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 300% 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cyber-sign::after,
+      .cyber-sign h1,
+      .cyber-sign h1::after,
+      .cyber-sign p.long span,
+      .cyber-sign .sign-bottom-bar {
         animation: none !important;
       }
     }

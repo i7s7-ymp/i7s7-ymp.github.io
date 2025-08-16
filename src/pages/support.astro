@@ -5,7 +5,11 @@ import PageHeader from '../components/PageHeader.astro';
 import data from '../data/support.yml';
 ---
 
-<Layout title="アーキテクチャ - i7s7-ymp Portfolio">
+<Layout
+  title="アーキテクチャ - i7s7-ymp Portfolio"
+  headerTitle="architecture:patterns"
+  headerPills={['cloud', 'patterns', 'build:ok']}
+>
   <div class="space-y-10">
     <PageHeader
       title={data.header.title}

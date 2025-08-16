@@ -18,7 +18,11 @@ const timelineByYear: Record<string, any[]> = data.timeline.reduce(
 const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', '2019'];
 ---
 
-<Layout title="実績 - i7s7-ymp Portfolio">
+<Layout
+  title="実績 - i7s7-ymp Portfolio"
+  headerTitle="achievements:timeline"
+  headerPills={['career', 'records', 'build:ok']}
+>
   <div class="space-y-10">
     <PageHeader
       title={data.header.title}

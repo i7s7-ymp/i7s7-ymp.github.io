@@ -31,7 +31,7 @@ const {
 <div
   class={`rounded-2xl border border-primary-600/30 bg-gradient-to-r ${gradientFrom} ${gradientTo} p-6 shadow-2xl backdrop-blur-md relative overflow-hidden ${extraClass}`}
 >
-  <div class="flex items-center space-x-4">
+  <div class="${extraClass.includes('cyber-sign') ? 'relative' : ''} flex items-center space-x-4">
     <div
       class={`flex h-16 w-16 animate-glow items-center justify-center rounded-2xl shadow-lg ${iconBgClass}`}
     >
@@ -39,11 +39,23 @@ const {
     </div>
     <div>
       <h1
-        class="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-3xl font-bold text-transparent"
+        data-text={title}
+        class={`text-3xl font-bold ${extraClass.includes('cyber-sign') ? 'text-white tracking-wider' : 'bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent'}`}
       >
         {title}
       </h1>
-      {subtitle && <p class="text-lg text-slate-300">{subtitle}</p>}
+      {
+        subtitle && !extraClass.includes('cyber-sign') && (
+          <p class="text-lg text-slate-300">{subtitle}</p>
+        )
+      }
+      {
+        subtitle && extraClass.includes('cyber-sign') && (
+          <p class="long text-lg text-slate-300">
+            <span>{subtitle}</span>
+          </p>
+        )
+      }
     </div>
     {
       statusLabel && (
@@ -57,6 +69,7 @@ const {
   <div class="mt-4">
     <slot name="extra" />
   </div>
+  {extraClass.includes('cyber-sign') && <div class="sign-bottom-bar" />}
 </div>
 
 <style>
