@@ -9,17 +9,18 @@ cloudCases:
     title: AWS マイクロサービス構成
     stack: AWS • Kubernetes • Docker
     diagram: |-
-      ┌─────────────────────────────────────────┐
-      │  CloudFront + Route53                   │
-      ├─────────────────────────────────────────┤
-      │  ALB → EKS Cluster                      │
-      │  ├─ API Gateway Service                 │
-      │  ├─ User Service (RDS)                  │
-      │  ├─ Order Service (DynamoDB)            │
-      │  └─ Payment Service (ElastiCache)       │
-      ├─────────────────────────────────────────┤
-      │  Monitoring: CloudWatch + X-Ray         │
-      └─────────────────────────────────────────┘
+      Clients
+        ↓
+      CloudFront + Route53
+        ↓
+      ALB
+        ↓
+      EKS Cluster
+        ├─ API Gateway Service
+        ├─ User Service (RDS)
+        ├─ Order Service (DynamoDB)
+        └─ Payment Service (ElastiCache)
+      Observability: CloudWatch, X-Ray
     desc: AWSを活用したマイクロサービスアーキテクチャ。EKSとAPI Gatewayによるスケーラブルな構成。
     tags: [AWS, Kubernetes, Microservices]
     colors: [blue, green, orange]
@@ -27,16 +28,16 @@ cloudCases:
     title: GCP データパイプライン
     stack: GCP • BigQuery • Dataflow
     diagram: |-
-      ┌─────────────────────────────────────────┐
-      │  Cloud Storage (Data Lake)              │
-      ├─────────────────────────────────────────┤
-      │  Dataflow → BigQuery                    │
-      │  ├─ ETL Processing                      │
-      │  ├─ Real-time Analytics                 │
-      │  └─ ML Pipeline (Vertex AI)             │
-      ├─────────────────────────────────────────┤
-      │  Visualization: Data Studio             │
-      └─────────────────────────────────────────┘
+      Ingestion: Cloud Storage (Data Lake)
+        ↓
+      Dataflow Pipelines
+        ├─ ETL Processing
+        ├─ Real-time Analytics
+        └─ ML Pipeline (Vertex AI)
+        ↓
+      BigQuery (Warehouse)
+        ↓
+      Visualization: Looker / Data Studio
     desc: GCPベースのデータパイプライン。リアルタイム分析とML統合のアーキテクチャ。
     tags: [GCP, BigQuery, ML Pipeline]
     colors: [yellow, purple, cyan]
@@ -44,16 +45,15 @@ cloudCases:
     title: Azure DevOps 統合
     stack: Azure • AKS • DevOps
     diagram: |-
-      ┌─────────────────────────────────────────┐
-      │  Azure DevOps Pipelines                 │
-      ├─────────────────────────────────────────┤
-      │  AKS Cluster                            │
-      │  ├─ App Gateway                         │
-      │  ├─ Container Instances                 │
-      │  └─ Azure SQL Database                  │
-      ├─────────────────────────────────────────┤
-      │  Monitoring: Azure Monitor              │
-      └─────────────────────────────────────────┘
+      Azure DevOps Pipelines (CI/CD)
+        ↓
+      Container Registry (Artifacts)
+        ↓
+      AKS Cluster
+        ├─ App Gateway
+        ├─ Workload Pods / Container Instances
+        └─ Azure SQL Database
+      Monitoring: Azure Monitor / Logs
     desc: Azure環境でのCI/CD統合アーキテクチャ。AKSとDevOpsパイプラインの組み合わせ。
     tags: [Azure, AKS, CI/CD]
     colors: [cyan, green, orange]
@@ -61,16 +61,17 @@ cloudCases:
     title: サーバーレス構成
     stack: AWS Lambda • API Gateway • DynamoDB
     diagram: |-
-      ┌─────────────────────────────────────────┐
-      │  API Gateway + CloudFront               │
-      ├─────────────────────────────────────────┤
-      │  Lambda Functions                       │
-      │  ├─ Authentication (Cognito)            │
-      │  ├─ Business Logic                      │
-      │  └─ Data Processing                     │
-      ├─────────────────────────────────────────┤
-      │  Storage: DynamoDB + S3                 │
-      └─────────────────────────────────────────┘
+      Clients
+        ↓
+      CloudFront
+        ↓
+      API Gateway
+        ↓
+      Lambda Functions
+        ├─ Auth (Cognito)
+        ├─ Business Logic
+        └─ Data Processing
+      Data Stores: DynamoDB, S3
     desc: 完全サーバーレス構成のWebアプリケーション。コスト効率とスケーラビリティを両立。
     tags: [Serverless, Lambda, DynamoDB]
     colors: [purple, yellow, blue]
@@ -78,31 +79,54 @@ appPatterns:
   - name: Clean Architecture
     color: green
     diagram: |-
-      Controllers
-        ↓
-      Use Cases
-        ↓
-      Entities
-        ↓
-      Infrastructure
+      ┌─────────────── Presentation ───────────────┐
+      │ Controllers / ViewModels                   │
+      └────────────────────────────────────────────┘
+                       ↓ depends on
+      ┌──────────────── Application ───────────────┐
+      │ Use Cases (Interactors)                    │
+      └────────────────────────────────────────────┘
+                       ↓ depends on
+      ┌────────────────── Domain ──────────────────┐
+      │ Entities / Value Objects / Domain Services │
+      └────────────────────────────────────────────┘
+                       ↓ depends on (inverted)
+      ┌───────────── Infrastructure ───────────────┐
+      │ Repositories / Gateways / External APIs    │
+      └────────────────────────────────────────────┘
     desc: 依存関係逆転による保守性の高いアーキテクチャ
   - name: CQRS Pattern
     color: blue
     diagram: |-
-      Commands ─┐
-                ├─ Write DB
-      Queries ──┘
-                ├─ Read DB
-      Events ───┘
+      +-----------+     +----------------+     +-----------+
+      | Commands  | --> | CommandHandler | --> | Write DB  |
+      +-----------+     +----------------+     +-----------+
+             | emits Events                           ▲
+             v                                        │ project
+        +---------+          update           +---------------+
+        | Event   | ------------------------> | Read Model(s) |
+        |  Bus    | <------------------------ | (Read DB)     |
+        +---------+         rehydrate         +---------------+
+             ▲                                        │ query
+             |                                        v
+      +-----------+     +---------------+      +-------------+
+      | Queries   | --> | QueryHandler  | ---> | Responses   |
+      +-----------+     +---------------+      +-------------+
     desc: 読み取りと書き込みの分離によるパフォーマンス最適化
   - name: Event Sourcing
     color: purple
     diagram: |-
-      Events Store
+      User Action
         ↓
-      Projections
+      Command Handler
+        ↓ emits Event
+      Event Store (Append Only)
+        ↓ replay / time-travel
+      Projection Handlers
+        ↓ build
+      Materialized Views (Read Models)
         ↓
-      View Models
+      API / UI Queries
     desc: イベント駆動による監査可能なシステム設計
 techStack:
   categories:
