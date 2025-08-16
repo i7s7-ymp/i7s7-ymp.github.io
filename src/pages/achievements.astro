@@ -288,7 +288,7 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
   }
   .year-node .year-dot::after {
     border: 2px dashed var(--yr-active);
-    animation: spin 14s linear infinite;
+    animation: timeline-spin 14s linear infinite;
     transition: opacity 0.55s;
     mix-blend-mode: screen;
   }
@@ -310,7 +310,7 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
       0 0 12px 5px rgba(52, 211, 153, 0.4),
       0 0 32px 14px rgba(52, 211, 153, 0.15);
     transform: scale(var(--_scale));
-    animation: pulse 2.4s ease-in-out infinite;
+    animation: timeline-pulse 2.4s ease-in-out infinite;
   }
   .year-node.is-active .year-dot::before {
     opacity: 0.95;
@@ -318,7 +318,7 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
   }
   .year-node.is-active .year-dot::after {
     opacity: 0.55;
-    animation: spin 7s linear infinite reverse;
+    animation: timeline-spin 7s linear infinite reverse;
     border-color: var(--yr-active-accent);
   }
   .year-node.is-active .year-label {
@@ -350,7 +350,7 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
     background-size:
       100% 100%,
       200% 100%;
-    animation: scan 3.6s linear infinite;
+    animation: timeline-scan 3.6s linear infinite;
     border-radius: 2px;
     filter: drop-shadow(0 0 4px rgba(52, 211, 153, 0.55));
   }
@@ -412,10 +412,10 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
   /* Activation pop */
   .year-node.activating .year-dot {
     animation:
-      popIn 0.42s cubic-bezier(0.45, 1.7, 0.6, 1) forwards,
-      pulse 2.4s ease-in-out infinite 0.42s;
+      timeline-popIn 0.42s cubic-bezier(0.45, 1.7, 0.6, 1) forwards,
+      timeline-pulse 2.4s ease-in-out infinite 0.42s;
   }
-  @keyframes popIn {
+  @keyframes timeline-popIn {
     0% {
       transform: scale(0.4);
       filter: brightness(0.7) saturate(0.6);
@@ -429,7 +429,7 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
       filter: brightness(1) saturate(1);
     }
   }
-  @keyframes pulse {
+  @keyframes timeline-pulse {
     0%,
     100% {
       box-shadow:
@@ -444,12 +444,12 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
         0 0 40px 18px rgba(52, 211, 153, 0.22);
     }
   }
-  @keyframes spin {
+  @keyframes timeline-spin {
     to {
       transform: rotate(360deg);
     }
   }
-  @keyframes scan {
+  @keyframes timeline-scan {
     to {
       background-position:
         0 0,
@@ -459,9 +459,9 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
 
   /* Panel fade */
   .year-panel {
-    animation: panelFade 0.45s ease;
+    animation: timeline-panelFade 0.45s ease;
   }
-  @keyframes panelFade {
+  @keyframes timeline-panelFade {
     from {
       opacity: 0;
       transform: translateY(6px);
