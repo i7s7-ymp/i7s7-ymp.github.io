@@ -3,6 +3,19 @@ import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 // @ts-ignore
 import data from '../data/achievements.yml';
+
+// 年単位にグルーピング（period の最初の4桁を年とみなす）
+const timelineByYear: Record<string, any[]> = data.timeline.reduce(
+  (acc: Record<string, any[]>, item: any) => {
+    const m = (item.period || '').match(/\d{4}/);
+    const year = m ? m[0] : 'その他';
+    (acc[year] = acc[year] || []).push(item);
+    return acc;
+  },
+  {}
+);
+// 表示対象年を固定（空年も見出しを出したい場合はこちらに列挙）
+const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', '2019'];
 ---
 
 <Layout title="実績 - i7s7-ymp Portfolio">
@@ -18,39 +31,111 @@ import data from '../data/achievements.yml';
       </div>
     </PageHeader>
 
-    <!-- 職歴・経験（タイムライン形式） -->
+    <!-- 職歴・経験（一本線タイムライン：2019-2025 / 年ホバーで実績表示） -->
     <div class="section-card">
-      <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
-        <span class="text-accent-cyan">職務経歴</span>
-      </h3>
-      <ul class="relative space-y-6 border-l border-primary-500/30 pl-5">
-        {
-          data.timeline.map((item: any) => (
-            <li class="group relative">
-              <div
-                class={`absolute -left-[9px] top-1 h-3 w-3 rounded-full bg-accent-${item.color} shadow-[0_0_0_3px_rgba(255,255,255,0.10)]`}
-              />
-              <h4 class="font-semibold leading-tight text-white">{item.role}</h4>
-              <p class={`font-mono text-xs text-accent-${item.color}/80`}>
-                {item.company} / {item.period}
-              </p>
-              <ul class="mt-2 space-y-1 text-sm text-primary-200">
-                {item.points.map((p: string) => (
-                  <li class="flex items-start gap-2">
-                    <span class={`text-accent-${item.color}`}>▸</span>
-                    <span>{p}</span>
-                  </li>
-                ))}
-              </ul>
-              <div class="mt-2 flex flex-wrap gap-1.5">
-                {item.badges.map((b: string) => (
-                  <span class="badge-pill text-xs">{b}</span>
-                ))}
-              </div>
-            </li>
-          ))
-        }
-      </ul>
+      <div class="mb-4 flex items-center justify-between gap-4">
+        <h3 class="gradient-heading-sm flex items-center space-x-2 text-lg font-semibold">
+          <span class="text-accent-cyan">職務経歴</span>
+        </h3>
+        <div class="flex items-center gap-4 text-[11px] text-primary-400/60">
+          <span class="hidden md:inline">年マーカーにホバー / フォーカスで詳細</span>
+        </div>
+      </div>
+      <div class="relative" aria-label="2019-2025 タイムライン (選択式)">
+        <!-- 中央ライン -->
+        <div
+          class="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-primary-500/30 via-primary-500/20 to-primary-500/30"
+        >
+        </div>
+        <ol class="relative flex justify-between gap-4 py-12" id="yearMarkers">
+          {
+            displayYears.slice().map(year => {
+              // 2025 左 / 2019 右 （reverse削除で並び順反転）
+              const items = timelineByYear[year] || [];
+              return (
+                <li
+                  class="year-node relative flex flex-col items-center"
+                  data-year={year}
+                  tabindex="0"
+                  role="button"
+                  aria-pressed={year === '2025' ? 'true' : 'false'}
+                >
+                  <div class="relative z-10 flex flex-col items-center">
+                    <div class="year-dot mb-2 h-4 w-4 rounded-full bg-accent-gold shadow-[0_0_0_4px_rgba(255,215,0,0.15)] ring-2 ring-accent-gold/40 transition" />
+                    <span class="year-label font-mono text-[11px] tracking-wide text-primary-300 transition">
+                      {year}
+                    </span>
+                    <span class="mt-1 text-[10px] text-primary-500/50" data-count>
+                      {items.length || 0}件
+                    </span>
+                  </div>
+                </li>
+              );
+            })
+          }
+        </ol>
+        <!-- 詳細パネル -->
+        <div id="yearDetails" class="relative mt-4">
+          {
+            displayYears.map(year => {
+              const items = timelineByYear[year] || [];
+              return (
+                <section
+                  data-year-panel={year}
+                  class={`year-panel ${year === '2025' ? '' : 'hidden'} rounded-xl border border-primary-500/30 bg-dark-900/80 p-5 shadow-lg ring-1 ring-primary-500/20 backdrop-blur-sm`}
+                  aria-hidden={year === '2025' ? 'false' : 'true'}
+                >
+                  <header class="mb-4 flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                      <span class="inline-flex items-center rounded bg-primary-500/10 px-3 py-1 font-mono text-[11px] tracking-wide text-accent-gold/80 ring-1 ring-primary-500/30">
+                        {year}
+                      </span>
+                      <h4 class="text-sm font-semibold text-primary-100">{year} の実績</h4>
+                      <span class="text-[11px] text-primary-400/60">{items.length || 0}件</span>
+                    </div>
+                  </header>
+                  {items.length === 0 && <p class="text-[12px] text-primary-500/60">記録なし</p>}
+                  <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    {items.map((item: any, idx: number) => (
+                      <article class="rounded-lg border border-primary-500/15 bg-dark-800/60 p-3 transition hover:border-primary-400/40">
+                        <h5 class="mb-1 line-clamp-2 text-[13px] font-semibold leading-snug text-primary-50">
+                          {idx + 1}. {item.role}
+                        </h5>
+                        <p class={`mb-1 font-mono text-[10px] text-accent-${item.color}/70`}>
+                          {item.company} / {item.period}
+                        </p>
+                        <ul class="space-y-1 text-[11px] leading-snug text-primary-200">
+                          {item.points.slice(0, 5).map((p: string) => (
+                            <li class="flex items-start gap-1.5">
+                              <span class={`mt-[3px] text-accent-${item.color}`}>▹</span>
+                              <span class="min-w-0 flex-1">{p}</span>
+                            </li>
+                          ))}
+                          {item.points.length > 5 && (
+                            <li class="text-[10px] italic text-primary-400/60">
+                              ...他 {item.points.length - 5} 件
+                            </li>
+                          )}
+                        </ul>
+                        {item.badges?.length && (
+                          <div class="mt-2 flex flex-wrap gap-1">
+                            {item.badges.slice(0, 8).map((b: string) => (
+                              <span class="badge-pill text-[9px]">{b}</span>
+                            ))}
+                            {item.badges.length > 8 && (
+                              <span class="badge-pill text-[9px]">+{item.badges.length - 8}</span>
+                            )}
+                          </div>
+                        )}
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              );
+            })
+          }
+        </div>
+      </div>
     </div>
 
     <!-- 技術的成果（スキャン可能な短文化リスト） -->
@@ -98,3 +183,303 @@ import data from '../data/achievements.yml';
     </div>
   </div>
 </Layout>
+
+<script is:inline>
+  // 年選択: デフォルト2025
+  const markers = Array.from(document.querySelectorAll('.year-node'));
+  const panels = Array.from(document.querySelectorAll('[data-year-panel]'));
+  const selectYear = y => {
+    let activeEl = null;
+    markers.forEach(m => {
+      const active = m.getAttribute('data-year') === y;
+      m.classList.toggle('is-active', active);
+      m.setAttribute('aria-pressed', active ? 'true' : 'false');
+      if (active) activeEl = m;
+    });
+    panels.forEach(p => {
+      const active = p.getAttribute('data-year-panel') === y;
+      p.classList.toggle('hidden', !active);
+      p.setAttribute('aria-hidden', active ? 'false' : 'true');
+    });
+    // 一回だけのポップアニメーション付与
+    if (activeEl) {
+      activeEl.classList.remove('activating');
+      // 再トリガーのためリフロー
+      void activeEl.offsetWidth;
+      activeEl.classList.add('activating');
+      activeEl.addEventListener(
+        'animationend',
+        () => {
+          activeEl.classList.remove('activating');
+        },
+        { once: true }
+      );
+    }
+  };
+  markers.forEach((m, idx) => {
+    m.addEventListener('click', () => selectYear(m.getAttribute('data-year')));
+    m.addEventListener('keydown', e => {
+      const i = markers.indexOf(m);
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectYear(m.getAttribute('data-year'));
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        markers[(i + 1) % markers.length].focus();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        markers[(i - 1 + markers.length) % markers.length].focus();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        markers[0].focus();
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        markers[markers.length - 1].focus();
+      }
+    });
+  });
+  selectYear('2025');
+</script>
+
+<style>
+  /* line clamp helper */
+  .line-clamp {
+    max-height: 2.4em;
+    overflow: hidden;
+    position: relative;
+  }
+  .line-clamp::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(17, 17, 25, 0) 40%, rgba(17, 17, 25, 0.9) 95%);
+    pointer-events: none;
+  }
+
+  /* Timeline Neo-Geek Theme */
+  :root {
+    --yr-active: #34d399;
+    --yr-active-accent: #10b981;
+    --yr-inactive: #64748b;
+  }
+  .year-node {
+    --_scale: 0.82;
+  }
+  .year-node:focus-visible .year-dot {
+    outline: 2px solid var(--yr-active);
+    outline-offset: 3px;
+  }
+  .year-node .year-dot {
+    position: relative;
+  }
+  .year-node .year-dot::before,
+  .year-node .year-dot::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .year-node .year-dot::before {
+    background: radial-gradient(var(--yr-active) 8%, transparent 68%);
+    filter: blur(5px);
+    transition: opacity 0.45s;
+  }
+  .year-node .year-dot::after {
+    border: 2px dashed var(--yr-active);
+    animation: spin 14s linear infinite;
+    transition: opacity 0.55s;
+    mix-blend-mode: screen;
+  }
+  .year-node:hover .year-dot::before,
+  .year-node:hover .year-dot::after,
+  .year-node:focus-visible .year-dot::before,
+  .year-node:focus-visible .year-dot::after {
+    opacity: 0.35;
+  }
+
+  /* Active marker */
+  .year-node.is-active {
+    --_scale: 1.38;
+  }
+  .year-node.is-active .year-dot {
+    background: linear-gradient(135deg, var(--yr-active) 15%, var(--yr-active-accent) 85%);
+    box-shadow:
+      0 0 0 3px rgba(52, 211, 153, 0.25),
+      0 0 12px 5px rgba(52, 211, 153, 0.4),
+      0 0 32px 14px rgba(52, 211, 153, 0.15);
+    transform: scale(var(--_scale));
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  .year-node.is-active .year-dot::before {
+    opacity: 0.95;
+    filter: blur(11px);
+  }
+  .year-node.is-active .year-dot::after {
+    opacity: 0.55;
+    animation: spin 7s linear infinite reverse;
+    border-color: var(--yr-active-accent);
+  }
+  .year-node.is-active .year-label {
+    color: var(--yr-active);
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-shadow:
+      0 0 4px rgba(52, 211, 153, 0.6),
+      0 0 18px rgba(16, 185, 129, 0.35);
+    position: relative;
+  }
+  .year-node.is-active .year-label::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 3px;
+    background:
+      linear-gradient(
+        90deg,
+        transparent,
+        var(--yr-active) 15%,
+        var(--yr-active-accent) 50%,
+        var(--yr-active) 85%,
+        transparent
+      ),
+      linear-gradient(90deg, transparent 40%, rgba(255, 255, 255, 0.4) 50%, transparent 60%);
+    background-size:
+      100% 100%,
+      200% 100%;
+    animation: scan 3.6s linear infinite;
+    border-radius: 2px;
+    filter: drop-shadow(0 0 4px rgba(52, 211, 153, 0.55));
+  }
+
+  /* Inactive markers */
+  .year-node .year-dot {
+    transition:
+      transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+      filter 0.5s,
+      background 0.5s,
+      box-shadow 0.5s;
+    transform: scale(var(--_scale));
+  }
+  .year-node:not(.is-active) .year-dot {
+    background: linear-gradient(135deg, #475569, #2e3a48);
+    box-shadow:
+      0 0 0 2px rgba(128, 144, 168, 0.28),
+      0 0 6px 0 rgba(20, 28, 42, 0.55),
+      0 0 10px -2px rgba(128, 144, 168, 0.35);
+    filter: grayscale(0.35) brightness(0.98) saturate(0.85) contrast(1.05);
+  }
+  .year-node:not(.is-active):hover .year-dot,
+  .year-node:not(.is-active):focus-visible .year-dot {
+    filter: grayscale(0.08) brightness(1.08) saturate(0.95) contrast(1.1);
+    transform: scale(0.95);
+    box-shadow:
+      0 0 0 2px rgba(150, 166, 188, 0.5),
+      0 0 14px 3px rgba(128, 144, 168, 0.4),
+      0 0 22px 6px rgba(30, 46, 64, 0.45);
+  }
+  .year-node:not(.is-active) .year-label {
+    color: rgba(176, 190, 205, 0.72);
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    text-shadow: 0 0 2px rgba(120, 136, 160, 0.4);
+    transition:
+      color 0.4s,
+      text-shadow 0.45s,
+      letter-spacing 0.45s;
+  }
+  .year-node:not(.is-active):hover .year-label,
+  .year-node:not(.is-active):focus-visible .year-label {
+    color: rgba(222, 228, 235, 0.92);
+    text-shadow: 0 0 5px rgba(170, 185, 205, 0.55);
+    letter-spacing: 0.06em;
+  }
+  .year-node:not(.is-active) [data-count] {
+    opacity: 0.42;
+    transition:
+      opacity 0.35s,
+      filter 0.4s;
+  }
+  .year-node:not(.is-active):hover [data-count],
+  .year-node:not(.is-active):focus-visible [data-count] {
+    opacity: 0.7;
+    filter: brightness(1.05);
+  }
+
+  /* Activation pop */
+  .year-node.activating .year-dot {
+    animation:
+      popIn 0.42s cubic-bezier(0.45, 1.7, 0.6, 1) forwards,
+      pulse 2.4s ease-in-out infinite 0.42s;
+  }
+  @keyframes popIn {
+    0% {
+      transform: scale(0.4);
+      filter: brightness(0.7) saturate(0.6);
+    }
+    60% {
+      transform: scale(1.6);
+      filter: brightness(1.3) saturate(1.4);
+    }
+    100% {
+      transform: scale(var(--_scale));
+      filter: brightness(1) saturate(1);
+    }
+  }
+  @keyframes pulse {
+    0%,
+    100% {
+      box-shadow:
+        0 0 0 3px rgba(52, 211, 153, 0.25),
+        0 0 12px 5px rgba(52, 211, 153, 0.4),
+        0 0 32px 14px rgba(52, 211, 153, 0.15);
+    }
+    45% {
+      box-shadow:
+        0 0 0 3px rgba(52, 211, 153, 0.35),
+        0 0 18px 8px rgba(52, 211, 153, 0.55),
+        0 0 40px 18px rgba(52, 211, 153, 0.22);
+    }
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes scan {
+    to {
+      background-position:
+        0 0,
+        -200% 0;
+    }
+  }
+
+  /* Panel fade */
+  .year-panel {
+    animation: panelFade 0.45s ease;
+  }
+  @keyframes panelFade {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .year-node .year-dot,
+    .year-node .year-dot::after,
+    .year-node.is-active .year-dot {
+      animation: none !important;
+    }
+    .year-node.is-active .year-label::after {
+      animation: none !important;
+    }
+  }
+</style>

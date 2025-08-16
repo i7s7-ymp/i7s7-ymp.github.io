@@ -3,44 +3,43 @@ import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 // @ts-ignore
 import data from '../data/social.yml';
+
+const gradMap: Record<string, string> = {
+  gray: 'from-gray-700 to-gray-900',
+  indigo: 'from-indigo-500 to-indigo-700',
+  cyan: 'from-cyan-400 to-sky-500',
+  'blue-600': 'from-blue-500 to-blue-700',
+  default: 'from-slate-600 to-slate-800',
+};
+const glowMap: Record<string, string> = {
+  gray: 'bg-gradient-to-r from-gray-400/20 via-gray-200/10 to-transparent',
+  indigo: 'bg-gradient-to-r from-indigo-400/40 via-indigo-300/10 to-transparent',
+  cyan: 'bg-gradient-to-r from-cyan-400/50 via-cyan-300/10 to-transparent',
+  'blue-600': 'bg-gradient-to-r from-blue-500/50 via-blue-300/10 to-transparent',
+  default: 'bg-gradient-to-r from-emerald-400/40 via-emerald-300/10 to-transparent',
+};
 ---
 
-<Layout title="ソーシャル - i7s7-ymp Portfolio">
+<Layout title="Social - i7s7-ymp Portfolio">
   <div class="space-y-10">
     <PageHeader
       title={data.header.title}
       subtitle={data.header.subtitle}
       icon="🌐"
-      iconBgClass="bg-gradient-to-r from-accent-blue to-accent-cyan"
+      iconBgClass="bg-gradient-to-r from-accent-cyan to-accent-pink"
     >
       <div slot="extra" class="flex flex-wrap gap-2 text-xs">
         {data.header.tags.map((t: string) => <span class="badge-pill">{t}</span>)}
       </div>
     </PageHeader>
 
-    <!-- ソーシャルリンクグリッド -->
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-6 md:grid-cols-2">
       {
         data.links.map((l: any) => {
-          const icon = l.icon;
-          const gradientMap = {
-            github: 'from-slate-700 via-slate-600 to-slate-500',
-            linkedin: 'from-blue-600 via-indigo-500 to-sky-400',
-            zenn: 'from-cyan-500 via-sky-500 to-blue-500',
-            discord: 'from-indigo-500 via-indigo-600 to-purple-600',
-            default: 'from-primary-500 via-accent-pink to-accent-cyan',
-          };
-          const glowMap = {
-            github: 'bg-slate-400/30',
-            linkedin: 'bg-indigo-400/30',
-            zenn: 'bg-cyan-300/30',
-            discord: 'bg-indigo-400/30',
-            default: 'bg-primary-300/30',
-          };
+          const icon = l.icon || 'default';
+          const grad = gradMap[icon] || gradMap[l.color] || gradMap.default;
           // @ts-ignore dyn key
-          const grad = gradientMap[icon] || gradientMap.default;
-          // @ts-ignore dyn key
-          const glow = glowMap[icon] || glowMap.default;
+          const glow = glowMap[icon] || glowMap[l.color] || glowMap.default;
           const svgs = {
             github: (
               <svg
@@ -63,25 +62,19 @@ import data from '../data/social.yml';
               </svg>
             ),
             zenn: (
-              <svg
-                viewBox="0 0 24 24"
-                class="h-8 w-8 text-white"
-                aria-hidden="true"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect
-                  x="3"
-                  y="3"
-                  width="18"
-                  height="18"
-                  rx="4"
-                  class="fill-white/10 stroke-white/30"
+              <svg viewBox="0 0 64 64" class="h-9 w-9" aria-hidden="true" role="img">
+                <defs>
+                  <linearGradient id="zennGradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#3EA8FF" />
+                    <stop offset="100%" stop-color="#0D7EE8" />
+                  </linearGradient>
+                </defs>
+                <rect x="6" y="6" width="52" height="52" rx="14" fill="url(#zennGradient)" />
+                <path
+                  fill="#FFFFFF"
+                  d="M22 20c-.9 0-1.6.7-1.6 1.6v4c0 .9.7 1.6 1.6 1.6h18.5L23 44.2c-.4.5-.6 1-.6 1.5v2.7c0 .9.7 1.6 1.6 1.6h24c.9 0 1.6-.7 1.6-1.6v-4c0-.9-.7-1.6-1.6-1.6H33.3L46 23.8c.3-.4.5-.9.5-1.4v-2.8c0-.9-.7-1.6-1.6-1.6H22Z"
                 />
-                <path d="M8 16h8l-8-8h8" class="stroke-white" />
+                <title>Zenn</title>
               </svg>
             ),
             discord: (
@@ -140,7 +133,6 @@ import data from '../data/social.yml';
       }
     </div>
 
-    <!-- 連絡先 -->
     <div class="section-card">
       <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
         <span class="text-accent-cyan">連絡先</span>
