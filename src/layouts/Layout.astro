@@ -7,46 +7,26 @@ export interface Props {
 const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
 ---
 
-<!doctype html>
-<html lang="ja" class="dark">
+<html lang="ja">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="description" content={description} />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>{title}</title>
-
-    <!-- フォント読み込み -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="description" content={description} />
   </head>
-  <body class="h-screen overflow-hidden bg-cyber-gradient font-sans text-white">
-    <a href="#main-content" class="skip-link">メインコンテンツへ移動</a>
-    <!-- 背景パーティクル -->
-    <div class="pointer-events-none fixed inset-0 overflow-hidden">
+  <body class="min-h-screen font-sans text-white antialiased">
+    <div class="fixed inset-0 -z-10">
       <div
-        class="absolute -right-40 -top-40 h-80 w-80 animate-float rounded-full bg-accent-cyan opacity-15 blur-3xl"
-      >
-      </div>
-      <div
-        class="absolute -left-40 top-1/3 h-64 w-64 animate-float rounded-full bg-accent-blue opacity-15 blur-3xl"
-        style="animation-delay: -1s;"
+        class="absolute inset-0 bg-gradient-to-br from-fuchsia-800 via-indigo-900 to-slate-950 opacity-90"
       >
       </div>
       <div
         class="absolute bottom-20 right-1/3 h-48 w-48 animate-float rounded-full bg-accent-neon opacity-15 blur-3xl"
-        style="animation-delay: -2s;"
+        style="animation-delay:-2s;"
       >
       </div>
     </div>
-
     <div class="relative z-10 flex h-screen">
-      <!-- サイドバー -->
       <aside
         class="flex w-72 flex-col border-r border-primary-600/30 bg-dark-900/80 shadow-2xl backdrop-blur-md"
       >
@@ -57,157 +37,120 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
             <div
               class="flex h-12 w-12 animate-glow items-center justify-center rounded-full bg-neon-gradient shadow-lg"
             >
-              <span class="text-xl font-bold text-white">i7</span>
+              <span class="text-xl font-bold">i7</span>
             </div>
             <div>
-              <h1 class="font-sans text-xl font-bold text-white">
-                i7s7-ymp
-                <span class="animate-pulse text-accent-cyan">◆</span>
+              <h1 class="font-sans text-xl font-bold">
+                i7s7-ymp <span class="animate-pulse text-accent-cyan">◆</span>
               </h1>
-              <p class="font-mono text-sm text-primary-400">./creative.portfolio</p>
+              <p class="font-mono text-sm text-primary-400">creative portfolio</p>
             </div>
           </div>
         </div>
-
         <nav class="flex-1 p-6" aria-label="Main navigation">
           <ul class="space-y-3">
             <li>
-              <a href="/" class="nav-link group" data-page="home">
-                <div class="flex items-center space-x-3">
-                  <div class="h-2 w-2 rounded-full bg-accent-neon group-hover:animate-pulse"></div>
-                  <span class="font-medium">Home</span>
-                </div>
-                <span class="font-mono text-xs text-primary-400 opacity-60">index.tsx</span>
-              </a>
+              <a href="/" class="nav-link group" data-page="home"
+                ><div class="flex items-center space-x-3">
+                  <div class="h-2 w-2 rounded-full bg-accent-neon group-hover:animate-pulse">
+                  </div><span class="font-medium">Home</span>
+                </div><span class="font-mono text-xs text-primary-400 opacity-60">ホーム</span></a
+              >
             </li>
             <li>
-              <a href="/support" class="nav-link group" data-page="support">
-                <div class="flex items-center space-x-3">
-                  <div class="h-2 w-2 rounded-full bg-accent-cyan group-hover:animate-pulse"></div>
-                  <span class="font-medium">Architecture</span>
-                </div>
-                <span class="font-mono text-xs text-primary-400 opacity-60">system.config</span>
-              </a>
+              <a href="/support" class="nav-link group" data-page="support"
+                ><div class="flex items-center space-x-3">
+                  <div class="h-2 w-2 rounded-full bg-accent-cyan group-hover:animate-pulse">
+                  </div><span class="font-medium">Architecture</span>
+                </div><span class="font-mono text-xs text-primary-400 opacity-60"
+                  >アーキテクチャ経験</span
+                ></a
+              >
             </li>
             <li>
-              <a href="/achievements" class="nav-link group" data-page="achievements">
-                <div class="flex items-center space-x-3">
-                  <div class="h-2 w-2 rounded-full bg-accent-gold group-hover:animate-pulse"></div>
-                  <span class="font-medium">Achievements</span>
-                </div>
-                <span class="font-mono text-xs text-primary-400 opacity-60">records.json</span>
-              </a>
+              <a href="/achievements" class="nav-link group" data-page="achievements"
+                ><div class="flex items-center space-x-3">
+                  <div class="h-2 w-2 rounded-full bg-accent-gold group-hover:animate-pulse">
+                  </div><span class="font-medium">Achievements</span>
+                </div><span class="font-mono text-xs text-primary-400 opacity-60">経歴</span></a
+              >
             </li>
             <li>
-              <a href="/social" class="nav-link group" data-page="social">
-                <div class="flex items-center space-x-3">
-                  <div class="h-2 w-2 rounded-full bg-accent-pink group-hover:animate-pulse"></div>
-                  <span class="font-medium">Social</span>
-                </div>
-                <span class="font-mono text-xs text-primary-400 opacity-60">connect.links</span>
-              </a>
+              <a href="/social" class="nav-link group" data-page="social"
+                ><div class="flex items-center space-x-3">
+                  <div class="h-2 w-2 rounded-full bg-accent-pink group-hover:animate-pulse">
+                  </div><span class="font-medium">Social</span>
+                </div><span class="font-mono text-xs text-primary-400 opacity-60">SNSリンク</span
+                ></a
+              >
             </li>
             <li>
-              <a href="/agent" class="nav-link group" data-page="agent">
-                <div class="flex items-center space-x-3">
-                  <div class="h-2 w-2 rounded-full bg-accent-blue group-hover:animate-pulse"></div>
-                  <span class="font-medium">AI Agent</span>
-                </div>
-                <span class="font-mono text-xs text-primary-400 opacity-60">agent.ai</span>
-              </a>
+              <a href="/agent" class="nav-link group" data-page="agent"
+                ><div class="flex items-center space-x-3">
+                  <div class="h-2 w-2 rounded-full bg-accent-blue group-hover:animate-pulse">
+                  </div><span class="font-medium">AI Agent</span>
+                </div><span class="font-mono text-xs text-primary-400 opacity-60">エージェント</span
+                ></a
+              >
             </li>
           </ul>
         </nav>
-
-        <!-- モードトグル削除（ライトモード廃止） -->
-
-        <!-- ステータス -->
         <div
           class="border-t border-primary-500/30 bg-gradient-to-r from-dark-900/50 to-primary-900/20 p-6"
         >
           <div class="space-y-2 font-mono text-xs">
             <div class="flex justify-between">
-              <span class="text-primary-300">status:</span>
-              <span class="text-accent-neon">online</span>
+              <span class="text-primary-300">status:</span><span class="text-accent-neon"
+                >online</span
+              >
             </div>
             <div class="flex justify-between">
-              <span class="text-primary-300">mode:</span>
-              <span class="text-accent-cyan">creative</span>
+              <span class="text-primary-300">mode:</span><span class="text-accent-cyan"
+                >creative</span
+              >
             </div>
             <div class="flex justify-between">
-              <span class="text-primary-300">vibe:</span>
-              <span class="text-accent-pink" id="current-time">loading...</span>
+              <span class="text-primary-300">vibe:</span><span
+                class="text-accent-pink"
+                id="current-time">--:--</span
+              >
             </div>
           </div>
         </div>
       </aside>
-
-      <!-- メインコンテンツ -->
       <main id="main-content" class="flex flex-1 flex-col overflow-hidden" tabindex="-1">
-        <!-- ヘッダー -->
         <header
           class="border-b border-primary-500/30 bg-dark-900/60 p-4 shadow-lg backdrop-blur-md"
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
-              <!-- ヘッダーインジケータ: 複数バリアント -->
               <div
                 id="headerIndicator"
                 class="header-indicator"
-                data-variant="eq"
                 role="img"
-                aria-label="system activity indicator"
-                title="Click / Tap to change indicator"
+                aria-label="system activity (wave)"
               >
-                <!-- Equalizer Variant -->
-                <div class="hi-variant hi-eq">
-                  <div class="eq-bar" style="--i:0"></div>
-                  <div class="eq-bar" style="--i:1"></div>
-                  <div class="eq-bar" style="--i:2"></div>
-                  <div class="eq-bar" style="--i:3"></div>
-                  <div class="eq-bar" style="--i:4"></div>
-                </div>
-                <!-- Orbit Variant -->
-                <div class="hi-variant hi-orbit" hidden>
-                  <div class="orbit-core"></div>
-                  <div class="orbit-ring r1"></div>
-                  <div class="orbit-ring r2"></div>
-                  <div class="orbit-dot d1"></div>
-                  <div class="orbit-dot d2"></div>
-                  <div class="orbit-dot d3"></div>
-                </div>
-                <!-- Wave Variant -->
-                <div class="hi-variant hi-wave" hidden>
-                  <svg viewBox="0 0 120 40" class="wave-svg" preserveAspectRatio="none">
-                    <path class="wave-path" d="M0 20 Q 15 5 30 20 T 60 20 T 90 20 T 120 20"></path>
-                    <path class="wave-path delayed" d="M0 20 Q 15 35 30 20 T 60 20 T 90 20 T 120 20"
-                    ></path>
-                  </svg>
-                </div>
-                <!-- Scan Variant -->
-                <div class="hi-variant hi-scan" hidden>
-                  <div class="scan-frame">
-                    <div class="scan-line"></div>
-                  </div>
-                </div>
+                <svg viewBox="0 0 120 40" class="wave-svg" preserveAspectRatio="none">
+                  <path class="wave-path" d="M0 20 Q 15 5 30 20 T 60 20 T 90 20 T 120 20"></path>
+                  <path class="wave-path delayed" d="M0 20 Q 15 35 30 20 T 60 20 T 90 20 T 120 20"
+                  ></path>
+                </svg>
               </div>
               <div
                 class="rounded-full border border-primary-500/30 bg-gradient-to-r from-primary-600/30 to-accent-cyan/30 px-4 py-2 backdrop-blur-sm"
               >
-                <span class="font-mono text-sm text-white">portfolio@city:~</span>
+                <span class="font-mono text-sm">portfolio@city:~</span>
               </div>
             </div>
             <div class="flex items-center space-x-4">
               <div
                 class="rounded-full border border-primary-500/30 bg-gradient-to-r from-accent-pink/20 to-primary-600/20 px-3 py-1 backdrop-blur-sm"
               >
-                <span class="font-mono text-sm text-accent-cyan" id="uptime">calculating...</span>
+                <span class="font-mono text-sm text-accent-cyan" id="uptime">0s active</span>
               </div>
             </div>
           </div>
         </header>
-
-        <!-- ページコンテンツ -->
         <div
           class="flex-1 overflow-auto bg-gradient-to-br from-dark-900/40 to-primary-950/40 p-8 backdrop-blur-sm"
         >
@@ -215,171 +158,42 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
         </div>
       </main>
     </div>
-
     <style>
+      body {
+        background: linear-gradient(135deg, #9333ea 0%, #6b21a8 50%, #3b0764 100%);
+        background-attachment: fixed;
+      }
       .nav-link {
         @apply block w-full rounded-lg p-4 text-left transition-all duration-300 hover:scale-105 hover:border hover:border-primary-500/30 hover:bg-gradient-to-r hover:from-primary-600/30 hover:to-accent-pink/30 hover:shadow-lg hover:backdrop-blur-md;
         color: rgba(255, 255, 255, 0.9);
       }
-
       .nav-link.active {
         @apply border border-primary-500/50 bg-gradient-to-r from-primary-600/40 to-accent-pink/40 shadow-xl backdrop-blur-md;
-        color: white;
+        color: #fff;
         box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
       }
-
-      /* カスタムスクロールバー */
       ::-webkit-scrollbar {
         width: 8px;
       }
-
       ::-webkit-scrollbar-track {
         background: rgba(15, 23, 42, 0.3);
         border-radius: 4px;
       }
-
       ::-webkit-scrollbar-thumb {
         background: linear-gradient(180deg, #a855f7, #ff6b9d);
         border-radius: 4px;
         border: 1px solid rgba(168, 85, 247, 0.3);
       }
-
       ::-webkit-scrollbar-thumb:hover {
         background: linear-gradient(180deg, #9333ea, #e91e63);
         box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
       }
-
-      /* グローバルスタイル */
-      body {
-        background: linear-gradient(135deg, #9333ea 0%, #6b21a8 50%, #3b0764 100%);
-        background-attachment: fixed;
-      }
-
-      /* ================= New Global Utility Styles (Geek + Pop) ================= */
-      :root {
-        --panel-border: rgba(168, 85, 247, 0.3);
-        --panel-bg-from: rgba(30, 27, 75, 0.6);
-        --panel-bg-to: rgba(15, 23, 42, 0.3);
-      }
-
-      .section-card {
-        @apply relative overflow-hidden rounded-2xl border p-6 shadow-xl backdrop-blur-md transition-all duration-300;
-        border-color: var(--panel-border);
-        background: linear-gradient(135deg, var(--panel-bg-from), var(--panel-bg-to));
-      }
-      .section-card:hover {
-        @apply scale-[1.01] shadow-2xl;
-      }
-      .section-card::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background:
-          radial-gradient(circle at 85% 15%, rgba(168, 85, 247, 0.25), transparent 60%),
-          radial-gradient(circle at 15% 85%, rgba(236, 72, 153, 0.15), transparent 55%);
-        opacity: 0.6;
-        pointer-events: none;
-      }
-      .panel-title {
-        @apply bg-gradient-to-r from-white to-primary-200 bg-clip-text text-xl font-bold text-transparent;
-      }
-      .terminal-caption {
-        @apply mb-2 flex items-center space-x-2 font-mono text-xs text-primary-400/80;
-      }
-      .badge-list {
-        @apply mt-4 flex flex-wrap gap-2;
-      }
-      .badge-pill {
-        @apply rounded-full border px-3 py-1 text-xs font-medium tracking-wide backdrop-blur-sm;
-        border-color: rgba(255, 255, 255, 0.2);
-        background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
-      }
-      .badge-pill:hover {
-        @apply border-primary-400 text-primary-200;
-      }
-      .subtle-divider {
-        @apply my-4 h-px bg-gradient-to-r from-transparent via-primary-600/40 to-transparent;
-      }
-      .stat-grid {
-        @apply grid gap-4 sm:grid-cols-2 lg:grid-cols-4;
-      }
-      .stat-card {
-        @apply section-card relative p-4 text-center shadow-md;
-      }
-      .stat-card h4 {
-        @apply mb-1 text-2xl font-bold text-accent-cyan;
-      }
-      .stat-card span {
-        @apply text-sm text-primary-200;
-      }
-      .gradient-heading-sm {
-        @apply bg-gradient-to-r from-accent-pink via-white to-accent-cyan bg-clip-text font-semibold text-transparent;
-      }
-      /* Scrollbar hiding utility (shared) */
-      .hide-scrollbar {
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-      }
-      .hide-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
-      /* SectionCard structural helpers (opt-in) */
-      .sc-header {
-        @apply mb-4 flex items-center justify-between;
-      }
-      .sc-body {
-        @apply space-y-3;
-      }
-      .sc-footer {
-        @apply mt-4;
-      }
-
-      /* Skip link accessibility */
-      .skip-link {
-        position: absolute;
-        left: 0;
-        top: -40px;
-        background: #111827;
-        color: #fff;
-        padding: 8px 16px;
-        z-index: 50;
-        border-radius: 0 0 6px 0;
-        transform: translateY(0);
-        transition: top 0.2s;
-      }
-      .skip-link:focus {
-        top: 0;
-        outline: 2px solid #22d3ee;
-      }
-
-      /* Focus styles */
-      .nav-link:focus-visible {
-        outline: 2px solid #22d3ee;
-        outline-offset: 2px;
-      }
-
-      /* Reduced motion preference */
-      @media (prefers-reduced-motion: reduce) {
-        .animate-glow,
-        .animate-float,
-        .animate-ping,
-        .animate-pulse,
-        .eq-bar {
-          animation: none !important;
-        }
-        * {
-          scroll-behavior: auto !important;
-        }
-      }
-      /* ========================================================================== */
-      /* ================= Header Indicator (Multi Variants) ================= */
       .header-indicator {
         --hi-border: rgba(255, 255, 255, 0.15);
         --hi-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        position: relative;
         min-width: 3.75rem;
         height: 1.4rem;
         padding: 0 0.4rem;
@@ -389,188 +203,35 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
         box-shadow:
           0 4px 12px -2px rgba(0, 0, 0, 0.45),
           0 0 0 1px rgba(168, 85, 247, 0.18) inset;
-        cursor: pointer;
         overflow: hidden;
         user-select: none;
       }
-      .header-indicator:focus-visible {
-        outline: 2px solid #22d3ee;
-        outline-offset: 2px;
-      }
-      .hi-variant {
-        position: relative;
-        display: none;
-        width: 100%;
-        height: 100%;
-      }
-      .header-indicator[data-variant='eq'] .hi-eq,
-      .header-indicator[data-variant='orbit'] .hi-orbit,
-      .header-indicator[data-variant='wave'] .hi-wave,
-      .header-indicator[data-variant='scan'] .hi-scan {
-        display: flex;
-      }
-      /* Equalizer */
-      .hi-eq {
-        align-items: flex-end;
-        gap: 0.35rem;
-        justify-content: center;
-      }
-      .eq-bar {
-        --bar-w: 0.32rem;
-        width: var(--bar-w);
-        border-radius: 9999px;
-        background: linear-gradient(180deg, #22d3ee, #a855f7 55%, #ec4899);
-        box-shadow:
-          0 0 6px -1px #22d3ee,
-          0 0 16px -4px #a855f7,
-          0 0 20px -6px #ec4899;
-        animation: eq-pulse 1.9s ease-in-out infinite;
-        animation-delay: calc(var(--i) * 0.18s);
-        position: relative;
-        overflow: hidden;
-      }
-      .eq-bar::after {
-        content: '';
-        position: absolute;
-        inset: 0 0 auto 0;
-        height: 38%;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), transparent);
-        filter: blur(2px);
-        opacity: 0.9;
-        mix-blend-mode: screen;
-      }
-      @keyframes eq-pulse {
-        0% {
-          height: 25%;
-          transform: translateY(75%);
-        }
-        20% {
-          height: 90%;
-          transform: translateY(10%);
-        }
-        40% {
-          height: 45%;
-          transform: translateY(55%);
-        }
-        60% {
-          height: 70%;
-          transform: translateY(30%);
-        }
-        80% {
-          height: 35%;
-          transform: translateY(65%);
-        }
-        100% {
-          height: 25%;
-          transform: translateY(75%);
-        }
-      }
-      /* Orbit */
-      .hi-orbit {
-        justify-content: center;
-        align-items: center;
-      }
-      .hi-orbit .orbit-core {
-        width: 0.55rem;
-        height: 0.55rem;
-        border-radius: 50%;
-        background: radial-gradient(circle, #a855f7 10%, #22d3ee 60%, transparent 70%);
-        box-shadow:
-          0 0 10px #a855f7,
-          0 0 18px -4px #22d3ee;
-        animation: core-pulse 3s ease-in-out infinite;
-      }
-      .orbit-ring {
-        position: absolute;
-        border: 1px solid rgba(168, 85, 247, 0.35);
-        border-radius: 50%;
-        animation: ring-spin linear infinite;
-      }
-      .orbit-ring.r1 {
-        width: 1.2rem;
-        height: 1.2rem;
-        animation-duration: 6s;
-      }
-      .orbit-ring.r2 {
-        width: 1.6rem;
-        height: 1.6rem;
-        animation-duration: 9s;
-        border-color: rgba(34, 211, 238, 0.35);
-      }
-      .orbit-dot {
-        position: absolute;
-        width: 0.35rem;
-        height: 0.35rem;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #ec4899, #a855f7);
-        box-shadow: 0 0 6px #ec4899;
-        animation: orbit 5s linear infinite;
-      }
-      .orbit-dot.d1 {
-        animation-duration: 5s;
-      }
-      .orbit-dot.d2 {
-        animation-duration: 7s;
-      }
-      .orbit-dot.d3 {
-        animation-duration: 9s;
-      }
-      @keyframes ring-spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-      @keyframes orbit {
-        0% {
-          transform: rotate(0deg) translateX(0.8rem) rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg) translateX(0.8rem) rotate(-360deg);
-        }
-      }
-      @keyframes core-pulse {
-        0%,
-        100% {
-          transform: scale(0.9);
-          opacity: 0.9;
-        }
-        50% {
-          transform: scale(1.15);
-          opacity: 1;
-        }
-      }
-      /* Wave */
-      .hi-wave {
-        align-items: center;
-        justify-content: center;
-      }
       .wave-svg {
-        width: 100%;
-        height: 100%;
-        overflow: visible;
+        width: 3.2rem;
+        height: 0.9rem;
+        stroke-width: 2;
+        fill: none;
       }
       .wave-path {
-        fill: none;
-        stroke: url(#);
-        stroke-width: 3;
-        stroke-linecap: round;
+        stroke: linear-gradient(90deg, #22d3ee, #a855f7, #ec4899);
         stroke: #22d3ee;
         filter: drop-shadow(0 0 4px #22d3ee);
-        animation: wave-draw 2.8s ease-in-out infinite;
+        stroke-linecap: round;
+        stroke-dasharray: 60 80;
+        animation: wave-move 3.2s ease-in-out infinite;
+        opacity: 0.85;
       }
       .wave-path.delayed {
-        stroke: #ec4899;
-        filter: drop-shadow(0 0 4px #ec4899);
-        animation-delay: 1.2s;
+        animation-delay: -1.6s;
+        stroke: #a855f7;
+        filter: drop-shadow(0 0 4px #a855f7);
+        opacity: 0.55;
       }
-      @keyframes wave-draw {
+      @keyframes wave-move {
         0% {
-          stroke-dasharray: 5 140;
+          stroke-dasharray: 60 80;
           stroke-dashoffset: 0;
-          opacity: 0.2;
+          opacity: 0.85;
         }
         40% {
           stroke-dasharray: 55 90;
@@ -586,165 +247,64 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
           opacity: 0.2;
         }
       }
-      /* Scan */
-      .hi-scan {
-        align-items: center;
-        justify-content: center;
-      }
-      .scan-frame {
-        position: relative;
-        width: 3.2rem;
-        height: 0.8rem;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 0.4rem;
-        overflow: hidden;
-        background: linear-gradient(
-          90deg,
-          rgba(168, 85, 247, 0.15),
-          rgba(34, 211, 238, 0.08),
-          rgba(168, 85, 247, 0.15)
-        );
-      }
-      .scan-line {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), transparent);
-        width: 35%;
-        animation: scan-move 2.2s cubic-bezier(0.68, -0.4, 0.32, 1.4) infinite;
-      }
-      @keyframes scan-move {
-        0% {
-          transform: translateX(-120%);
-        }
-        55% {
-          transform: translateX(180%);
-        }
-        100% {
-          transform: translateX(180%);
-        }
-      }
-      /* Reduced motion adjustments for variants */
       @media (prefers-reduced-motion: reduce) {
-        .orbit-ring,
-        .orbit-dot,
-        .eq-bar,
-        .wave-path,
-        .scan-line {
+        .wave-path {
           animation: none !important;
         }
       }
-      /* ========================================================================== */
     </style>
-
     <script>
-      // 現在時刻の更新
+      const startTime = Date.now();
       function updateTime() {
         const now = new Date();
-        const timeString = now.toLocaleTimeString('ja-JP', {
+        const t = now.toLocaleTimeString('ja-JP', {
           hour12: false,
           hour: '2-digit',
           minute: '2-digit',
         });
-        const timeElement = document.getElementById('current-time');
-        if (timeElement) {
-          timeElement.textContent = timeString;
-        }
+        const el = document.getElementById('current-time');
+        if (el) el.textContent = t;
       }
-
-      // アップタイムの更新
-      const startTime = Date.now();
       function updateUptime() {
         const elapsed = Date.now() - startTime;
-        const minutes = Math.floor(elapsed / (1000 * 60));
-        const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
-        const uptimeElement = document.getElementById('uptime');
-        if (uptimeElement) {
-          if (minutes > 0) {
-            uptimeElement.textContent = `${minutes}m active`;
-          } else {
-            uptimeElement.textContent = `${seconds}s active`;
-          }
-        }
+        const m = Math.floor(elapsed / 60000);
+        const s = Math.floor((elapsed % 60000) / 1000);
+        const el = document.getElementById('uptime');
+        if (el) el.textContent = m > 0 ? `${m}m active` : `${s}s active`;
       }
-
-      // ナビゲーションのアクティブ状態
       function updateActiveNav() {
-        const currentPath = window.location.pathname;
-        document.querySelectorAll('.nav-link').forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === currentPath) {
-            link.classList.add('active');
-          }
+        const p = window.location.pathname;
+        document.querySelectorAll('.nav-link').forEach(a => {
+          a.classList.remove('active');
+          if (a.getAttribute('href') === p) a.classList.add('active');
         });
       }
-
-      // パーティクルアニメーション
       function createParticles() {
         const container = document.querySelector('.fixed.inset-0');
         if (!container) return;
-
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 4; i++) {
           setTimeout(() => {
-            const particle = document.createElement('div');
-            particle.className =
-              'absolute w-1 h-1 bg-accent-cyan rounded-full opacity-60 animate-ping';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 2 + 's';
-            container.appendChild(particle);
-
-            setTimeout(() => {
-              particle.remove();
-            }, 4000);
-          }, i * 1000);
+            const d = document.createElement('div');
+            d.className = 'absolute w-1 h-1 bg-accent-cyan rounded-full opacity-60 animate-ping';
+            d.style.left = Math.random() * 100 + '%';
+            d.style.top = Math.random() * 100 + '%';
+            d.style.animationDelay = Math.random() * 2 + 's';
+            container.appendChild(d);
+            setTimeout(() => d.remove(), 4000);
+          }, i * 900);
         }
       }
-
-      // インジケータバリアント切替
-      const indicatorVariants = ['eq', 'orbit', 'wave', 'scan'];
-      function cycleIndicator() {
-        const el = document.getElementById('headerIndicator');
-        if (!el) return;
-        const attr = el.getAttribute('data-variant');
-        const current = attr && indicatorVariants.includes(attr) ? attr : 'eq';
-        const idx = indicatorVariants.indexOf(current);
-        const nextIdx = (idx + 1) % indicatorVariants.length;
-        const next = indicatorVariants[nextIdx] || 'eq';
-        el.setAttribute('data-variant', next as string);
-        // tooltip 更新
-        el.title = `Indicator variant: ${next} (click to change)`;
-      }
-
-      // イベントリスナー
       document.addEventListener('DOMContentLoaded', () => {
-        // ライトモード廃止のためテーマ適用処理削除（常時ダーク）
         updateTime();
         updateUptime();
         updateActiveNav();
-
         setInterval(updateTime, 1000);
         setInterval(updateUptime, 1000);
         setInterval(createParticles, 8000);
-
-        // 初回パーティクル生成
         createParticles();
-
-        // インジケータクリック切替
-        const indicator = document.getElementById('headerIndicator');
-        if (indicator) {
-          indicator.addEventListener('click', cycleIndicator);
-          indicator.addEventListener('keypress', e => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              cycleIndicator();
-            }
-          });
-          indicator.tabIndex = 0;
-        }
       });
-
-      // ページ遷移時のアクティブ状態更新
       document.addEventListener('astro:page-load', updateActiveNav);
     </script>
   </body>
 </html>
+<div

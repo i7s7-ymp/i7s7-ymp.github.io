@@ -3,11 +3,11 @@ import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 ---
 
-<Layout title="Social Media - i7s7-ymp Portfolio">
+<Layout title="ソーシャル - i7s7-ymp Portfolio">
   <div class="space-y-8">
     <PageHeader
-      title="Social Media & Links"
-      subtitle="Connect with me across platforms"
+      title="Social Links"
+      subtitle="各プラットフォームへのリンク"
       icon="🌐"
       iconBgClass="bg-gradient-to-r from-accent-blue to-accent-cyan"
     >
@@ -42,9 +42,7 @@ import PageHeader from '../components/PageHeader.astro';
             <p class="text-sm text-gray-400">@i7s7-ymp</p>
           </div>
         </div>
-        <p class="text-sm text-primary-200">
-          オープンソースプロジェクトとポートフォリオのコードを公開中
-        </p>
+        <p class="text-sm text-primary-200">OSSプロジェクトとポートフォリオコードを公開</p>
         <div class="mt-3 flex flex-wrap gap-4 font-mono text-xs text-primary-300">
           <span>50+ repos</span>
           <span>100+ commits</span>
@@ -74,7 +72,7 @@ import PageHeader from '../components/PageHeader.astro';
             <p class="text-sm text-gray-400">@i7s7_ymp</p>
           </div>
         </div>
-        <p class="text-sm text-primary-200">技術情報の発信とコミュニティとの交流</p>
+        <p class="text-sm text-primary-200">技術情報発信とコミュニティ交流</p>
         <div class="mt-3 flex flex-wrap gap-4 font-mono text-xs text-primary-300">
           <span>Tech tweets</span>
           <span>Daily updates</span>
@@ -103,7 +101,7 @@ import PageHeader from '../components/PageHeader.astro';
             <p class="text-sm text-gray-400">i7s7-ymp</p>
           </div>
         </div>
-        <p class="text-sm text-primary-200">プロフェッショナルなネットワークとキャリア情報</p>
+        <p class="text-sm text-primary-200">プロフェッショナルネットワーク</p>
         <div class="mt-3 flex flex-wrap gap-4 font-mono text-xs text-primary-300">
           <span>Professional</span>
           <span>Networking</span>
@@ -128,7 +126,7 @@ import PageHeader from '../components/PageHeader.astro';
             <p class="text-sm text-gray-400">@i7s7_ymp</p>
           </div>
         </div>
-        <p class="text-sm text-primary-200">技術記事の投稿と知識の共有</p>
+        <p class="text-sm text-primary-200">技術記事投稿と知識共有</p>
         <div class="mt-3 flex flex-wrap gap-4 font-mono text-xs text-primary-300">
           <span>Tech articles</span>
           <span>Tutorials</span>
@@ -157,7 +155,7 @@ import PageHeader from '../components/PageHeader.astro';
             <p class="text-sm text-gray-400">i7s7-ymp</p>
           </div>
         </div>
-        <p class="text-sm text-primary-200">技術的な質問への回答とコミュニティ貢献</p>
+        <p class="text-sm text-primary-200">Q&A貢献と知見共有</p>
         <div class="mt-3 flex flex-wrap gap-4 font-mono text-xs text-primary-300">
           <span>Q&A</span>
           <span>Community</span>
@@ -194,7 +192,7 @@ import PageHeader from '../components/PageHeader.astro';
             <p class="text-sm text-gray-400">blog.i7s7-ymp.dev</p>
           </div>
         </div>
-        <p class="text-sm text-primary-200">技術ブログとプロジェクトの詳細解説</p>
+        <p class="text-sm text-primary-200">技術ブログ & 詳細解説</p>
         <div class="mt-3 flex flex-wrap gap-4 font-mono text-xs text-primary-300">
           <span>Deep dives</span>
           <span>Tutorials</span>
@@ -205,7 +203,7 @@ import PageHeader from '../components/PageHeader.astro';
     <!-- Contact Information -->
     <div class="section-card">
       <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
-        <span class="text-accent-cyan">&gt;</span><span>contact_info --show</span>
+        <span class="text-accent-cyan">連絡先</span>
       </h3>
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div class="space-y-2">
@@ -227,41 +225,6 @@ import PageHeader from '../components/PageHeader.astro';
             <span class="text-green-400">🕒</span>
             <span class="text-gray-300">JST (UTC+9)</span>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- GitHubアクティビティ風 -->
-    <div class="section-card">
-      <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
-        <span class="text-accent-cyan">&gt;</span><span
-          >git log --oneline --graph --since="1 week ago"</span
-        >
-      </h3>
-      <div class="space-y-2 font-mono text-xs text-primary-200">
-        <div class="flex items-center space-x-2">
-          <span class="text-green-400">●</span>
-          <span class="text-yellow-400">a1b2c3d</span>
-          <span class="text-gray-300">Update portfolio design system</span>
-          <span class="text-gray-500">2 days ago</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <span class="text-green-400">●</span>
-          <span class="text-yellow-400">e4f5g6h</span>
-          <span class="text-gray-300">Add new blog post about React patterns</span>
-          <span class="text-gray-500">3 days ago</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <span class="text-green-400">●</span>
-          <span class="text-yellow-400">i7j8k9l</span>
-          <span class="text-gray-300">Contribute to open source project</span>
-          <span class="text-gray-500">5 days ago</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <span class="text-green-400">●</span>
-          <span class="text-yellow-400">m0n1o2p</span>
-          <span class="text-gray-300">Share tech insights on Twitter</span>
-          <span class="text-gray-500">1 week ago</span>
         </div>
       </div>
     </div>
