@@ -105,9 +105,9 @@ const agentData = data;
               </div>
             </div>
             <h3 class="text-xl font-bold text-white">i7s7-ymp</h3>
-            {/* @ts-ignore */}
+            {/* 役割リスト */}
             {
-              agentData.avatar.roles.map((r, i) => (
+              agentData.avatar.roles.map((r: any, i: number) => (
                 <p class={i === 0 ? 'text-primary-300' : 'text-sm text-primary-400'}>{r}</p>
               ))
             }
@@ -120,9 +120,8 @@ const agentData = data;
         >
           <h4 class="mb-3 font-semibold text-white">💡 よくある質問</h4>
           <div class="space-y-2">
-            {/* @ts-ignore */}
             {
-              agentData.quickQuestions.map(q => (
+              agentData.quickQuestions.map((q: any) => (
                 <button class="quick-question w-full rounded-lg bg-primary-600/20 p-3 text-left text-sm text-primary-200 transition-colors hover:bg-primary-600/30">
                   {q}
                 </button>
