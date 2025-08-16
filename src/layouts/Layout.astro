@@ -14,7 +14,7 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
     <title>{title}</title>
     <meta name="description" content={description} />
   </head>
-  <body class="min-h-screen font-sans text-white antialiased">
+  <body class="min-h-screen overflow-x-hidden font-sans text-white antialiased">
     <div class="fixed inset-0 -z-10">
       <div
         class="absolute inset-0 bg-gradient-to-br from-fuchsia-800 via-indigo-900 to-slate-950 opacity-90"
@@ -43,7 +43,7 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
               <h1 class="font-sans text-xl font-bold">
                 i7s7-ymp <span class="animate-pulse text-accent-cyan">◆</span>
               </h1>
-              <p class="font-mono text-sm text-primary-400">creative portfolio</p>
+              <p class="font-mono text-sm text-primary-400">portfolio</p>
             </div>
           </div>
         </div>
@@ -118,7 +118,11 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
           </div>
         </div>
       </aside>
-      <main id="main-content" class="flex flex-1 flex-col overflow-hidden" tabindex="-1">
+      <main
+        id="main-content"
+        class="flex flex-1 flex-col overflow-hidden overflow-x-hidden"
+        tabindex="-1"
+      >
         <header
           class="border-b border-primary-500/30 bg-dark-900/60 p-4 shadow-lg backdrop-blur-md"
         >
@@ -131,15 +135,39 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
                 aria-label="system activity (wave)"
               >
                 <svg viewBox="0 0 120 40" class="wave-svg" preserveAspectRatio="none">
-                  <path class="wave-path" d="M0 20 Q 15 5 30 20 T 60 20 T 90 20 T 120 20"></path>
-                  <path class="wave-path delayed" d="M0 20 Q 15 35 30 20 T 60 20 T 90 20 T 120 20"
-                  ></path>
+                  <defs>
+                    <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#22d3ee"></stop>
+                      <stop offset="50%" stop-color="#a855f7"></stop>
+                      <stop offset="100%" stop-color="#ec4899"></stop>
+                    </linearGradient>
+                  </defs>
+                  <g class="wave-track">
+                    <path
+                      class="wave stroke-layer"
+                      stroke="url(#waveGradient)"
+                      d="M0 20 Q 15 5 30 20 T 60 20 T 90 20 T 120 20"></path>
+                    <path
+                      class="wave stroke-layer"
+                      stroke="url(#waveGradient)"
+                      transform="translate(120 0)"
+                      d="M0 20 Q 15 5 30 20 T 60 20 T 90 20 T 120 20"></path>
+                    <path
+                      class="wave glow-layer"
+                      stroke="url(#waveGradient)"
+                      d="M0 20 Q 15 5 30 20 T 60 20 T 90 20 T 120 20"></path>
+                    <path
+                      class="wave glow-layer"
+                      stroke="url(#waveGradient)"
+                      transform="translate(120 0)"
+                      d="M0 20 Q 15 5 30 20 T 60 20 T 90 20 T 120 20"></path>
+                  </g>
                 </svg>
               </div>
               <div
                 class="rounded-full border border-primary-500/30 bg-gradient-to-r from-primary-600/30 to-accent-cyan/30 px-4 py-2 backdrop-blur-sm"
               >
-                <span class="font-mono text-sm">portfolio@city:~</span>
+                <span class="font-mono text-sm">portfolio</span>
               </div>
             </div>
             <div class="flex items-center space-x-4">
@@ -152,7 +180,7 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
           </div>
         </header>
         <div
-          class="flex-1 overflow-auto bg-gradient-to-br from-dark-900/40 to-primary-950/40 p-8 backdrop-blur-sm"
+          class="flex-1 overflow-auto overflow-x-hidden bg-gradient-to-br from-dark-900/40 to-primary-950/40 p-8 backdrop-blur-sm"
         >
           <slot />
         </div>
@@ -162,6 +190,10 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
       body {
         background: linear-gradient(135deg, #9333ea 0%, #6b21a8 50%, #3b0764 100%);
         background-attachment: fixed;
+      }
+      html,
+      body {
+        overflow-x: hidden;
       }
       .nav-link {
         @apply block w-full rounded-lg p-4 text-left transition-all duration-300 hover:scale-105 hover:border hover:border-primary-500/30 hover:bg-gradient-to-r hover:from-primary-600/30 hover:to-accent-pink/30 hover:shadow-lg hover:backdrop-blur-md;
@@ -206,47 +238,84 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
         overflow: hidden;
         user-select: none;
       }
+      /* ==== Continuous One-Direction Wave ============================= */
       .wave-svg {
         width: 3.2rem;
-        height: 0.9rem;
-        stroke-width: 2;
+        height: 0.95rem;
         fill: none;
+        overflow: visible;
       }
-      .wave-path {
-        stroke: linear-gradient(90deg, #22d3ee, #a855f7, #ec4899);
-        stroke: #22d3ee;
-        filter: drop-shadow(0 0 4px #22d3ee);
+      .wave-track {
+        animation: wave-slide 4s linear infinite;
+      }
+      .wave {
         stroke-linecap: round;
-        stroke-dasharray: 60 80;
-        animation: wave-move 3.2s ease-in-out infinite;
-        opacity: 0.85;
+        vector-effect: non-scaling-stroke;
       }
-      .wave-path.delayed {
-        animation-delay: -1.6s;
-        stroke: #a855f7;
-        filter: drop-shadow(0 0 4px #a855f7);
-        opacity: 0.55;
+      .stroke-layer {
+        stroke-width: 2;
+        filter: drop-shadow(0 0 4px #22d3ee) drop-shadow(0 0 10px rgba(34, 211, 238, 0.35));
       }
-      @keyframes wave-move {
+      .glow-layer {
+        stroke-width: 5;
+        opacity: 0.12;
+        filter: blur(2px) drop-shadow(0 0 6px #a855f7);
+      }
+      @keyframes wave-slide {
         0% {
-          stroke-dasharray: 60 80;
-          stroke-dashoffset: 0;
-          opacity: 0.85;
-        }
-        40% {
-          stroke-dasharray: 55 90;
-          opacity: 1;
-        }
-        70% {
-          stroke-dasharray: 10 135;
-          opacity: 0.8;
+          transform: translateX(0);
         }
         100% {
-          stroke-dasharray: 5 140;
-          stroke-dashoffset: -30;
-          opacity: 0.2;
+          transform: translateX(-120px);
         }
       }
+      /* Subtle sheen */
+      .header-indicator {
+        position: relative;
+      }
+      .header-indicator::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          120deg,
+          transparent 0 40%,
+          rgba(255, 255, 255, 0.18) 55%,
+          transparent 70%
+        );
+        mix-blend-mode: screen;
+        animation: sheen-move 5.2s linear infinite;
+        opacity: 0.55;
+        pointer-events: none;
+      }
+      @keyframes sheen-move {
+        0% {
+          transform: translateX(-40%);
+        }
+        100% {
+          transform: translateX(40%);
+        }
+      }
+      /* Safety: prevent hover scale from creating horizontal overflow on ultra-wide */
+      .section-card {
+        max-width: 100%;
+      }
+      .section-card:hover {
+        overflow: hidden;
+      }
+      #main-content {
+        overflow-x: hidden;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .wave-group,
+        .wave-path,
+        .wave-svg,
+        .header-indicator::after {
+          animation: none !important;
+          filter: none !important;
+        }
+      }
+      /* =============================================================== */
       @media (prefers-reduced-motion: reduce) {
         .wave-path {
           animation: none !important;
@@ -307,4 +376,3 @@ const { title, description = 'Pop City Portfolio - i7s7-ymp' } = Astro.props;
     </script>
   </body>
 </html>
-<div
