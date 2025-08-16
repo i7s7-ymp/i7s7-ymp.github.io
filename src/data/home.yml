@@ -1,0 +1,76 @@
+header:
+  title: 'i7s7-ymp のユニバースへようこそ'
+  subtitle: 'クリエイティブ × コード ✨'
+  tags:
+    - label: '#Creative'
+      color: cyan
+    - label: '#Developer'
+      color: blue
+    - label: '#Technology'
+      color: neon
+profile:
+  heading: 'プロフィール'
+  items:
+    - key: name
+      value: '"i7s7-ymp"'
+      valueClass: text-white
+    - key: role
+      value: '"フルスタックエンジニア"'
+      valueClass: text-accent-pink
+    - key: location
+      value: '"東京 🇯🇵"'
+      valueClass: text-accent-cyan
+    - key: status
+      value: '"未来を構築中"'
+      valueClass: text-accent-neon animate-pulse
+    - key: mood
+      value: '"YOASOBI energy ⚡"'
+      valueClass: text-accent-gold
+skills:
+  heading: 'スキル'
+  bars:
+    - label: 'JavaScript / TypeScript'
+      percent: 90
+      barClass: 'from-accent-neon to-accent-cyan'
+      percentClass: text-accent-neon
+    - label: 'React / Vue / Astro'
+      percent: 85
+      barClass: 'from-accent-pink to-primary-400'
+      percentClass: text-accent-pink
+    - label: 'Node.js / Python'
+      percent: 80
+      barClass: 'from-accent-gold to-accent-coral'
+      percentClass: text-accent-gold
+    - label: 'Docker / AWS'
+      percent: 75
+      barClass: 'from-accent-cyan to-primary-600'
+      percentClass: text-accent-cyan
+activities:
+  heading: '最近の活動'
+  liveLabel: LIVE
+  logs:
+    - date: 2024.12
+      color: neon
+      text: 'デザインシステムを刷新・導入'
+      ping: true
+    - date: 2024.11
+      color: cyan
+      text: 'コンポーネント構造の最適化'
+    - date: 2024.10
+      color: pink
+      text: 'ドキュメント整備とアップデート'
+    - date: 2024.09
+      color: coral
+      text: 'レスポンシブレイアウト改善'
+creativeBanner:
+  title: '✨ クリエイティブ × デベロッパー ✨'
+  emojis:
+    - icon: '🎨'
+      delay: 0s
+    - icon: '💻'
+      delay: 0.2s
+    - icon: '🚀'
+      delay: 0.4s
+    - icon: '✨'
+      delay: 0.6s
+  tagline: 'コードと創造性で未来をハックする'

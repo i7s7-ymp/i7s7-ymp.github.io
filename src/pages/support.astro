@@ -1,20 +1,20 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
+// @ts-ignore
+import data from '../data/support.yml';
 ---
 
 <Layout title="アーキテクチャ - i7s7-ymp Portfolio">
   <div class="space-y-10">
     <PageHeader
-      title="アーキテクチャ経験"
-      subtitle="クラウド & アプリケーション設計"
-      icon="🧱"
-      iconBgClass="bg-gradient-to-r from-accent-cyan to-accent-blue"
+      title={data.header.title}
+      subtitle={data.header.subtitle}
+      icon={data.header.icon}
+      iconBgClass={data.header.iconBgClass}
     >
       <div slot="extra" class="flex flex-wrap gap-2 text-xs">
-        <span class="badge-pill">cloud</span>
-        <span class="badge-pill">scalability</span>
-        <span class="badge-pill">design</span>
+        {data.header.tags.map((t: string) => <span class="badge-pill">{t}</span>)}
       </div>
     </PageHeader>
 
@@ -24,136 +24,29 @@ import PageHeader from '../components/PageHeader.astro';
         <h3 class="mb-4 text-lg font-semibold text-green-400">クラウドアーキテクチャ事例</h3>
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <!-- AWS マイクロサービス -->
-          <div class="section-card p-4">
-            <div class="mb-3">
-              <h4 class="font-semibold text-blue-400">AWS マイクロサービス構成</h4>
-              <span class="text-xs text-yellow-400">AWS • Kubernetes • Docker</span>
-            </div>
-            <div class="mb-3 rounded bg-gray-800 p-3">
-              <pre
-                class="text-xs text-green-400">
-┌─────────────────────────────────────────┐
-│  CloudFront + Route53                   │
-├─────────────────────────────────────────┤
-│  ALB → EKS Cluster                      │
-│  ├─ API Gateway Service                 │
-│  ├─ User Service (RDS)                  │
-│  ├─ Order Service (DynamoDB)            │
-│  └─ Payment Service (ElastiCache)       │
-├─────────────────────────────────────────┤
-│  Monitoring: CloudWatch + X-Ray         │
-└─────────────────────────────────────────┘</pre>
-            </div>
-            <p class="text-sm text-gray-300">
-              AWSを活用したマイクロサービスアーキテクチャ。EKSとAPI
-              Gatewayによるスケーラブルな構成。
-            </p>
-            <div class="mt-3 flex flex-wrap gap-2">
-              <span class="rounded bg-blue-400/20 px-2 py-1 text-xs text-blue-400">AWS</span>
-              <span class="rounded bg-green-400/20 px-2 py-1 text-xs text-green-400"
-                >Kubernetes</span
-              >
-              <span class="rounded bg-orange-400/20 px-2 py-1 text-xs text-orange-400"
-                >Microservices</span
-              >
-            </div>
-          </div>
-
-          <!-- GCP データパイプライン -->
-          <div class="section-card p-4">
-            <div class="mb-3">
-              <h4 class="font-semibold text-yellow-400">GCP データパイプライン</h4>
-              <span class="text-xs text-yellow-400">GCP • BigQuery • Dataflow</span>
-            </div>
-            <div class="mb-3 rounded bg-gray-800 p-3">
-              <pre
-                class="text-xs text-green-400">
-┌─────────────────────────────────────────┐
-│  Cloud Storage (Data Lake)              │
-├─────────────────────────────────────────┤
-│  Dataflow → BigQuery                    │
-│  ├─ ETL Processing                      │
-│  ├─ Real-time Analytics                 │
-│  └─ ML Pipeline (Vertex AI)             │
-├─────────────────────────────────────────┤
-│  Visualization: Data Studio             │
-└─────────────────────────────────────────┘</pre>
-            </div>
-            <p class="text-sm text-gray-300">
-              GCPベースのデータパイプライン。リアルタイム分析とML統合のアーキテクチャ。
-            </p>
-            <div class="mt-3 flex flex-wrap gap-2">
-              <span class="rounded bg-yellow-400/20 px-2 py-1 text-xs text-yellow-400">GCP</span>
-              <span class="rounded bg-purple-400/20 px-2 py-1 text-xs text-purple-400"
-                >BigQuery</span
-              >
-              <span class="rounded bg-cyan-400/20 px-2 py-1 text-xs text-cyan-400">ML Pipeline</span
-              >
-            </div>
-          </div>
-
-          <!-- Azure DevOps -->
-          <div class="section-card p-4">
-            <div class="mb-3">
-              <h4 class="font-semibold text-cyan-400">Azure DevOps 統合</h4>
-              <span class="text-xs text-yellow-400">Azure • AKS • DevOps</span>
-            </div>
-            <div class="mb-3 rounded bg-gray-800 p-3">
-              <pre
-                class="text-xs text-green-400">
-┌─────────────────────────────────────────┐
-│  Azure DevOps Pipelines                 │
-├─────────────────────────────────────────┤
-│  AKS Cluster                            │
-│  ├─ App Gateway                         │
-│  ├─ Container Instances                 │
-│  └─ Azure SQL Database                  │
-├─────────────────────────────────────────┤
-│  Monitoring: Azure Monitor              │
-└─────────────────────────────────────────┘</pre>
-            </div>
-            <p class="text-sm text-gray-300">
-              Azure環境でのCI/CD統合アーキテクチャ。AKSとDevOpsパイプラインの組み合わせ。
-            </p>
-            <div class="mt-3 flex flex-wrap gap-2">
-              <span class="rounded bg-cyan-400/20 px-2 py-1 text-xs text-cyan-400">Azure</span>
-              <span class="rounded bg-green-400/20 px-2 py-1 text-xs text-green-400">AKS</span>
-              <span class="rounded bg-orange-400/20 px-2 py-1 text-xs text-orange-400">CI/CD</span>
-            </div>
-          </div>
-
-          <!-- サーバーレス -->
-          <div class="section-card p-4">
-            <div class="mb-3">
-              <h4 class="font-semibold text-purple-400">サーバーレス構成</h4>
-              <span class="text-xs text-yellow-400">AWS Lambda • API Gateway • DynamoDB</span>
-            </div>
-            <div class="mb-3 rounded bg-gray-800 p-3">
-              <pre
-                class="text-xs text-green-400">
-┌─────────────────────────────────────────┐
-│  API Gateway + CloudFront               │
-├─────────────────────────────────────────┤
-│  Lambda Functions                       │
-│  ├─ Authentication (Cognito)            │
-│  ├─ Business Logic                      │
-│  └─ Data Processing                     │
-├─────────────────────────────────────────┤
-│  Storage: DynamoDB + S3                 │
-└─────────────────────────────────────────┘</pre>
-            </div>
-            <p class="text-sm text-gray-300">
-              完全サーバーレス構成のWebアプリケーション。コスト効率とスケーラビリティを両立。
-            </p>
-            <div class="mt-3 flex flex-wrap gap-2">
-              <span class="rounded bg-purple-400/20 px-2 py-1 text-xs text-purple-400"
-                >Serverless</span
-              >
-              <span class="rounded bg-yellow-400/20 px-2 py-1 text-xs text-yellow-400">Lambda</span>
-              <span class="rounded bg-blue-400/20 px-2 py-1 text-xs text-blue-400">DynamoDB</span>
-            </div>
-          </div>
+          {
+            data.cloudCases.map((c: any) => (
+              <div class="section-card p-4">
+                <div class="mb-3">
+                  <h4 class={`font-semibold text-${c.colors[0]}-400`}>{c.title}</h4>
+                  <span class="text-xs text-yellow-400">{c.stack}</span>
+                </div>
+                <div class="mb-3 rounded bg-gray-800 p-3">
+                  <pre class="text-xs text-green-400">{c.diagram}</pre>
+                </div>
+                <p class="text-sm text-gray-300">{c.desc}</p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  {c.tags.map((t: string, i: number) => (
+                    <span
+                      class={`rounded bg-${c.colors[i]}-400/20 px-2 py-1 text-xs text-${c.colors[i]}-400`}
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))
+          }
         </div>
       </div>
 
@@ -162,51 +55,17 @@ import PageHeader from '../components/PageHeader.astro';
         <h3 class="mb-4 text-lg font-semibold text-green-400">アプリケーションパターン</h3>
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <!-- Clean Architecture -->
-          <div class="section-card p-4">
-            <h4 class="mb-2 font-semibold text-green-400">Clean Architecture</h4>
-            <div class="mb-2 rounded bg-gray-800 p-2">
-              <pre
-                class="text-xs text-gray-300">
-Controllers
-  ↓
-Use Cases
-  ↓
-Entities
-  ↓
-Infrastructure</pre>
-            </div>
-            <p class="text-xs text-gray-400">依存関係逆転による保守性の高いアーキテクチャ</p>
-          </div>
-
-          <!-- CQRS Pattern -->
-          <div class="section-card p-4">
-            <h4 class="mb-2 font-semibold text-blue-400">CQRS Pattern</h4>
-            <div class="mb-2 rounded bg-gray-800 p-2">
-              <pre
-                class="text-xs text-gray-300">
-Commands ─┐
-          ├─ Write DB
-Queries ──┘
-          ├─ Read DB
-Events ───┘</pre>
-            </div>
-            <p class="text-xs text-gray-400">読み取りと書き込みの分離によるパフォーマンス最適化</p>
-          </div>
-
-          <!-- Event Sourcing -->
-          <div class="section-card p-4">
-            <h4 class="mb-2 font-semibold text-purple-400">Event Sourcing</h4>
-            <div class="mb-2 rounded bg-gray-800 p-2">
-              <pre class="text-xs text-gray-300">
-Events Store
-  ↓
-Projections
-  ↓
-View Models</pre>
-            </div>
-            <p class="text-xs text-gray-400">イベント駆動による監査可能なシステム設計</p>
-          </div>
+          {
+            data.appPatterns.map((p: any) => (
+              <div class="section-card p-4">
+                <h4 class={`mb-2 font-semibold text-${p.color}-400`}>{p.name}</h4>
+                <div class="mb-2 rounded bg-gray-800 p-2">
+                  <pre class="text-xs text-gray-300">{p.diagram}</pre>
+                </div>
+                <p class="text-xs text-gray-400">{p.desc}</p>
+              </div>
+            ))
+          }
         </div>
       </div>
 
@@ -214,81 +73,21 @@ View Models</pre>
       <div class="section-card">
         <h3 class="mb-3 text-lg font-semibold text-green-400">技術スタック</h3>
         <div class="grid grid-cols-2 gap-6 md:grid-cols-4">
-          <!-- クラウドプロバイダー -->
-          <div>
-            <h4 class="mb-3 text-sm font-semibold text-yellow-400">Cloud Providers</h4>
-            <div class="space-y-2">
-              <div class="flex items-center space-x-2">
-                <div class="h-2 w-2 rounded bg-orange-400"></div>
-                <span class="text-sm text-gray-300">AWS</span>
+          {
+            data.techStack.categories.map((cat: any) => (
+              <div>
+                <h4 class="mb-3 text-sm font-semibold text-yellow-400">{cat.title}</h4>
+                <div class="space-y-2">
+                  {cat.items.map((it: any) => (
+                    <div class="flex items-center space-x-2">
+                      <div class={`h-2 w-2 rounded bg-${it.color}-400`} />
+                      <span class="text-sm text-gray-300">{it.name}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div class="flex items-center space-x-2">
-                <div class="h-2 w-2 rounded bg-blue-400"></div>
-                <span class="text-sm text-gray-300">Google Cloud</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="h-2 w-2 rounded bg-cyan-400"></div>
-                <span class="text-sm text-gray-300">Azure</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- コンテナ・オーケストレーション -->
-          <div>
-            <h4 class="mb-3 text-sm font-semibold text-yellow-400">Container</h4>
-            <div class="space-y-2">
-              <div class="flex items-center space-x-2">
-                <div class="h-2 w-2 rounded bg-blue-400"></div>
-                <span class="text-sm text-gray-300">Docker</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="h-2 w-2 rounded bg-purple-400"></div>
-                <span class="text-sm text-gray-300">Kubernetes</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="h-2 w-2 rounded bg-green-400"></div>
-                <span class="text-sm text-gray-300">Helm</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- データベース -->
-          <div>
-            <h4 class="mb-3 text-sm font-semibold text-yellow-400">Database</h4>
-            <div class="space-y-2">
-              <div class="flex items-center space-x-2">
-                <div class="h-2 w-2 rounded bg-blue-400"></div>
-                <span class="text-sm text-gray-300">PostgreSQL</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="h-2 w-2 rounded bg-orange-400"></div>
-                <span class="text-sm text-gray-300">DynamoDB</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="h-2 w-2 rounded bg-red-400"></div>
-                <span class="text-sm text-gray-300">Redis</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 監視・運用 -->
-          <div>
-            <h4 class="mb-3 text-sm font-semibold text-yellow-400">Monitoring</h4>
-            <div class="space-y-2">
-              <div class="flex items-center space-x-2">
-                <div class="h-2 w-2 rounded bg-orange-400"></div>
-                <span class="text-sm text-gray-300">Prometheus</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="h-2 w-2 rounded bg-yellow-400"></div>
-                <span class="text-sm text-gray-300">Grafana</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="h-2 w-2 rounded bg-purple-400"></div>
-                <span class="text-sm text-gray-300">Jaeger</span>
-              </div>
-            </div>
-          </div>
+            ))
+          }
         </div>
       </div>
     </div>

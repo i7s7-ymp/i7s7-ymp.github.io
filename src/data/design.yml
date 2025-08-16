@@ -1,0 +1,49 @@
+header:
+  title: Design System Guide
+  subtitle: Utilities, tokens & usage conventions
+  icon: 🎨
+  iconBgClass: bg-gradient-to-r from-accent-pink to-accent-purple
+  tags:
+    - ui
+    - consistency
+    - reference
+containers:
+  - name: section-card
+    desc: 汎用セクション枠。グラデ背景 + border + blur + hover拡大。
+    sample: Sample content inside section-card.
+  - name: stat-card
+    desc: KPI/数字用の小型カード。section-card継承。
+    stat: 123
+    statLabel: Example
+typography:
+  tokens:
+    - panel-title: ページ/大見出し用グラデテキスト
+    - gradient-heading-sm: 小見出し用グラデテキスト
+    - terminal-caption: コマンド行風キャプション
+  examples:
+    panelTitle: Panel Title Example
+    gradientSmall: Gradient Heading Small Example
+    terminal: echo "hello"
+badges:
+  list:
+    - open source
+    - cloud
+    - frontend
+    - ai/ml
+  note: 'badge-pill: 丸型・半透明グラデ背景。hover で境界色強調。'
+scrollDemoLines: 12
+accentPalette:
+  - pink
+  - cyan
+  - neon
+  - gold
+  - coral
+  - blue
+  - indigo
+  - purple
+principles:
+  - 再利用できるレイアウト枠は section-card / stat-card を優先
+  - 色は Tailwind 拡張パレット (accent-*) を組み合わせて使用
+  - 動的に付与するクラスは safelist へ登録
+  - 不要になったクラスは速やかに削除し CSS バンドルを抑制
+  - アクセシビリティ: グラデテキストは十分なコントラスト背景上で使用

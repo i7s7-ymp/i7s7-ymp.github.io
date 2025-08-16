@@ -1,15 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
+// @ts-ignore
+import data from '../data/agent.yml';
+const agentData = data;
 ---
 
 <Layout title="AI Agent - i7s7-ymp Portfolio">
   <div class="flex h-full min-h-0 flex-col">
     <PageHeader
-      title="AI Agent Chat"
-      subtitle="i7s7-ympのパーソナルAIアシスタント"
-      icon="🤖"
-      statusLabel="オンライン"
+      title={agentData.header.title}
+      subtitle={agentData.header.subtitle}
+      icon={agentData.header.icon}
+      statusLabel={agentData.header.statusLabel}
+      iconBgClass={agentData.header.iconBgClass}
     />
 
     <!-- メインチャットエリア -->
@@ -101,8 +105,12 @@ import PageHeader from '../components/PageHeader.astro';
               </div>
             </div>
             <h3 class="text-xl font-bold text-white">i7s7-ymp</h3>
-            <p class="text-primary-300">Full Stack Developer</p>
-            <p class="text-sm text-primary-400">Creative Technologist</p>
+            {/* @ts-ignore */}
+            {
+              agentData.avatar.roles.map((r, i) => (
+                <p class={i === 0 ? 'text-primary-300' : 'text-sm text-primary-400'}>{r}</p>
+              ))
+            }
           </div>
         </div>
 
@@ -112,26 +120,14 @@ import PageHeader from '../components/PageHeader.astro';
         >
           <h4 class="mb-3 font-semibold text-white">💡 よくある質問</h4>
           <div class="space-y-2">
-            <button
-              class="quick-question w-full rounded-lg bg-primary-600/20 p-3 text-left text-sm text-primary-200 transition-colors hover:bg-primary-600/30"
-            >
-              経歴について教えて
-            </button>
-            <button
-              class="quick-question w-full rounded-lg bg-primary-600/20 p-3 text-left text-sm text-primary-200 transition-colors hover:bg-primary-600/30"
-            >
-              得意な技術スタックは？
-            </button>
-            <button
-              class="quick-question w-full rounded-lg bg-primary-600/20 p-3 text-left text-sm text-primary-200 transition-colors hover:bg-primary-600/30"
-            >
-              最近のプロジェクトは？
-            </button>
-            <button
-              class="quick-question w-full rounded-lg bg-primary-600/20 p-3 text-left text-sm text-primary-200 transition-colors hover:bg-primary-600/30"
-            >
-              趣味や興味のあることは？
-            </button>
+            {/* @ts-ignore */}
+            {
+              agentData.quickQuestions.map(q => (
+                <button class="quick-question w-full rounded-lg bg-primary-600/20 p-3 text-left text-sm text-primary-200 transition-colors hover:bg-primary-600/30">
+                  {q}
+                </button>
+              ))
+            }
           </div>
         </div>
 
@@ -142,38 +138,23 @@ import PageHeader from '../components/PageHeader.astro';
   </div>
 
   <script>
+    // YAMLデータ (Astroフロントマターから直接利用できないので再参照)
+    // @ts-ignore
+    const data = agentData;
+  </script>
+  <script is:inline>
     // チャット機能の詳細な実装
     const chatMessages = document.getElementById('chat-messages');
-    const chatInput = document.getElementById('chat-input') as HTMLInputElement;
+    const chatInput = document.getElementById('chat-input');
     const sendBtn = document.getElementById('send-btn');
     const quickQuestions = document.querySelectorAll('.quick-question');
 
     // i7s7-ympの詳細な経歴データ
-    const profileData = {
-      career: {
-        title: 'エンジニアとしてのキャリア',
-        content:
-          'Webエンジニアとして5年以上の経験があります。フロントエンドからバックエンド、インフラまで幅広く携わっています。特にReact、Vue.js、Node.js、Pythonを得意としており、最近はAI/ML分野にも注力しています。',
-      },
-      skills: {
-        title: '技術スキル',
-        content:
-          '【Frontend】React, Vue.js, TypeScript, Tailwind CSS\n【Backend】Node.js, Python, Go, PostgreSQL\n【Infrastructure】Docker, Kubernetes, AWS, GCP\n【AI/ML】TensorFlow, PyTorch, OpenAI API\n【Others】Git, CI/CD, Agile development',
-      },
-      projects: {
-        title: '最近のプロジェクト',
-        content:
-          '最近は、このポートフォリオサイト（Astro + TypeScript + Tailwind）の開発や、AIを活用したコードレビューボット、自動タスクスケジューラーなどを手がけています。すべてのプロジェクトでユーザー体験を重視した設計を心がけています。',
-      },
-      interests: {
-        title: '趣味・興味',
-        content:
-          '新しい技術の探求が大好きです。特にWeb3、AR/VR、AIの可能性に興味があります。プライベートでは音楽制作、ゲーム開発、写真撮影も楽しんでいます。クリエイティブな活動と技術を組み合わせることに情熱を注いでいます。',
-      },
-    };
+    // @ts-ignore
+    const profileData = (window && window.agentProfileData) || data.profileData;
 
     // AIレスポンス生成
-    function generateResponse(userMessage: string): string {
+    function generateResponse(userMessage) {
       const message = userMessage.toLowerCase();
 
       if (message.includes('経歴') || message.includes('キャリア') || message.includes('仕事')) {
@@ -193,17 +174,11 @@ import PageHeader from '../components/PageHeader.astro';
       } else if (message.includes('趣味') || message.includes('興味') || message.includes('好き')) {
         return profileData.interests.content;
       } else if (message.includes('こんにちは') || message.includes('はじめまして')) {
-        return 'こんにちは！i7s7-ympです。Webエンジニア兼クリエイターとして活動しています。技術的なことから趣味のことまで、何でもお気軽に聞いてくださいね！✨';
+        return data.responses.hello;
       } else if (message.includes('ありがとう')) {
-        return 'どういたしまして！他にも何か知りたいことがあれば、いつでもお聞きください😊';
+        return data.responses.thanks;
       } else {
-        const responses = [
-          '面白い質問ですね！もう少し詳しく教えていただけますか？',
-          'その分野について詳しく話せます。具体的にはどの部分が気になりますか？',
-          '技術的なことなら何でもお答えできます！',
-          'プログラミングやクリエイティブな作業について話すのが大好きです！',
-          'どんなプロジェクトや技術に興味をお持ちですか？',
-        ];
+        const responses = data.responses.fallback;
         return (
           responses[Math.floor(Math.random() * responses.length)] ||
           '申し訳ありませんが、うまく回答できませんでした。別の質問をしてみてください。'
@@ -212,7 +187,7 @@ import PageHeader from '../components/PageHeader.astro';
     }
 
     // メッセージを追加
-    function addMessage(content: string, isUser: boolean = false) {
+    function addMessage(content, isUser = false) {
       if (!chatMessages) return;
 
       const messageDiv = document.createElement('div');
@@ -290,7 +265,7 @@ import PageHeader from '../components/PageHeader.astro';
     // クイック質問
     quickQuestions.forEach(btn => {
       btn.addEventListener('click', () => {
-        const question = (btn as HTMLElement).textContent;
+        const question = btn.textContent;
         if (question && chatInput) {
           chatInput.value = question;
           sendMessage();

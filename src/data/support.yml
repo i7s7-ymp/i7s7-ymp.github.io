@@ -1,0 +1,144 @@
+header:
+  title: アーキテクチャ経験
+  subtitle: クラウド & アプリケーション設計
+  icon: 🧱
+  iconBgClass: bg-gradient-to-r from-accent-cyan to-accent-blue
+  tags: [cloud, scalability, design]
+cloudCases:
+  - id: aws-microservices
+    title: AWS マイクロサービス構成
+    stack: AWS • Kubernetes • Docker
+    diagram: |-
+      ┌─────────────────────────────────────────┐
+      │  CloudFront + Route53                   │
+      ├─────────────────────────────────────────┤
+      │  ALB → EKS Cluster                      │
+      │  ├─ API Gateway Service                 │
+      │  ├─ User Service (RDS)                  │
+      │  ├─ Order Service (DynamoDB)            │
+      │  └─ Payment Service (ElastiCache)       │
+      ├─────────────────────────────────────────┤
+      │  Monitoring: CloudWatch + X-Ray         │
+      └─────────────────────────────────────────┘
+    desc: AWSを活用したマイクロサービスアーキテクチャ。EKSとAPI Gatewayによるスケーラブルな構成。
+    tags: [AWS, Kubernetes, Microservices]
+    colors: [blue, green, orange]
+  - id: gcp-data-pipeline
+    title: GCP データパイプライン
+    stack: GCP • BigQuery • Dataflow
+    diagram: |-
+      ┌─────────────────────────────────────────┐
+      │  Cloud Storage (Data Lake)              │
+      ├─────────────────────────────────────────┤
+      │  Dataflow → BigQuery                    │
+      │  ├─ ETL Processing                      │
+      │  ├─ Real-time Analytics                 │
+      │  └─ ML Pipeline (Vertex AI)             │
+      ├─────────────────────────────────────────┤
+      │  Visualization: Data Studio             │
+      └─────────────────────────────────────────┘
+    desc: GCPベースのデータパイプライン。リアルタイム分析とML統合のアーキテクチャ。
+    tags: [GCP, BigQuery, ML Pipeline]
+    colors: [yellow, purple, cyan]
+  - id: azure-devops
+    title: Azure DevOps 統合
+    stack: Azure • AKS • DevOps
+    diagram: |-
+      ┌─────────────────────────────────────────┐
+      │  Azure DevOps Pipelines                 │
+      ├─────────────────────────────────────────┤
+      │  AKS Cluster                            │
+      │  ├─ App Gateway                         │
+      │  ├─ Container Instances                 │
+      │  └─ Azure SQL Database                  │
+      ├─────────────────────────────────────────┤
+      │  Monitoring: Azure Monitor              │
+      └─────────────────────────────────────────┘
+    desc: Azure環境でのCI/CD統合アーキテクチャ。AKSとDevOpsパイプラインの組み合わせ。
+    tags: [Azure, AKS, CI/CD]
+    colors: [cyan, green, orange]
+  - id: serverless
+    title: サーバーレス構成
+    stack: AWS Lambda • API Gateway • DynamoDB
+    diagram: |-
+      ┌─────────────────────────────────────────┐
+      │  API Gateway + CloudFront               │
+      ├─────────────────────────────────────────┤
+      │  Lambda Functions                       │
+      │  ├─ Authentication (Cognito)            │
+      │  ├─ Business Logic                      │
+      │  └─ Data Processing                     │
+      ├─────────────────────────────────────────┤
+      │  Storage: DynamoDB + S3                 │
+      └─────────────────────────────────────────┘
+    desc: 完全サーバーレス構成のWebアプリケーション。コスト効率とスケーラビリティを両立。
+    tags: [Serverless, Lambda, DynamoDB]
+    colors: [purple, yellow, blue]
+appPatterns:
+  - name: Clean Architecture
+    color: green
+    diagram: |-
+      Controllers
+        ↓
+      Use Cases
+        ↓
+      Entities
+        ↓
+      Infrastructure
+    desc: 依存関係逆転による保守性の高いアーキテクチャ
+  - name: CQRS Pattern
+    color: blue
+    diagram: |-
+      Commands ─┐
+                ├─ Write DB
+      Queries ──┘
+                ├─ Read DB
+      Events ───┘
+    desc: 読み取りと書き込みの分離によるパフォーマンス最適化
+  - name: Event Sourcing
+    color: purple
+    diagram: |-
+      Events Store
+        ↓
+      Projections
+        ↓
+      View Models
+    desc: イベント駆動による監査可能なシステム設計
+techStack:
+  categories:
+    - title: Cloud Providers
+      color: yellow
+      items:
+        - name: AWS
+          color: orange
+        - name: Google Cloud
+          color: blue
+        - name: Azure
+          color: cyan
+    - title: Container
+      color: yellow
+      items:
+        - name: Docker
+          color: blue
+        - name: Kubernetes
+          color: purple
+        - name: Helm
+          color: green
+    - title: Database
+      color: yellow
+      items:
+        - name: PostgreSQL
+          color: blue
+        - name: DynamoDB
+          color: orange
+        - name: Redis
+          color: red
+    - title: Monitoring
+      color: yellow
+      items:
+        - name: Prometheus
+          color: orange
+        - name: Grafana
+          color: yellow
+        - name: Jaeger
+          color: purple

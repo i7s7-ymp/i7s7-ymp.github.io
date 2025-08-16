@@ -1,0 +1,56 @@
+header:
+  title: 'Social Links'
+  subtitle: '各プラットフォームへのリンク'
+  tags: [open source, network, community]
+links:
+  - name: GitHub
+    url: https://github.com/i7s7-ymp
+    username: '@i7s7-ymp'
+    desc: OSSプロジェクトとポートフォリオコードを公開
+    stats: ['50+ repos', '100+ commits', Active]
+    color: gray
+    icon: github
+  - name: Twitter
+    url: https://twitter.com/i7s7_ymp
+    username: '@i7s7_ymp'
+    desc: 技術情報発信とコミュニティ交流
+    stats: [Tech tweets, Daily updates]
+    color: blue
+    icon: twitter
+  - name: LinkedIn
+    url: https://linkedin.com/in/i7s7-ymp
+    username: i7s7-ymp
+    desc: プロフェッショナルネットワーク
+    stats: [Professional, Networking]
+    color: blue-600
+    icon: linkedin
+  - name: Qiita
+    url: https://qiita.com/i7s7_ymp
+    username: '@i7s7_ymp'
+    desc: 技術記事投稿と知識共有
+    stats: [Tech articles, Tutorials]
+    color: green
+    icon: qiita
+  - name: Stack Overflow
+    url: https://stackoverflow.com/users/i7s7-ymp
+    username: i7s7-ymp
+    desc: Q&A貢献と知見共有
+    stats: [Q&A, Community]
+    color: orange
+    icon: stackoverflow
+  - name: Tech Blog
+    url: https://blog.i7s7-ymp.dev
+    username: blog.i7s7-ymp.dev
+    desc: 技術ブログ & 詳細解説
+    stats: [Deep dives, Tutorials]
+    color: purple
+    icon: blog
+contacts:
+  - icon: 📧
+    value: contact@i7s7-ymp.dev
+  - icon: 🌐
+    value: https://i7s7-ymp.github.io
+  - icon: 📍
+    value: Tokyo, Japan
+  - icon: 🕒
+    value: JST (UTC+9)
