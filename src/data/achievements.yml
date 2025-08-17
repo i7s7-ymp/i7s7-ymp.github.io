@@ -7,39 +7,92 @@ header:
 # certifications[]: code, title, level, color
 
 timeline:
-  - role: 'シニア フルスタック デベロッパー'
-    company: 'Tech Startup Inc.'
-    period: '2022 - 現在'
-    color: cyan
+  - role: 'DLPシステム開発'
+    company: 'Nifty Co.'
+    period: '2025'
+    color: gold
     points:
-      - 'React / Node.js による Web / API 設計と実装'
-      - 'CI/CD・Observability (GitHub Actions, CloudWatch) 整備'
-      - 'チーム標準 (コーディング規約 / Release Flow) 策定'
-    badges: [React, Node.js, AWS, TypeScript]
-  - role: 'フロントエンド デベロッパー'
-    company: 'Digital Agency Ltd.'
-    period: '2021 - 2022'
+      - 'セキュリティNW間のファイル移動機能を実装'
+      - 'ファイルアクセス権限の設計・実装を担当'
+    badges: [Python, Google Cloud]
+  - role: '社員ID生成システム刷新'
+    company: 'Nifty Co.'
+    period: '2025'
     color: pink
     points:
-      - 'LP / コーポレート / Webアプリ UI 実装 & パフォーマンス改善'
-      - 'Lighthouse 指標の最適化 (LCP / CLS / TTI)'
-      - 'デザインシステム初期基盤整備'
-    badges: [Vue.js, Nuxt.js, SCSS]
-  - role: 'ジュニア デベロッパー'
-    company: 'Software Solutions Co.'
-    period: '2020 - 2021'
+      - '承認イベントからIDを自動生成するシステムを再構築'
+      - '拡張性を考慮したアプリケーション設計を担当。'
+    badges: [Go, AWS]
+  - role: 'NiftyTechDay2025 への登壇'
+    company: 'Nifty Co.'
+    period: '2025'
+    color: cyan
+    points:
+      - 'LTでメタバース業務有用性評価プロジェクトの成果を発表'
+      - '参加者アンケートで最高の評価を獲得'
+    badges: [.]
+  - role: 'NiftyTechBook#2 の執筆'
+    company: 'Nifty Co.'
+    period: '2024'
+    color: cyan
+    points:
+      - 'メタバースの業務有用性評価プロジェクトを執筆'
+      - '実験の条件と解析方法を詳細に記載'
+      - '技術書典18で200部頒布し、採用活動に貢献'
+    badges: [.]
+  - role: 'メタバースの業務有用性評価プロジェクト'
+    company: 'Nifty Co.'
+    period: '2024 - 2025'
+    color: cyan
+    points:
+      - '社員向け認証基盤の開発'
+      - 'クラウドプロキシサービス管理者'
+      - 'SaaSアプリケーション調達'
+    badges: [Python, Google Cloud, MQ3]
+  - role: 'スケジュールデータのパイプラインシステム開発'
+    company: 'Nifty Co.'
+    period: '2024'
+    color: gold
+    points:
+      - '社員向け認証基盤の開発'
+      - 'クラウドプロキシサービス管理者'
+      - 'SaaSアプリケーション調達'
+    badges: [Go, AWS]
+  - role: '社員情報のパイプラインシステム開発'
+    company: 'Nifty Co.'
+    period: '2023'
+    color: gold
+    points:
+      - '個人情報を含むデータパイプラインの設計と実装'
+      - 'イベント駆動アーキテクチャ'
+    badges: [Python, AWS]
+  - role: 'システムアドミニストレーター'
+    company: 'Nifty Co.'
+    period: '2022 - 2025'
+    color: gold
+    points:
+      - '社員向け認証基盤の開発'
+      - 'クラウドプロキシサービス管理者'
+      - 'SaaSアプリケーション調達'
+    badges: [Go, Python, AWS, Microsoft, Zscaler, SSO]
+  - role: '@nifty IDとのIDフェデレーションプロジェクト'
+    company: 'Nifty Co.'
+    period: '2020'
+    color: gold
+    points:
+      - 'ニフティ会員基盤とのID統合'
+      - 'ログイン時のブロック機能を開発'
+    badges: [ROR, PostgreSQL]
+  - role: 'ポイントサイト デベロッパー'
+    company: 'Nifty Co.'
+    period: '2019 - 2022'
     color: gold
     points:
       - '既存プロダクトのバグ改修と保守'
       - 'TDD / コードレビュー文化の導入学習'
-      - '小規模機能のエンドツーエンド実装'
-    badges: [JavaScript, PHP, MySQL]
+    badges: [ROR, PostgreSQL, AWS]
 certifications:
   - code: AWS
     title: AWS認定 ソリューションアーキテクト
-    level: Associate / 2023
+    level: Associate / 2020
     color: orange
-  - code: JS
-    title: JavaScript デベロッパー認定
-    level: Advanced / 2022
-    color: blue

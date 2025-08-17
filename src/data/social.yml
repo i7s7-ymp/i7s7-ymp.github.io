@@ -6,35 +6,35 @@ links:
     url: https://github.com/i7s7-ymp
     username: '@i7s7-ymp'
     desc: OSSプロジェクトとポートフォリオコードを公開
-    stats: ['50+ repos', '100+ commits', Active]
+    stats: ['20+ repos', '100+ commits', Active]
     color: gray
     icon: github
   - name: LinkedIn
-    url: https://linkedin.com/in/i7s7-ymp
-    username: i7s7-ymp
-    desc: プロフェッショナルネットワーク
+    url: https://www.linkedin.com/in/hiroki-yamashita-579520330
+    username: 'i7s7-ymp'
+    desc: ビジネスネットワーク
     stats: [Professional, Networking]
     color: blue-600
     icon: linkedin
   - name: Zenn
     # NOTE: 推定プロフィールURL。必要ならユーザー名に合わせて編集してください。
-    url: https://zenn.dev/i7s7_ymp
-    username: '@i7s7_ymp'
+    url: https://zenn.dev/ymp
+    username: 'i7s7-ymp'
     desc: 技術記事投稿と知識共有 (Zenn)
     stats: [Tech articles, Tutorials]
     color: cyan
     icon: zenn
   - name: Discord
     # TODO: 必要なら有効な招待リンクかユーザー名に変更してください
-    url: https://discord.com/users/your-id
-    username: '@your-discord'
-    desc: コミュニティチャット / コラボレーション
+    url: https://discord.com/users/805757324119638037
+    username: 'i7s7_ymp'
+    desc: コミュニティチャット
     stats: [Chat, Community]
     color: indigo
     icon: discord
 contacts:
   - icon: 📧
-    value: contact@i7s7-ymp.dev
+    value: ruler0510@gmail.com
   - icon: 🌐
     value: https://i7s7-ymp.github.io
   - icon: 📍
