@@ -1,80 +1,357 @@
 ---
-interface Props {
+export interface Props {
   title: string;
   subtitle?: string;
-  icon?: string; // 絵文字やテキスト
-  iconBgClass?: string; // アイコン背景用クラス
-  iconTextClass?: string; // アイコンテキスト用クラス
-  statusLabel?: string;
-  statusDotClass?: string; // ステータスドット色
-  statusTextClass?: string; // ステータステキスト色
-  gradientFrom?: string; // 背景グラデーション開始色クラス
-  gradientTo?: string; // 背景グラデーション終了色クラス
-  class?: string; // 追加ラッパークラス
+  icon?: string; // emoji 文字列 (例: rocket, cloud など)
+  iconBgClass?: string; // Tailwind 用クラス
 }
 
-const {
-  title,
-  subtitle,
-  icon = '✨',
-  iconBgClass = 'bg-neon-gradient',
-  iconTextClass = 'text-2xl font-bold text-white',
-  statusLabel,
-  statusDotClass = 'bg-accent-neon',
-  statusTextClass = 'text-slate-400',
-  gradientFrom = 'from-primary-700/20',
-  gradientTo = 'to-accent-cyan/20',
-  class: extraClass = '',
-} = Astro.props as Props;
+const { title, subtitle = '', icon = '🚀', iconBgClass = 'bg-accent-cyan' } = Astro.props as Props;
+
+// シンプルな emoji name → 実絵文字 変換 (拡張しやすいマップ)
+const emojiMap: Record<string, string> = {
+  rocket: '🚀',
+  cloud: '☁️',
+  db: '🗄️',
+  lock: '🔐',
+  gear: '⚙️',
+  light: '💡',
+  star: '⭐',
+};
+const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も表示
 ---
 
-<div
-  class={`rounded-2xl border border-primary-600/30 bg-gradient-to-r ${gradientFrom} ${gradientTo} p-6 shadow-2xl backdrop-blur-md relative overflow-hidden ${extraClass}`}
->
-  <div class="${extraClass.includes('cyber-sign') ? 'relative' : ''} flex items-center space-x-4">
-    <div
-      class={`flex h-16 w-16 animate-glow items-center justify-center rounded-2xl shadow-lg ${iconBgClass}`}
-    >
-      <span class={iconTextClass}>{icon}</span>
+<div class="page-header cyber mb-10">
+  <div class="ph-inner">
+    <div class="ph-icon-shell">
+      <div class={`ph-icon-core ${iconBgClass}`} aria-hidden="true">
+        <span class="ph-icon" role="img">{displayIcon}</span>
+        <span class="ph-icon-glow"></span>
+        <span class="ph-icon-ring"></span>
+      </div>
     </div>
-    <div>
-      <h1
-        data-text={title}
-        class={`text-3xl font-bold ${extraClass.includes('cyber-sign') ? 'text-white tracking-wider' : 'bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent'}`}
-      >
-        {title}
-      </h1>
-      {
-        subtitle && !extraClass.includes('cyber-sign') && (
-          <p class="text-lg text-slate-300">{subtitle}</p>
-        )
-      }
-      {
-        subtitle && extraClass.includes('cyber-sign') && (
-          <p class="long text-lg text-slate-300">
-            <span>{subtitle}</span>
-          </p>
-        )
-      }
+    <div class="ph-text">
+      <h2 class="ph-title" data-text={title}>{title}</h2>
+      {subtitle && <p class="ph-sub">{subtitle}</p>}
+      <div class="ph-accent-bar" aria-hidden="true">
+        <span class="ab ab-l"></span>
+        <span class="ab ab-c"></span>
+        <span class="ab ab-r"></span>
+      </div>
     </div>
-    {
-      statusLabel && (
-        <div class="ml-auto flex items-center space-x-2">
-          <div class={`h-3 w-3 animate-pulse rounded-full ${statusDotClass}`} />
-          <span class={`text-sm ${statusTextClass}`}>{statusLabel}</span>
-        </div>
-      )
-    }
   </div>
-  <div class="mt-4">
-    <slot name="extra" />
-  </div>
-  {extraClass.includes('cyber-sign') && <div class="sign-bottom-bar" />}
+  <div class="ph-bg fx-scan" aria-hidden="true"></div>
+  <div class="ph-bg fx-grid" aria-hidden="true"></div>
+  <div class="ph-bg fx-glow" aria-hidden="true"></div>
 </div>
 
 <style>
-  /* スロットが空の場合非表示 */
-  div > .mt-4:empty {
-    display: none;
+  /* === Cyberpunk Header === */
+  .page-header.cyber {
+    position: relative;
+    padding: 1.25rem 1.4rem 1.35rem 1.35rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.78), rgba(30, 41, 59, 0.55)) padding-box;
+    overflow: hidden;
+    backdrop-filter: blur(8px) saturate(125%);
+    box-shadow:
+      0 4px 14px -6px rgba(0, 0, 0, 0.65),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+  /* 背景の過剰な回転コンポジットを削減 */
+  .page-header.cyber::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 25%, rgba(56, 189, 248, 0.18), transparent 65%),
+      radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.18), transparent 60%);
+    mix-blend-mode: overlay;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .page-header.cyber::after {
+    content: none;
+  }
+  .ph-inner {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    gap: 1.6rem;
+    z-index: 2;
+  }
+  .ph-icon-shell {
+    display: flex;
+    align-items: center;
+  }
+  .ph-icon-core {
+    position: relative;
+    width: 66px;
+    height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: linear-gradient(140deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04));
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.07),
+      0 3px 8px -2px rgba(0, 0, 0, 0.6),
+      0 0 14px -5px rgba(56, 189, 248, 0.45);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .ph-icon-core::before,
+  .ph-icon-core::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+  .ph-icon-core::before {
+    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.55), transparent 65%);
+    opacity: 0.75;
+  }
+  .ph-icon-core::after {
+    background: linear-gradient(
+      120deg,
+      rgba(56, 189, 248, 0.28),
+      rgba(236, 72, 153, 0.18),
+      rgba(139, 92, 246, 0.28)
+    );
+    opacity: 0.45;
+  }
+  .ph-icon-ring {
+    position: absolute;
+    inset: 0;
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    border-radius: inherit;
+    box-shadow: 0 0 8px -2px rgba(255, 255, 255, 0.45) inset;
+    animation: ringPulse 9s ease-in-out infinite;
+    opacity: 0.45;
+  }
+  .ph-icon-glow {
+    position: absolute;
+    inset: -30%;
+    background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.4), transparent 75%);
+    filter: blur(18px);
+    opacity: 0.35;
+    animation: iconGlow 8s ease-in-out infinite;
+  }
+  .ph-icon {
+    font-size: 1.9rem;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.4));
+  }
+  .ph-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+  .ph-title {
+    position: relative;
+    margin: 0;
+    font-size: clamp(1.55rem, 1.05rem + 1.5vw, 2.15rem);
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    line-height: 1.1;
+    background: linear-gradient(90deg, #e2f6ff, #3abff0 30%, #d960a8 70%, #c59bff);
+    -webkit-background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.55));
+  }
+  .ph-title::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #fff;
+    opacity: 0.04;
+    transform: translate(1px, 0.5px);
+    pointer-events: none;
+  }
+  .ph-sub {
+    margin: 0.5rem 0 0;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.6px;
+    color: #b7c4d7;
+    text-transform: uppercase;
+    display: inline-flex;
+    gap: 0.45rem;
+    align-items: center;
+    position: relative;
+  }
+  .ph-sub::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: linear-gradient(135deg, #38bdf8, #ec4899);
+    border-radius: 2px;
+    box-shadow:
+      0 0 4px #38bdf8,
+      0 0 6px #ec4899;
+    opacity: 0.85;
+  }
+  .ph-accent-bar {
+    position: relative;
+    margin-top: 0.65rem;
+    height: 5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .ph-accent-bar .ab {
+    display: block;
+    height: 2px;
+    background: linear-gradient(90deg, #38bdf8, #ec4899, #a855f7);
+    box-shadow:
+      0 0 4px -1px #38bdf8,
+      0 0 6px -2px #ec4899;
+    opacity: 0.9;
+  }
+  .ph-accent-bar .ab-l {
+    width: 42px;
+    animation: widthPulse 7s ease-in-out infinite;
+  }
+  .ph-accent-bar .ab-c {
+    flex: 1;
+    opacity: 0.7;
+  }
+  .ph-accent-bar .ab-r {
+    width: 18px;
+    animation: widthPulse 9s ease-in-out infinite reverse;
+  }
+
+  /* Background FX layers */
+  .ph-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .fx-scan {
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.05) 0 1px,
+      transparent 1px 4px
+    );
+    mix-blend-mode: overlay;
+    opacity: 0.22;
+    animation: scan 14s linear infinite;
+  }
+  .fx-grid {
+    background:
+      linear-gradient(rgba(56, 189, 248, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(236, 72, 153, 0.1) 1px, transparent 1px);
+    background-size:
+      46px 46px,
+      46px 46px;
+    opacity: 0.12;
+    mix-blend-mode: overlay;
+    animation: gridShift 65s linear infinite;
+  }
+  .fx-glow {
+    background:
+      radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.22), transparent 60%),
+      radial-gradient(circle at 15% 85%, rgba(56, 189, 248, 0.28), transparent 65%);
+    filter: blur(20px);
+    opacity: 0.35;
+  }
+
+  /* Animations */
+  @keyframes spinHue {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes iconGlow {
+    0%,
+    100% {
+      opacity: 0.32;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.55;
+      transform: scale(1.05);
+    }
+  }
+  @keyframes ringPulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.45;
+    }
+    55% {
+      transform: scale(1.02);
+      opacity: 0.65;
+    }
+  }
+  @keyframes widthPulse {
+    0%,
+    100% {
+      filter: brightness(1);
+    }
+    50% {
+      filter: brightness(1.25) saturate(1.25);
+    }
+  }
+  @keyframes scan {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 0 140px;
+    }
+  }
+  @keyframes gridShift {
+    0% {
+      background-position:
+        0 0,
+        0 0;
+    }
+    100% {
+      background-position:
+        460px 0,
+        0 460px;
+    }
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 640px) {
+    .page-header.cyber {
+      padding: 1.1rem 1.1rem 1.25rem;
+    }
+    .ph-inner {
+      gap: 1.05rem;
+    }
+    .ph-icon-core {
+      width: 58px;
+      height: 58px;
+      border-radius: 15px;
+    }
+    .ph-title {
+      font-size: clamp(1.45rem, 1.1rem + 1.5vw, 1.9rem);
+    }
+    .ph-sub {
+      font-size: 0.72rem;
+    }
+    .ph-accent-bar {
+      margin-top: 0.65rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-header.cyber::before,
+    .page-header.cyber::after,
+    .ph-icon-ring,
+    .ph-icon-glow,
+    .fx-scan,
+    .fx-grid,
+    .ab-l,
+    .ab-r {
+      animation: none !important;
+    }
   }
 </style>
