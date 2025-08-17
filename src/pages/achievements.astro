@@ -30,9 +30,15 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
       icon="🏆"
       iconBgClass="bg-gradient-to-r from-accent-gold to-accent-pink"
     >
-      <div slot="extra" class="flex flex-wrap gap-2 text-xs">
-        {data.header.tags.map((t: string) => <span class="badge-pill">{t}</span>)}
-      </div>
+      {
+        Array.isArray(data.header.tags) && data.header.tags.length > 0 && (
+          <div slot="extra" class="flex flex-wrap gap-2 text-xs">
+            {data.header.tags.map((t: string) => (
+              <span class="badge-pill">{t}</span>
+            ))}
+          </div>
+        )
+      }
     </PageHeader>
 
     <!-- 職歴・経験（一本線タイムライン：2019-2025 / 年ホバーで実績表示） -->
@@ -51,7 +57,10 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
           class="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-primary-500/30 via-primary-500/20 to-primary-500/30"
         >
         </div>
-        <ol class="relative flex justify-between gap-4 py-12" id="yearMarkers">
+        <ol
+          class="year-markers-condensed relative flex justify-center gap-16 py-10"
+          id="yearMarkers"
+        >
           {
             displayYears.slice().map(year => {
               // 2025 左 / 2019 右 （reverse削除で並び順反転）
@@ -142,26 +151,6 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
       </div>
     </div>
 
-    <!-- 技術的成果（スキャン可能な短文化リスト） -->
-    <div class="section-card">
-      <h3 class="gradient-heading-sm mb-3 flex items-center space-x-2 text-lg font-semibold">
-        <span class="text-accent-cyan">技術的成果</span>
-      </h3>
-      <ul class="grid grid-cols-1 gap-2 text-sm md:grid-cols-2" aria-label="主な技術的成果">
-        {
-          data.achievements.map((a: any) => (
-            <li class="flex items-start gap-2 rounded border border-primary-500/20 bg-dark-900/40 p-3">
-              <span class="mt-0.5 text-accent-cyan">✔</span>
-              <div>
-                <p class="font-medium text-primary-100">{a.title}</p>
-                <p class="text-primary-300/80">{a.desc}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-
     <!-- 資格・認定 -->
     <div class="section-card">
       <h3 class="gradient-heading-sm mb-3 flex items-center space-x-2 text-lg font-semibold">
@@ -192,6 +181,30 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
   // 年選択: デフォルト2025
   const markers = Array.from(document.querySelectorAll('.year-node'));
   const panels = Array.from(document.querySelectorAll('[data-year-panel]'));
+  function computePanelHeights() {
+    if (!panels.length) return;
+    // 一旦全パネルを表示して最大高さ計測
+    const states = panels.map(p => p.classList.contains('hidden'));
+    panels.forEach(p => p.classList.remove('hidden'));
+    let max = 0;
+    panels.forEach(p => {
+      // 現在高さ計測 (padding含む)
+      const h = p.scrollHeight;
+      if (h > max) max = h;
+    });
+    // 元の表示状態を戻す
+    panels.forEach((p, i) => {
+      if (states[i]) p.classList.add('hidden');
+      // 各パネルに min-height を付与して高さ揺れ防止
+      p.style.minHeight = max + 'px';
+    });
+  }
+  // リサイズで再計測 (フォント折返し等による高さ変動対応)
+  let _resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(() => computePanelHeights(), 180);
+  });
   const selectYear = y => {
     let activeEl = null;
     markers.forEach(m => {
@@ -219,6 +232,8 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
         { once: true }
       );
     }
+    // 切替後も高さ維持 (内容差分で最大が更新される可能性低いが保険で1フレーム後再計測)
+    requestAnimationFrame(() => computePanelHeights());
   };
   markers.forEach((m, idx) => {
     m.addEventListener('click', () => selectYear(m.getAttribute('data-year')));
@@ -243,6 +258,8 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
     });
   });
   selectYear('2025');
+  // 初期ロード後高さ統一
+  computePanelHeights();
 </script>
 
 <style>
@@ -484,6 +501,28 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
     }
     .year-node.is-active .year-label::after {
       animation: none !important;
+    }
+  }
+</style>
+
+<style is:global>
+  /* 年マーカー間隔調整 (より凝縮) */
+  #yearMarkers.year-markers-condensed {
+    max-width: 1140px; /* もう少し広げる */
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #yearMarkers.year-markers-condensed .year-node {
+    padding: 0 6px;
+  }
+  @media (max-width: 900px) {
+    #yearMarkers.year-markers-condensed {
+      gap: 3rem;
+    }
+  }
+  @media (max-width: 640px) {
+    #yearMarkers.year-markers-condensed {
+      gap: 2.1rem;
     }
   }
 </style>

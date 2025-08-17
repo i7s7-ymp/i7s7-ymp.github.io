@@ -1,10 +1,6 @@
 header:
   title: '実績 & 経験'
   subtitle: 'マイルストーンと技術的達成'
-  tags:
-    - growth
-    - projects
-    - experience
 timeline:
   - role: 'シニア フルスタック デベロッパー'
     company: 'Tech Startup Inc.'
@@ -33,19 +29,6 @@ timeline:
       - 'TDD / コードレビュー文化の導入学習'
       - '小規模機能のエンドツーエンド実装'
     badges: [JavaScript, PHP, MySQL]
-achievements:
-  - title: 'OSS コントリビューション'
-    desc: '人気 OSS への PR / Issue 対応'
-  - title: 'パフォーマンス最適化'
-    desc: '初期描画 50% 改善'
-  - title: 'マイクロサービス化'
-    desc: 'モノリス分割 / API 境界設計'
-  - title: 'CI/CD パイプライン'
-    desc: 'GitHub Actions × AWS 自動化'
-  - title: 'チームリーダーシップ'
-    desc: '5 名開発チームで技術推進'
-  - title: 'カンファレンス登壇'
-    desc: '技術共有 / 開発文化発信'
 certifications:
   - code: AWS
     title: AWS認定 ソリューションアーキテクト

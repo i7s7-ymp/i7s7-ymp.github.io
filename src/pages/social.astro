@@ -41,9 +41,15 @@ const logoUrlMap = {
       icon="🌐"
       iconBgClass="bg-gradient-to-r from-accent-cyan to-accent-pink"
     >
-      <div slot="extra" class="flex flex-wrap gap-2 text-xs">
-        {data.header.tags.map((t: string) => <span class="badge-pill">{t}</span>)}
-      </div>
+      {
+        Array.isArray(data.header.tags) && data.header.tags.length > 0 && (
+          <div slot="extra" class="flex flex-wrap gap-2 text-xs">
+            {data.header.tags.map((t: string) => (
+              <span class="badge-pill">{t}</span>
+            ))}
+          </div>
+        )
+      }
     </PageHeader>
     <div class="grid gap-6 md:grid-cols-2">
       {

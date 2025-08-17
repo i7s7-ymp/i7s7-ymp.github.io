@@ -41,21 +41,20 @@ for (const exp of experiences) {
 // カテゴリごとの明確な配色 + パターン指定（色が近い場合の視覚差分強化）
 interface CatStyle {
   color: string;
-  pattern?: string;
 }
 const categoryStyles: Record<string, CatStyle> = {
-  Compute: { color: 'purple', pattern: 'cross' },
-  Database: { color: 'yellow', pattern: 'diag2' },
-  Storage: { color: 'teal', pattern: 'vdash' },
-  'Application Integration': { color: 'blue', pattern: 'diag' },
-  'Network & Content Delivery': { color: 'red', pattern: 'hstripe' },
-  'Developer Tools': { color: 'orange', pattern: 'grid' },
-  'Financial Management': { color: 'green', pattern: 'dot' },
-  Analytics: { color: 'cyan', pattern: 'none' },
-  'Security Identity & Compliance': { color: 'pink', pattern: 'checker' },
+  Compute: { color: 'purple' },
+  Database: { color: 'yellow' },
+  Storage: { color: 'teal' },
+  'Application Integration': { color: 'blue' },
+  'Network & Content Delivery': { color: 'red' },
+  'Developer Tools': { color: 'orange' },
+  'Financial Management': { color: 'green' },
+  Analytics: { color: 'cyan' },
+  'Security Identity & Compliance': { color: 'pink' },
 };
 function catStyle(name: string): CatStyle {
-  return categoryStyles[name] || { color: 'cyan', pattern: 'none' };
+  return categoryStyles[name] || { color: 'cyan' };
 }
 
 // 表示用: カテゴリ日本語ラベルマップ（内部集計キーは英語維持）
@@ -98,6 +97,7 @@ const palette = [
   'red',
   'cyan',
 ] as const;
+// 単一パターンに統一: pattern 情報は保持しない
 const patternStats: PatternStat[] = patternCategories.map((name, i) => ({
   name,
   total: 0,
@@ -218,7 +218,7 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
               catStats.map(cat => {
                 const hPct = cat.total === 0 ? 0 : (cat.total / yMax) * 100;
                 const isHigh = hPct > 90;
-                const { color, pattern } = catStyle(cat.name);
+                const { color } = catStyle(cat.name);
                 const id = `cat-${cat.name.replace(/\s+/g, '-').toLowerCase()}`;
                 return (
                   <div
@@ -227,7 +227,6 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
                     data-color={color}
                     data-id={id}
                     data-zero={cat.total === 0}
-                    data-pattern={pattern}
                     title={`${catLabel(cat.name)}: ${cat.total}件`}
                     data-high={isHigh}
                   >
@@ -630,80 +629,19 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
   .bar-box[data-color='pink'] .bar-fill {
     --bar-color: linear-gradient(180deg, #ec4899, #be185d);
   }
-  /* パターンオーバーレイ */
-  .bar-box[data-pattern]:not([data-pattern='none']) .bar-fill::before {
+  /* 単一パターンオーバーレイ (全バー共通) */
+  .bar-fill::before {
     content: '';
     position: absolute;
     inset: 0;
-    opacity: 0.45;
+    opacity: 0.48;
     mix-blend-mode: overlay;
-    background-size: 16px 16px;
-    background-repeat: repeat;
-  }
-  .bar-box[data-pattern='dot'] .bar-fill::before {
-    background-image:
-      radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.6) 12%, transparent 13%),
-      radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.6) 12%, transparent 13%);
-  }
-  .bar-box[data-pattern='diag'] .bar-fill::before {
-    background-image: repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.55) 0 4px,
-      transparent 4px 8px
+    background-image: radial-gradient(
+      circle at 3px 3px,
+      rgba(255, 255, 255, 0.55) 0 1.6px,
+      transparent 1.7px
     );
-  }
-  .bar-box[data-pattern='diag2'] .bar-fill::before {
-    background-image: repeating-linear-gradient(
-      -45deg,
-      rgba(255, 255, 255, 0.5) 0 3px,
-      transparent 3px 7px
-    );
-  }
-  .bar-box[data-pattern='cross'] .bar-fill::before {
-    background-image:
-      repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.5) 0 2px, transparent 2px 8px),
-      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.5) 0 2px, transparent 2px 8px);
-  }
-  .bar-box[data-pattern='grid'] .bar-fill::before {
-    background-image:
-      repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.45) 0 1px, transparent 1px 8px),
-      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.45) 0 1px, transparent 1px 8px);
-  }
-  .bar-box[data-pattern='hstripe'] .bar-fill::before {
-    background-image: repeating-linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0.55) 0 3px,
-      transparent 3px 6px
-    );
-  }
-  .bar-box[data-pattern='vdash'] .bar-fill::before {
-    background-image: repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.55) 0 2px,
-      transparent 2px 6px
-    );
-  }
-  .bar-box[data-pattern='checker'] .bar-fill::before {
-    background-image:
-      linear-gradient(
-        45deg,
-        rgba(255, 255, 255, 0.55) 25%,
-        transparent 25% 50%,
-        rgba(255, 255, 255, 0.55) 50% 75%,
-        transparent 75%
-      ),
-      linear-gradient(
-        45deg,
-        rgba(255, 255, 255, 0.35) 25%,
-        transparent 25% 50%,
-        rgba(255, 255, 255, 0.35) 50% 75%,
-        transparent 75%
-      );
-    background-size: 12px 12px;
-    background-position:
-      0 0,
-      6px 6px;
-    opacity: 0.5;
+    background-size: 10px 10px;
   }
   /* App patterns */
   .patterns-section {
