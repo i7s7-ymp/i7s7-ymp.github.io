@@ -21,7 +21,7 @@ timeline:
     color: pink
     points:
       - '承認イベントからIDを自動生成するシステムを再構築'
-      - '拡張性を考慮したアプリケーション設計を担当。'
+      - '拡張性を考慮したアプリケーション設計を担当'
     badges: [Go, AWS]
   - role: 'NiftyTechDay2025 への登壇'
     company: 'Nifty Co.'
@@ -29,7 +29,7 @@ timeline:
     color: cyan
     points:
       - 'LTでメタバース業務有用性評価プロジェクトの成果を発表'
-      - '参加者アンケートで最高の評価を獲得'
+      - '参加者アンケートで社内最高の評価を獲得'
     badges: [.]
   - role: 'NiftyTechBook#2 の執筆'
     company: 'Nifty Co.'
@@ -45,18 +45,16 @@ timeline:
     period: '2024 - 2025'
     color: cyan
     points:
-      - '社員向け認証基盤の開発'
-      - 'クラウドプロキシサービス管理者'
-      - 'SaaSアプリケーション調達'
+      - '脳波・会話データからメタバースの業務活用を検証'
+      - '企画からメンバー調整まで一貫して統括'
     badges: [Python, Google Cloud, MQ3]
   - role: 'スケジュールデータのパイプラインシステム開発'
     company: 'Nifty Co.'
     period: '2024'
     color: gold
     points:
-      - '社員向け認証基盤の開発'
-      - 'クラウドプロキシサービス管理者'
-      - 'SaaSアプリケーション調達'
+      - 'DesknetsとGoogleカレンダー間の双方向同期システム'
+      - 'キューイングアーキテクチャでスケジュール不整合を防止'
     badges: [Go, AWS]
   - role: '社員情報のパイプラインシステム開発'
     company: 'Nifty Co.'
