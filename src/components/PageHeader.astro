@@ -4,9 +4,20 @@ export interface Props {
   subtitle?: string;
   icon?: string; // emoji 文字列 (例: rocket, cloud など)
   iconBgClass?: string; // Tailwind 用クラス
+  statusLabel?: string; // 追加のステータス用小ラベル
+  iconTextClass?: string; // アイコン(文字)独自クラス
+  class?: string; // 親から追加クラス
 }
 
-const { title, subtitle = '', icon = '🚀', iconBgClass = 'bg-accent-cyan' } = Astro.props as Props;
+const {
+  title,
+  subtitle = '',
+  icon = '🚀',
+  iconBgClass = 'bg-accent-cyan',
+  statusLabel = '',
+  iconTextClass = '',
+  class: extClass = '',
+} = Astro.props as Props;
 
 // シンプルな emoji name → 実絵文字 変換 (拡張しやすいマップ)
 const emojiMap: Record<string, string> = {
@@ -21,23 +32,35 @@ const emojiMap: Record<string, string> = {
 const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も表示
 ---
 
-<div class="page-header cyber mb-10">
+<div class={`page-header cyber mb-10 ${extClass}`.trim()}>
   <div class="ph-inner">
     <div class="ph-icon-shell">
       <div class={`ph-icon-core ${iconBgClass}`} aria-hidden="true">
-        <span class="ph-icon" role="img">{displayIcon}</span>
+        <span class={`ph-icon ${iconTextClass}`.trim()} role="img">{displayIcon}</span>
         <span class="ph-icon-glow"></span>
         <span class="ph-icon-ring"></span>
       </div>
     </div>
     <div class="ph-text">
       <h2 class="ph-title" data-text={title}>{title}</h2>
-      {subtitle && <p class="ph-sub">{subtitle}</p>}
+      {
+        (subtitle || statusLabel) && (
+          <p class="ph-sub">
+            {subtitle}
+            {statusLabel && (
+              <span class="ph-status" aria-label="status label">
+                {statusLabel}
+              </span>
+            )}
+          </p>
+        )
+      }
       <div class="ph-accent-bar" aria-hidden="true">
         <span class="ab ab-l"></span>
         <span class="ab ab-c"></span>
         <span class="ab ab-r"></span>
       </div>
+      <slot name="extra" />
     </div>
   </div>
   <div class="ph-bg fx-scan" aria-hidden="true"></div>
@@ -180,6 +203,32 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
       0 0 3px #5daec4,
       0 0 4px #b690c9;
     opacity: 0.7;
+  }
+  .ph-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: 0.75rem;
+    padding: 2px 8px 2px 6px;
+    font-size: 0.6rem;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 2px 6px -2px rgba(0, 0, 0, 0.6);
+    color: #e2e8f0;
+    position: relative;
+  }
+  .ph-status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #22d3ee, #0e7490);
+    box-shadow: 0 0 6px #22d3ee;
   }
   .ph-accent-bar {
     position: relative;

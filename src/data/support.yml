@@ -1,52 +1,48 @@
 header:
-	title: アーキテクチャ経験
-	subtitle: クラウド & アプリケーション設計
-	icon: rocket
-	iconBgClass: bg-purple-600
+  title: アーキテクチャ経験
+  subtitle: クラウド & アプリケーション設計
+  icon: rocket
+  iconBgClass: bg-purple-600
 
-cloudCases:
-	- title: Web API 基盤
-		ops: 18
-		category: Compute
-	- title: 課金分析バッチ
-		ops: 4
-		category: Developer Tools
-	- title: 監査ログ集約
-		ops: 5
-		category: Analytics
-	- title: 課金最適化タグ運用
-		ops: 2
-		category: Financial Management
-	- title: 連携メッセージング基盤
-		ops: 3
-		category: Application Integration
-	- title: 静的コンテンツ配信
-		ops: 1
-		category: Network & Content Delivery
-	- title: バックアップバケット
-		ops: 2
-		category: Storage
-	- title: 認証統合 PoC
-		ops: 1
-		category: Security Identity & Compliance
-	- title: 構成管理DB
-		ops: 2
-		category: Database
+# experiences: 単一ソース (B 案)
+# - category: YAML 配列 (複数カテゴリ) / 未指定可
+# - architecture: 単一パターン (patternCategories のいずれか) / 未指定可
+# - uses: (オプション) 重み付け値 (仕様 #3 選択前は 1 と同義で集計)
+# 旧 cloudCases / appPatterns はコメントアウトし、移行後は削除予定
 
-appPatterns:
-	- name: API Gateway + Lambda + DynamoDB
-		desc: サーバーレスでスケーラブルな CRUD/API パターン。
-		color: purple
-	- name: Event-Driven Fan-out
-		desc: イベントを複数コンシューマに非同期配信する疎結合パターン。
-		color: blue
-	- name: Data Lake Ingestion
-		desc: オブジェクトストレージに生データを集約し分析基盤へ段階投入。
-		color: cyan
-	- name: Centralized Logging
-		desc: ログを一括収集・検索できる監視/追跡パターン。
-		color: green
-	- name: Cost Tag Governance
-		desc: コスト配賦と最適化のためのタグ統制フロー。
-		color: yellow
-
+experiences:
+  - title: Web API 基盤
+    category: [Compute, Storage]
+    architecture: Layered
+    description: API + データ層の基本レイヤード構成
+  - title: 課金分析バッチ
+    category: [Developer Tools, Analytics]
+    architecture: Data-Centric
+    description: 分析用 ETL / バッチ指向
+  - title: 監査ログ集約
+    category: [Analytics, Security Identity & Compliance]
+    architecture: Event-Driven
+    description: ログイベントの集約 / 検索
+  - title: 連携メッセージング基盤
+    category: [Application Integration]
+    architecture: Event-Driven
+    description: Fan-out / 非同期疎結合
+  - title: バックアップバケット
+    category: [Storage]
+    architecture: Separation Of Concern
+    description: 保持 / 境界分離
+  - title: 構成管理DB
+    category: [Database]
+    architecture: Domain-Driven
+    description: CMDB 的ドメインモデル
+  - title: 認証統合 PoC
+    category: [Security Identity & Compliance]
+    architecture: Component-Based
+    description: 認証コンポーネント統合
+  - title: 静的コンテンツ配信
+    category: [Network & Content Delivery]
+    architecture: Distributed System
+    description: エッジ配信 / キャッシュ
+# --- legacy (参考) ---
+# cloudCases: ...
+# appPatterns: ...

@@ -2,32 +2,18 @@
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 // @ts-ignore
-import data from '../data/support.yaml';
+import data from '../data/support.yml';
 
-interface CloudCase {
+interface ExperienceItem {
   title: string;
-  ops?: number;
-  category?: string;
-  desc?: string;
-  diagram?: string;
-  tags?: string[];
-  colors?: string[];
-  stack?: string;
+  category?: string[]; // 複数カテゴリ
+  architecture?: string; // 単一パターン
+  description?: string;
+  uses?: number; // (仕様#3 未決定: 現状は1と同義)
 }
-interface AppPattern {
-  name: string;
-  desc?: string;
-  diagram?: string;
-  color?: string;
-  uses?: number; // 利用回数など任意メトリック（未指定は1）
-}
+const experiences: ExperienceItem[] = (data as any).experiences ?? [];
 
-// 単一プロバイダ（AWS のみ使用）
-const cloudCases: CloudCase[] = (data as any).cloudCases ?? [];
-const appPatterns: AppPattern[] = (data as any).appPatterns ?? [];
-
-// 指定順序（ユーザー指定最新順）
-// 表示名と実データカテゴリ名称の差異を吸収（"Application Integration" vs "Application integrations"）
+// 指定順序: 既存クラウド分類
 const targetCategories = [
   'Compute',
   'Database',
@@ -39,31 +25,18 @@ const targetCategories = [
   'Analytics',
   'Security Identity & Compliance',
 ];
-
-type CatStat = { name: string; total: number; items: CloudCase[] };
-function buildStats(cases: CloudCase[]): CatStat[] {
-  return targetCategories.map(name => {
-    const items = cases.filter(c => {
-      const cat = (c.category || '').trim();
-      if (name === 'Application Integration')
-        return cat === 'Application Integration' || cat === 'Application integrations';
-      return cat === name;
-    });
-    const total = items.reduce((s, c) => s + (c.ops || 0), 0);
-    return { name, total, items };
-  });
+type CatStat = { name: string; total: number };
+const catStats: CatStat[] = targetCategories.map(name => ({ name, total: 0 }));
+for (const exp of experiences) {
+  const cats = Array.isArray(exp.category) ? exp.category : [];
+  for (const c of cats) {
+    const key = c === 'Application integrations' ? 'Application Integration' : c;
+    const stat = catStats.find(s => s.name === key);
+    if (stat) stat.total += 1; // uses 未適用（仕様#3 決定前）
+  }
 }
-let catStats: CatStat[] = buildStats(cloudCases);
 
-// Y軸: 最大値を含む10刻みスケール
-function computeScale(stats: CatStat[]) {
-  const rawMax = Math.max(...stats.map(c => c.total), 0);
-  const yMax = rawMax === 0 ? 10 : Math.ceil(rawMax / 10) * 10;
-  const ticks: number[] = [];
-  for (let v = 0; v <= yMax; v += 10) ticks.push(v);
-  return { yMax, ticks };
-}
-let { yMax, ticks: catTicks } = computeScale(catStats);
+// (旧) 個別スケール計算は廃止 -> 後段で unified スケール適用
 
 // カテゴリごとの明確な配色 + パターン指定（色が近い場合の視覚差分強化）
 interface CatStyle {
@@ -85,7 +58,21 @@ function catStyle(name: string): CatStyle {
   return categoryStyles[name] || { color: 'cyan', pattern: 'none' };
 }
 
-// アプリケーション設計カテゴリ（横軸固定順序）
+// 表示用: カテゴリ日本語ラベルマップ（内部集計キーは英語維持）
+const catLabelMap: Record<string, string> = {
+  Compute: 'コンピュート',
+  Database: 'データベース',
+  Storage: 'ストレージ',
+  'Application Integration': 'アプリケーション統合',
+  'Network & Content Delivery': 'ネットワーク / コンテンツ配信',
+  'Developer Tools': '開発ツール',
+  'Financial Management': 'コスト管理',
+  Analytics: '分析',
+  'Security Identity & Compliance': 'セキュリティ / ID / コンプライアンス',
+};
+const catLabel = (name: string) => catLabelMap[name] || name;
+
+// アプリケーションアーキテクチャ カテゴリ
 const patternCategories = [
   'Data-Centric',
   'Layered',
@@ -98,33 +85,77 @@ const patternCategories = [
   'Interpreter',
   'Concurrency',
 ];
-// カテゴリ毎の集計（name一致）: 同名が複数あれば uses 合計、存在しなければ0
-type PatternStat = { name: string; total: number; color: string; sourceCount: number };
-const patternStats: PatternStat[] = patternCategories.map(cat => {
-  const matched = appPatterns.filter(p => p.name === cat);
-  const total = matched.reduce((s, p) => s + (typeof p.uses === 'number' ? p.uses : 1), 0);
-  // 最初のマッチ色 or fallback palette
-  const palette = [
-    'cyan',
-    'blue',
-    'green',
-    'purple',
-    'yellow',
-    'orange',
-    'teal',
-    'pink',
-    'red',
-    'cyan',
-  ];
-  const fallback = palette[patternCategories.indexOf(cat) % palette.length];
-  const color = (matched[0]?.color ?? fallback) as string;
-  return { name: cat, total, color, sourceCount: matched.length } as PatternStat;
-});
-const patternRawMax = Math.max(...patternStats.map(p => p.total), 0);
-const patternYMax = patternRawMax === 0 ? 1 : Math.ceil(patternRawMax / 5) * 5; // 5刻み程度
-const patternTicks: number[] = [];
-for (let v = 0; v <= patternYMax; v += Math.max(1, Math.round(patternYMax / 5)))
-  patternTicks.push(v);
+type PatternStat = { name: string; total: number; color: string };
+const palette = [
+  'cyan',
+  'blue',
+  'green',
+  'purple',
+  'yellow',
+  'orange',
+  'teal',
+  'pink',
+  'red',
+  'cyan',
+] as const;
+const patternStats: PatternStat[] = patternCategories.map((name, i) => ({
+  name,
+  total: 0,
+  color: palette[i % palette.length] as string,
+}));
+for (const exp of experiences) {
+  const arch = exp.architecture;
+  if (!arch) continue;
+  const stat = patternStats.find(p => p.name === arch);
+  if (stat) stat.total += 1; // uses 未適用（仕様#3 決定前）
+}
+
+// 統一Y軸スケール: 両チャートで同じ高さ基準を共有
+function computeUnifiedScale(values: number[]) {
+  const maxVal = Math.max(...values, 0);
+  if (maxVal === 0) {
+    return { yMax: 5, step: 1, ticks: [0, 1, 2, 3, 4, 5] };
+  }
+  const segments = 5; // tick は 0 含め 6 本
+  // 基本ステップ候補
+  let rawStep = maxVal / segments;
+  const magnitude = 10 ** Math.floor(Math.log10(rawStep));
+  const norm = rawStep / magnitude;
+  // 1,2,2.5,5,10 ステップ系列
+  let base;
+  if (norm <= 1) base = 1;
+  else if (norm <= 2) base = 2;
+  else if (norm <= 2.5) base = 2.5;
+  else if (norm <= 5) base = 5;
+  else base = 10;
+  let step = base * magnitude;
+  if (step < 1) step = 1;
+  const yMax = step * segments;
+  const ticks: number[] = [];
+  for (let v = 0; v <= yMax + 0.0001; v += step) ticks.push(v);
+  return { yMax, step, ticks };
+}
+const allValues = [...catStats.map(c => c.total), ...patternStats.map(p => p.total)];
+const unified = computeUnifiedScale(allValues);
+const yMax = unified.yMax;
+const catTicks = unified.ticks;
+const patternYMax = unified.yMax;
+const patternTicks = unified.ticks;
+
+// パターン日本語ラベル
+const patternLabelMap: Record<string, string> = {
+  'Data-Centric': 'データ中心',
+  Layered: 'レイヤード',
+  'Component-Based': 'コンポーネント指向',
+  'Service-Oriented': 'サービス指向',
+  'Distributed System': '分散システム',
+  'Domain-Driven': 'ドメイン駆動',
+  'Event-Driven': 'イベント駆動',
+  'Separation Of Concern': '関心分離',
+  Interpreter: 'インタプリタ',
+  Concurrency: '並行処理',
+};
+const patternLabel = (name: string) => patternLabelMap[name] || name;
 ---
 
 <Layout title="アーキテクチャ - i7s7-ymp Portfolio">
@@ -134,82 +165,109 @@ for (let v = 0; v <= patternYMax; v += Math.max(1, Math.round(patternYMax / 5)))
     icon={data.header.icon}
     iconBgClass={data.header.iconBgClass}
   />
-  <div class="vchart-wrapper pb-10 pt-4">
-    <div
-      class="vchart"
-      role="img"
-      aria-label={`クラウドカテゴリ別運用件数 Y軸最大 ${yMax}`}
-      aria-describedby="cat-note"
+  <div class="chart-toggle-wrapper" role="group" aria-label="チャート種別切替">
+    <button
+      type="button"
+      class="chart-toggle-btn active"
+      data-chart-toggle
+      data-target="cloud"
+      aria-pressed="true"
+      aria-controls="cloud-chart-section">クラウド</button
     >
-      <div class="plot" data-count={catStats.length}>
-        <div class="grid-y" aria-hidden="true">
-          {
-            catTicks.map(t => {
-              const pct = (t / yMax) * 100;
-              const top = 100 - pct;
-              return (
-                <div class="grid-row" style={`top:${top}%;`}>
-                  <span class="grid-line" />
-                  <span class="grid-label">{t}</span>
-                </div>
-              );
-            })
-          }
+    <button
+      type="button"
+      class="chart-toggle-btn"
+      data-chart-toggle
+      data-target="app"
+      aria-pressed="false"
+      aria-controls="app-chart-section">アプリ</button
+    >
+  </div>
+  <section
+    class="cloud-arch-section chart-section"
+    aria-labelledby="cloud-arch-title"
+    id="cloud-chart-section"
+  >
+    <h3 id="cloud-arch-title" class="mb-6 text-lg font-semibold text-cyan-400">
+      クラウドアーキテクチャ
+    </h3>
+    <div class="chart-wrapper">
+      <div
+        class="vchart"
+        role="img"
+        aria-label={`クラウドカテゴリ別運用件数 Y軸最大 ${yMax}`}
+        aria-describedby="cat-note"
+      >
+        <div class="plot" data-count={catStats.length}>
+          <div class="grid-y" aria-hidden="true">
+            {
+              catTicks.map(t => {
+                const pct = (t / yMax) * 100;
+                const top = 100 - pct;
+                return (
+                  <div class="grid-row" style={`top:${top}%;`}>
+                    <span class="grid-line" />
+                    <span class="grid-label">{t}</span>
+                  </div>
+                );
+              })
+            }
+          </div>
+          <div class="bars" data-count={catStats.length} style="--bar-w:70px;">
+            {
+              catStats.map(cat => {
+                const hPct = cat.total === 0 ? 0 : (cat.total / yMax) * 100;
+                const isHigh = hPct > 90;
+                const { color, pattern } = catStyle(cat.name);
+                const id = `cat-${cat.name.replace(/\s+/g, '-').toLowerCase()}`;
+                return (
+                  <div
+                    class="bar-box"
+                    style={`--h:${hPct}%;`}
+                    data-color={color}
+                    data-id={id}
+                    data-zero={cat.total === 0}
+                    data-pattern={pattern}
+                    title={`${catLabel(cat.name)}: ${cat.total}件`}
+                    data-high={isHigh}
+                  >
+                    <div class="bar-hit" aria-label={`${catLabel(cat.name)} ${cat.total}件`}>
+                      <span class="bar-fill" />
+                      <span class="bar-value font-mono">{cat.total}</span>
+                    </div>
+                  </div>
+                );
+              })
+            }
+          </div>
+          <div class="axis-x" aria-hidden="true"></div>
         </div>
-        <div class="bars" data-count={catStats.length} style="--bar-w:70px;">
+        <div class="bar-labels" aria-hidden="false">
           {
             catStats.map(cat => {
-              const hPct = cat.total === 0 ? 0 : (cat.total / yMax) * 100;
-              const isHigh = hPct > 90;
-              const { color, pattern } = catStyle(cat.name);
+              const { color } = catStyle(cat.name);
               const id = `cat-${cat.name.replace(/\s+/g, '-').toLowerCase()}`;
               return (
                 <div
-                  class="bar-box"
-                  style={`--h:${hPct}%;`}
+                  class="x-label badge-pill"
                   data-color={color}
                   data-id={id}
-                  data-zero={cat.total === 0}
-                  data-pattern={pattern}
-                  title={`${cat.name}: ${cat.total} ops`}
-                  data-high={isHigh}
+                  tabindex="0"
+                  aria-label={`${catLabel(cat.name)} カテゴリ`}
                 >
-                  <div class="bar-hit" aria-label={`${cat.name} ${cat.total} ops`}>
-                    <span class="bar-fill" />
-                    <span class="bar-value font-mono">{cat.total}</span>
-                  </div>
+                  {catLabel(cat.name)}
                 </div>
               );
             })
           }
         </div>
-        <div class="axis-x" aria-hidden="true"></div>
-      </div>
-      <div class="bar-labels" aria-hidden="false">
-        {
-          catStats.map(cat => {
-            const { color } = catStyle(cat.name);
-            const id = `cat-${cat.name.replace(/\s+/g, '-').toLowerCase()}`;
-            return (
-              <div
-                class="x-label badge-pill"
-                data-color={color}
-                data-id={id}
-                tabindex="0"
-                aria-label={`${cat.name} カテゴリ`}
-              >
-                {cat.name}
-              </div>
-            );
-          })
-        }
       </div>
     </div>
-  </div>
-  <p id="cat-note" class="chart-note" aria-label="カテゴリ分類注釈">
-    ※ カテゴリ区分は主に AWS サービス分類 (Console / Docs, 2025年時点)
-    を参考にしつつポートフォリオ用途で簡略化・統合しています。
-  </p>
+    <p id="cat-note" class="chart-note unified-note" aria-label="カテゴリ分類注釈">
+      ※ カテゴリ区分は主に AWS サービス分類 (Console / Docs, 2025年時点)
+      を参考にしつつポートフォリオ用途で簡略化・統合しています。
+    </p>
+  </section>
   <script>
     // @ts-nocheck 単一プロバイダ版: バー/ラベル相互ハイライト
     document.addEventListener('DOMContentLoaded', () => {
@@ -246,14 +304,51 @@ for (let v = 0; v <= patternYMax; v += Math.max(1, Math.round(patternYMax / 5)))
         });
       }
       attachInteractions();
+      // トグル制御
+      const toggleButtons = Array.from(document.querySelectorAll('[data-chart-toggle]'));
+      const cloudSection = document.getElementById('cloud-chart-section');
+      const appSection = document.getElementById('app-chart-section');
+      function setChart(which) {
+        if (!cloudSection || !appSection) return;
+        const showCloud = which === 'cloud';
+        cloudSection.hidden = !showCloud;
+        appSection.hidden = showCloud;
+        toggleButtons.forEach(btn => {
+          const active = btn.dataset.target === which;
+          btn.classList.toggle('active', active);
+          btn.setAttribute('aria-pressed', String(active));
+        });
+      }
+      toggleButtons.forEach(btn => {
+        btn.addEventListener('click', () => setChart(btn.dataset.target));
+        btn.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setChart(btn.dataset.target);
+          }
+          if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            const idx = toggleButtons.indexOf(btn);
+            const dir = e.key === 'ArrowRight' ? 1 : -1;
+            const next = (idx + dir + toggleButtons.length) % toggleButtons.length;
+            toggleButtons[next].focus();
+          }
+        });
+      });
+      setChart('cloud');
     });
   </script>
 
-  <section class="patterns-section pb-20" aria-labelledby="pattern-chart-title">
+  <section
+    class="patterns-section chart-section"
+    aria-labelledby="pattern-chart-title"
+    id="app-chart-section"
+    hidden
+  >
     <h3 id="pattern-chart-title" class="mb-6 text-lg font-semibold text-green-400">
       アプリケーションパターン
     </h3>
-    <div class="pchart-wrapper">
+    <div class="chart-wrapper">
       <div
         class="pchart"
         role="img"
@@ -290,7 +385,7 @@ for (let v = 0; v <= patternYMax; v += Math.max(1, Math.round(patternYMax / 5)))
                     data-zero={p.total === 0}
                     data-high={isHigh}
                   >
-                    <div class="bar-hit" aria-label={`${p.name} ${p.total} uses`}>
+                    <div class="bar-hit" aria-label={`${patternLabel(p.name)} ${p.total}件`}>
                       <span class="bar-fill" />
                       <span class="bar-value font-mono">{p.total}</span>
                     </div>
@@ -311,9 +406,9 @@ for (let v = 0; v <= patternYMax; v += Math.max(1, Math.round(patternYMax / 5)))
                   data-color={p.color}
                   data-id={id}
                   tabindex="0"
-                  aria-label={`${p.name} パターン`}
+                  aria-label={`${patternLabel(p.name)} パターン`}
                 >
-                  {p.name}
+                  {patternLabel(p.name)}
                 </div>
               );
             })
@@ -321,8 +416,8 @@ for (let v = 0; v <= patternYMax; v += Math.max(1, Math.round(patternYMax / 5)))
         </div>
       </div>
     </div>
-    <p id="pattern-note" class="chart-note mt-4">
-      ※ 各パターンの値は uses プロパティ（未指定は 1）です。YAML に <code>uses:</code> を追加して調整できます。
+    <p id="pattern-note" class="chart-note unified-note">
+      ※ 値は experiences の件数（1エントリー=1）です。uses 反映ロジック(仕様#3) 未適用。
     </p>
   </section>
 </Layout>
@@ -330,12 +425,19 @@ for (let v = 0; v <= patternYMax; v += Math.max(1, Math.round(patternYMax / 5)))
 <!-- プロバイダ切替関連コード除去後 -->
 
 <style>
+  .chart-section {
+    /* 両チャート共通の下余白統一 */
+    padding-bottom: 3.5rem; /* 注釈位置を安定化 */
+  }
+  .chart-wrapper {
+    position: relative;
+  }
   .vchart-wrapper {
     position: relative;
   }
   .vchart {
     position: relative;
-    min-height: 320px;
+    min-height: 320px; /* 統一基準 */
   }
   .plot {
     position: relative;
@@ -608,15 +710,64 @@ for (let v = 0; v <= patternYMax; v += Math.max(1, Math.round(patternYMax / 5)))
     max-width: 1100px;
     margin: 0 auto;
   }
+  .cloud-arch-section {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .chart-toggle-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin: 0 56px 1.25rem 56px;
+  }
+  .chart-toggle-btn {
+    position: relative;
+    padding: 6px 18px 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.6));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #e2e8f0;
+    cursor: pointer;
+    transition:
+      0.25s background,
+      0.25s box-shadow,
+      0.25s border-color,
+      0.25s transform;
+    backdrop-filter: blur(6px);
+  }
+  .chart-toggle-btn:hover,
+  .chart-toggle-btn:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.25),
+      0 0 14px -2px #38bdf8;
+  }
+  .chart-toggle-btn.active {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(15, 23, 42, 0.7));
+    border-color: #38bdf8;
+    box-shadow:
+      0 0 0 1px #38bdf8,
+      0 0 18px -2px #38bdf8;
+    transform: translateY(-2px);
+  }
+  @media (max-width: 640px) {
+    .chart-toggle-wrapper {
+      margin: 0 46px 1.1rem 46px;
+    }
+  }
   .pchart-wrapper {
     position: relative;
   }
   .pchart {
     position: relative;
-    min-height: 300px;
+    min-height: 320px; /* クラウド側と統一 */
   }
   .pattern-bars {
-    height: 220px;
+    height: 250px; /* .bars と統一 */
   }
   .pattern-labels {
     margin-top: 1rem;
@@ -625,10 +776,11 @@ for (let v = 0; v <= patternYMax; v += Math.max(1, Math.round(patternYMax / 5)))
     display: flex;
     flex-wrap: wrap;
     gap: 0.55rem 0.65rem;
-    margin: 1.25rem 0 0 56px;
+    margin: 1rem 0 0 56px;
     font-size: 11px;
     line-height: 1.2;
     max-width: calc(100% - 56px);
+    min-height: 70px; /* ラベル行高さを固定化 (2行想定) */
   }
   /* badge-pill ベース (header と統一) */
   .badge-pill {
@@ -705,7 +857,7 @@ for (let v = 0; v <= patternYMax; v += Math.max(1, Math.round(patternYMax / 5)))
     transform: translateY(-2px);
   }
   .chart-note {
-    margin: 0.75rem 0 2rem 56px;
+    margin: 0.75rem 0 0 56px; /* chart-section の padding-bottom と組み合わせて統一位置 */
     max-width: 780px;
     font-size: 10px;
     line-height: 1.5;
@@ -715,6 +867,9 @@ for (let v = 0; v <= patternYMax; v += Math.max(1, Math.round(patternYMax / 5)))
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     backdrop-filter: blur(4px);
+  }
+  .unified-note {
+    margin-top: 0.75rem;
   }
   @media (max-width: 640px) {
     .chart-note {
