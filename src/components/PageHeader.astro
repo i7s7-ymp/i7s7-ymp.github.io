@@ -70,19 +70,23 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
 
 <style>
   /* === Cyberpunk Header === */
+  /* REFACTOR-STAGE2: PageHeader の装飾層 (fx-scan, fx-grid 等) を他ヘッダーでも使うなら /src/styles/tokens.css に抽出予定 */
   .page-header.cyber {
     position: relative;
-    padding: 1.25rem 1.4rem 1.35rem 1.35rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 18px;
-    background: linear-gradient(135deg, rgba(17, 24, 39, 0.78), rgba(30, 41, 59, 0.55)) padding-box;
+    padding: var(--ph-padding, 1.25rem 1.4rem 1.35rem 1.35rem);
+    border: 1px solid var(--ph-border, rgba(255, 255, 255, 0.1));
+    border-radius: var(--ph-radius, 18px);
+    background: var(
+        --ph-bg,
+        linear-gradient(135deg, rgba(17, 24, 39, 0.78), rgba(30, 41, 59, 0.55))
+      )
+      padding-box;
     overflow: hidden;
     backdrop-filter: blur(8px) saturate(125%);
     box-shadow:
       0 4px 14px -6px rgba(0, 0, 0, 0.65),
       0 0 0 1px rgba(255, 255, 255, 0.05);
   }
-  /* 背景の過剰な回転コンポジットを削減 */
   .page-header.cyber::before {
     content: '';
     position: absolute;
@@ -117,7 +121,10 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
     justify-content: center;
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.18);
-    background: linear-gradient(140deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04));
+    background: var(
+      --ph-icon-bg,
+      linear-gradient(140deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04))
+    );
     box-shadow:
       0 0 0 1px rgba(255, 255, 255, 0.07),
       0 3px 8px -2px rgba(0, 0, 0, 0.6),
@@ -125,19 +132,21 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
     overflow: hidden;
     isolation: isolate;
   }
-  .ph-icon-core::before,
+  .ph-icon-core::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.55), transparent 65%);
+    opacity: 0.75;
+  }
   .ph-icon-core::after {
     content: '';
     position: absolute;
     inset: 0;
     mix-blend-mode: overlay;
     pointer-events: none;
-  }
-  .ph-icon-core::before {
-    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.55), transparent 65%);
-    opacity: 0.75;
-  }
-  .ph-icon-core::after {
     background: linear-gradient(120deg, rgba(90, 174, 196, 0.22), rgba(182, 169, 201, 0.18));
     opacity: 0.38;
   }
@@ -197,7 +206,7 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
     content: '';
     width: 5px;
     height: 5px;
-    background: linear-gradient(135deg, #5daec4, #b690c9);
+    background: var(--ph-sub-bullet, linear-gradient(135deg, #5daec4, #b690c9));
     border-radius: 2px;
     box-shadow:
       0 0 3px #5daec4,
@@ -213,12 +222,17 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
     font-size: 0.6rem;
     letter-spacing: 0.6px;
     text-transform: uppercase;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--ph-status-border, rgba(255, 255, 255, 0.2));
     border-radius: 999px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
-    box-shadow:
+    background: var(
+      --ph-status-bg,
+      linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05))
+    );
+    box-shadow: var(
+      --shadow-status,
       0 0 0 1px rgba(255, 255, 255, 0.1),
-      0 2px 6px -2px rgba(0, 0, 0, 0.6);
+      0 2px 6px -2px rgba(0, 0, 0, 0.6)
+    );
     color: #e2e8f0;
     position: relative;
   }
@@ -227,7 +241,7 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #22d3ee, #0e7490);
+    background: var(--ph-status-dot, radial-gradient(circle at 35% 35%, #22d3ee, #0e7490));
     box-shadow: 0 0 6px #22d3ee;
   }
   .ph-accent-bar {
@@ -236,19 +250,24 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
     height: 5px;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--ph-accent-gap, 4px);
   }
   .ph-accent-bar .ab {
     display: block;
-    height: 2px;
-    background: linear-gradient(90deg, rgba(90, 174, 196, 0.95), rgba(180, 169, 201, 0.95));
-    box-shadow:
+    height: var(--ph-accent-height, 2px);
+    background: var(
+      --ph-accent-gradient,
+      linear-gradient(90deg, rgba(90, 174, 196, 0.95), rgba(180, 169, 201, 0.95))
+    );
+    box-shadow: var(
+      --ph-accent-shadow,
       0 0 3px -1px rgba(90, 174, 196, 0.6),
-      0 0 5px -2px rgba(180, 169, 201, 0.55);
+      0 0 5px -2px rgba(180, 169, 201, 0.55)
+    );
     opacity: 0.75;
   }
   .ph-accent-bar .ab-l {
-    width: 42px;
+    width: var(--ph-accent-len-l, 42px);
     animation: widthPulse 7s ease-in-out infinite;
   }
   .ph-accent-bar .ab-c {
@@ -256,11 +275,9 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
     opacity: 0.7;
   }
   .ph-accent-bar .ab-r {
-    width: 18px;
+    width: var(--ph-accent-len-r, 18px);
     animation: widthPulse 9s ease-in-out infinite reverse;
   }
-
-  /* Background FX layers */
   .ph-bg {
     position: absolute;
     inset: 0;
@@ -294,8 +311,6 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
     filter: blur(18px);
     opacity: 0.28;
   }
-
-  /* Animations */
   @keyframes spinHue {
     to {
       transform: rotate(360deg);
@@ -352,8 +367,6 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
         0 460px;
     }
   }
-
-  /* Responsive tweaks */
   @media (max-width: 640px) {
     .page-header.cyber {
       padding: 1.1rem 1.1rem 1.25rem;
@@ -376,7 +389,6 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
       margin-top: 0.65rem;
     }
   }
-
   @media (prefers-reduced-motion: reduce) {
     .page-header.cyber::before,
     .page-header.cyber::after,

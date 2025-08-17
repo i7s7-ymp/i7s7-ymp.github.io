@@ -1,6 +1,11 @@
 header:
   title: '実績 & 経験'
   subtitle: 'マイルストーンと技術的達成'
+
+# DATA SCHEMA
+# timeline[]: role, company, period(YYYY or range), color(token), points[], badges[]
+# certifications[]: code, title, level, color
+
 timeline:
   - role: 'シニア フルスタック デベロッパー'
     company: 'Tech Startup Inc.'

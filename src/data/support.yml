@@ -4,11 +4,11 @@ header:
   icon: rocket
   iconBgClass: bg-purple-600
 
-# experiences: 単一ソース (B 案)
-# - category: YAML 配列 (複数カテゴリ) / 未指定可
-# - architecture: 単一パターン (patternCategories のいずれか) / 未指定可
-# - uses: (オプション) 重み付け値 (仕様 #3 選択前は 1 と同義で集計)
-# 旧 cloudCases / appPatterns はコメントアウトし、移行後は削除予定
+# DATA SCHEMA
+# - category: [String] 0..n
+# - architecture: String (単一)
+# - uses: Number (optional weighting) 現状未適用
+# TODO(uses-weighting Stage7): 集計時 total += uses ?? 1 に変更するフックを実装
 
 experiences:
   - title: Web API 基盤
@@ -43,6 +43,4 @@ experiences:
     category: [Network & Content Delivery]
     architecture: Distributed System
     description: エッジ配信 / キャッシュ
-# --- legacy (参考) ---
-# cloudCases: ...
-# appPatterns: ...
+  # (legacy sections removed)

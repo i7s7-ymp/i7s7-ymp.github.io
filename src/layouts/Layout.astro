@@ -6,6 +6,8 @@ export interface Props {
   headerPills?: string[]; // ステータスピル（uptime/timeは自動付与）
 }
 
+import '../styles/tokens.css';
+
 const {
   title,
   description = 'Portfolio - i7s7-ymp',
@@ -20,6 +22,7 @@ const {
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <!-- tokens.css は frontmatter import 済み -->
   </head>
   <body class="min-h-screen overflow-x-hidden font-sans text-white antialiased">
     <div class="fixed inset-0 -z-10">

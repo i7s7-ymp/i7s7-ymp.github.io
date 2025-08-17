@@ -1,0 +1,29 @@
+---
+export interface LabelItem {
+  id: string;
+  color: string;
+  text: string; // 表示/aria兼用
+  kind?: 'category' | 'pattern';
+}
+export interface Props {
+  labels: LabelItem[];
+  pattern?: boolean;
+}
+const { labels, pattern = false } = Astro.props as Props;
+---
+
+<div class={`bar-labels${pattern ? ' pattern-labels' : ''}`} aria-hidden="false">
+  {
+    labels.map(l => (
+      <div
+        class="x-label badge-pill"
+        data-color={l.color}
+        data-id={l.id}
+        tabindex="0"
+        aria-label={`${l.text} ${l.kind === 'pattern' ? 'パターン' : 'カテゴリ'}`}
+      >
+        {l.text}
+      </div>
+    ))
+  }
+</div>

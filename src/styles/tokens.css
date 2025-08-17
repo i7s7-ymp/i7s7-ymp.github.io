@@ -1,0 +1,165 @@
+:root {
+  /* Stage5: Token 拡張 (値の外だし / 視覚出力不変) */
+  /* Color stops for bar gradients */
+  --bar-cyan-start: #22d3ee;
+  --bar-cyan-end: #0891b2;
+  --bar-blue-start: #3b82f6;
+  --bar-blue-end: #1d4ed8;
+  --bar-green-start: #10b981;
+  --bar-green-end: #047857;
+  --bar-purple-start: #8b5cf6;
+  --bar-purple-end: #6d28d9;
+  --bar-yellow-start: #fbbf24;
+  --bar-yellow-end: #d97706;
+  --bar-orange-start: #fb923c;
+  --bar-orange-end: #c2410c;
+  --bar-red-start: #ef4444;
+  --bar-red-end: #b91c1c;
+  --bar-teal-start: #14b8a6;
+  --bar-teal-end: #0f766e;
+  --bar-pink-start: #ec4899;
+  --bar-pink-end: #be185d;
+
+  /* Bar gradient composites (derived from start/end stops) */
+  --bar-grad-cyan: linear-gradient(180deg, var(--bar-cyan-start), var(--bar-cyan-end));
+  --bar-grad-blue: linear-gradient(180deg, var(--bar-blue-start), var(--bar-blue-end));
+  --bar-grad-green: linear-gradient(180deg, var(--bar-green-start), var(--bar-green-end));
+  --bar-grad-purple: linear-gradient(180deg, var(--bar-purple-start), var(--bar-purple-end));
+  --bar-grad-yellow: linear-gradient(180deg, var(--bar-yellow-start), var(--bar-yellow-end));
+  --bar-grad-orange: linear-gradient(180deg, var(--bar-orange-start), var(--bar-orange-end));
+  --bar-grad-red: linear-gradient(180deg, var(--bar-red-start), var(--bar-red-end));
+  --bar-grad-teal: linear-gradient(180deg, var(--bar-teal-start), var(--bar-teal-end));
+  --bar-grad-pink: linear-gradient(180deg, var(--bar-pink-start), var(--bar-pink-end));
+
+  /* Shared spacing (axis/labels alignment) */
+  --chart-axis-left: 56px;
+  --chart-height: 250px;
+  --chart-axis-left-md: 50px; /* <=900px */
+  --chart-axis-left-sm: 46px; /* <=640px */
+
+  /* Bar sizing & gaps */
+  --bar-width: 70px;
+  --bar-gap: 1.25rem; /* desktop gap */
+  --bar-gap-md: 1rem; /* <=900px */
+  --bar-gap-sm: 0.9rem; /* <=640px */
+
+  /* Label layout */
+  --label-gap-row: 0.55rem;
+  --label-gap-col: 0.65rem;
+  --labels-min-height: 70px;
+
+  /* Pill base background gradients */
+  --pill-bg: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.6));
+  --pill-bg-hover: linear-gradient(135deg, rgba(45, 55, 72, 0.9), rgba(25, 32, 48, 0.75));
+  --pill-bg-active: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(15, 23, 42, 0.7));
+
+  /* Chart toggle button backgrounds */
+  --toggle-bg: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.6));
+  --toggle-bg-active: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(15, 23, 42, 0.7));
+  --shadow-toggle-hover: 0 0 0 1px rgba(255, 255, 255, 0.25), 0 0 14px -2px #38bdf8;
+  --shadow-toggle-active: 0 0 0 1px #38bdf8, 0 0 18px -2px #38bdf8;
+
+  /* Animation names (future unification) */
+  --anim-bar-grow: grow-bar; /* existing keyframes */
+
+  /* Header (PageHeader) tokens */
+  --ph-bg: linear-gradient(135deg, rgba(17, 24, 39, 0.78), rgba(30, 41, 59, 0.55));
+  --ph-border: rgba(255, 255, 255, 0.1);
+  --ph-radius: 18px;
+  --ph-padding: 1.25rem 1.4rem 1.35rem 1.35rem;
+  --ph-icon-bg: linear-gradient(140deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04));
+  --ph-sub-bullet: linear-gradient(135deg, #5daec4, #b690c9);
+  --ph-accent-gradient: linear-gradient(90deg, rgba(90, 174, 196, 0.95), rgba(180, 169, 201, 0.95));
+  --ph-accent-gap: 4px;
+  --ph-accent-height: 2px;
+  --ph-accent-len-l: 42px;
+  --ph-accent-len-r: 18px;
+  --ph-accent-shadow: 0 0 3px -1px rgba(90, 174, 196, 0.6), 0 0 5px -2px rgba(180, 169, 201, 0.55);
+  --ph-status-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+  --ph-status-border: rgba(255, 255, 255, 0.2);
+  --ph-status-dot: radial-gradient(circle at 35% 35%, #22d3ee, #0e7490);
+
+  /* Timeline tokens */
+  --tl-active: #34d399; /* will later reference semantic */
+  --tl-active-accent: #10b981;
+  --tl-inactive: #64748b;
+  --tl-marker-gap-desktop: 4rem; /* gap-16 相当 */
+  --tl-marker-gap-md: 3rem;
+  --tl-marker-gap-sm: 2.1rem;
+  --tl-line-color-from: rgba(99, 102, 241, 0.3); /* placeholder if unifying */
+
+  /* (axis responsive tokens moved above) */
+
+  /* Elevation / shadows (initial subset) */
+  --shadow-bar: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 5px 14px -4px rgba(0, 0, 0, 0.65);
+  --shadow-bar-hover: 0 0 0 1px rgba(255, 255, 255, 0.22), 0 10px 26px -6px rgba(0, 0, 0, 0.85);
+  --shadow-bar-active: 0 0 0 2px rgba(255, 255, 255, 0.15), 0 0 18px -2px rgba(255, 255, 255, 0.35);
+  --shadow-badge-active:
+    0 0 0 1px var(--pill-color, #38bdf8), 0 0 18px -2px var(--pill-color, #38bdf8);
+  --shadow-badge-hover:
+    0 0 0 1px var(--pill-color, #38bdf8), 0 0 14px -2px var(--pill-color, #38bdf8);
+  --shadow-status: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 2px 6px -2px rgba(0, 0, 0, 0.6);
+  --shadow-year-active:
+    0 0 0 3px rgba(52, 211, 153, 0.25), 0 0 12px 5px rgba(52, 211, 153, 0.4),
+    0 0 32px 14px rgba(52, 211, 153, 0.15);
+  --shadow-year-inactive:
+    0 0 0 2px rgba(128, 144, 168, 0.28), 0 0 6px 0 rgba(20, 28, 42, 0.55),
+    0 0 10px -2px rgba(128, 144, 168, 0.35);
+
+  /* Blur tokens */
+  --blur-header: 8px;
+  --blur-panel: 6px;
+  --blur-pill: 6px;
+
+  /* Semantic color layer (initial minimal set) */
+  --color-accent-success: #34d399;
+  --color-accent-success-alt: #10b981;
+  --color-neutral-muted: #64748b;
+  --color-info-cyan: #22d3ee;
+  /* Map timeline tokens to semantic (non-breaking) */
+  --tl-active: var(--color-accent-success);
+  --tl-active-accent: var(--color-accent-success-alt);
+  --tl-inactive: var(--color-neutral-muted);
+
+  /* Chart note panel */
+  --chart-note-bg: rgba(15, 23, 42, 0.55);
+  --chart-note-border: rgba(255, 255, 255, 0.08);
+  --chart-note-fg: #94a3b8;
+
+  /* Radius scale */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 16px;
+  --radius-pill: 999px;
+
+  /* Additional blur scale */
+  --blur-xs: 4px;
+  --blur-sm: 6px;
+  --blur-md: 8px;
+
+  /* Generic shadow tokens */
+  --shadow-tooltip: 0 2px 5px -2px rgba(0, 0, 0, 0.6);
+
+  /* Grid / axis & scrollbar tokens */
+  --grid-line-gradient: linear-gradient(90deg, rgba(255, 255, 255, 0.18), transparent 55%);
+  --axis-x-gradient: linear-gradient(90deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.05));
+  --scrollbar-track-bg: rgba(255, 255, 255, 0.05);
+  --scrollbar-thumb-bg: rgba(255, 255, 255, 0.18);
+
+  /* Bar value tooltip */
+  --bar-value-bg: rgba(15, 23, 42, 0.88);
+  --bar-value-bg-alt: rgba(0, 0, 0, 0.28); /* high label */
+  --bar-value-border: rgba(255, 255, 255, 0.15);
+  --bar-value-border-alt: rgba(255, 255, 255, 0.25);
+  --bar-value-fg: #e2e8f0;
+  --bar-value-fg-muted: #94a3b8;
+
+  /* Neutral palette refs (could unify later) */
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+}

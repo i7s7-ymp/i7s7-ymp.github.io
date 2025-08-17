@@ -209,6 +209,41 @@ npm run check
 4. 色コントラストを確保し可読性維持
 5. 追加ユーティリティは `/design` ページで文書化
 
+### Chart Design Tokens (Stage5)
+
+チャート/統計可視化まわりは `src/styles/tokens.css` に集約された CSS カスタムプロパティで管理しています。ゼロレグリファクタを支える層別けは以下。
+
+| Category              | Prefix / Examples                                                                                                        | Purpose                                    |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
+| Spacing / Axis        | `--chart-axis-left`, `--bar-gap(-md/-sm)`                                                                                | 軸オフセットと群間隔のレスポンシブ制御     |
+| Bar Dimensions        | `--bar-width`, `--h` (inline var)                                                                                        | 棒幅/高さ計算用基準                        |
+| Gradients (Stops)     | `--bar-cyan-start/end`                                                                                                   | 個別色の開始/終了色定義                    |
+| Gradients (Composite) | `--bar-grad-cyan`                                                                                                        | 実際に適用される完成グラデ (fallback 付き) |
+| Shadows               | `--shadow-bar`, `--shadow-bar-hover`, `--shadow-bar-active`, `--shadow-badge-*`, `--shadow-toggle-*`, `--shadow-tooltip` | 影レイヤ統一とホバー/アクティブ差分管理    |
+| Pills / Toggles       | `--pill-bg(-hover/-active)`, `--toggle-bg(-active)`                                                                      | バッジ/トグルのガラスモーフ状態            |
+| Bar Value Tooltip     | `--bar-value-bg`, `--bar-value-border`, `--bar-value-fg`, `--bar-value-bg-alt` ほか                                      | 値ツールチップと high 状態差分             |
+| Note Panel            | `--chart-note-bg`, `--chart-note-border`, `--chart-note-fg`                                                              | 補足説明パネルの背景/枠/文字色             |
+| Grid / Axis Lines     | `--grid-line-gradient`, `--axis-x-gradient`                                                                              | 線のフェードと奥行き感                     |
+| Scrollbar             | `--scrollbar-track-bg`, `--scrollbar-thumb-bg`                                                                           | 横スクロールのダークテーマ調整             |
+| Radius Scale          | `--radius-xs/sm/md/lg/xl/pill`                                                                                           | 一貫した角丸スケール。`pill` は完全円弧    |
+| Blur Scale            | `--blur-xs/sm/md`                                                                                                        | 背景ブラー段階 (ガラス表現)                |
+| Neutral Palette (WIP) | `--neutral-*`                                                                                                            | 将来のテーマ/明度調整用占位                |
+
+利用指針:
+
+1. 直接色値/px値を書かずトークン参照する (段階的テーマ拡張が容易)
+2. 新規トークンはカテゴリーコメント直下に追加し README へ反映
+3. 既存トークン差し替え時は fallback を保持し視覚差分を最小化
+4. DOM 構造変更はトークン完備後に parity harness (support.astro 内) で構造差分ゼロを確認
+
+将来拡張 (案):
+
+- Light / High-contrast バリアントトークンセット
+- Semantic 色層 (例: `--color-positive` -> グラデマッピング) の分離
+- スクリーンショット比較自動化 (Playwright + pixelmatch) でゼロレグ CI
+
+開発時は `tokens.css` を基準に差分レビューすることで、スタイリング意図 (ローカル調整 vs グローバルテーマ拡張) を識別しやすくなります。
+
 ## 🤝 Contributing
 
 1. フォークを作成

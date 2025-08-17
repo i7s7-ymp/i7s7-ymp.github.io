@@ -16,6 +16,7 @@ const timelineByYear: Record<string, any[]> = data.timeline.reduce(
 );
 // 表示対象年を固定（空年も見出しを出したい場合はこちらに列挙）
 const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', '2019'];
+// REFACTOR-STAGE2: displayYears と timelineByYear の同期ロジック（空年の扱い）を utility 化予定
 ---
 
 <Layout
@@ -41,7 +42,7 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
       }
     </PageHeader>
 
-    <!-- 職歴・経験（一本線タイムライン：2019-2025 / 年ホバーで実績表示） -->
+    <!-- 職歴・経験タイムライン -->
     <div class="section-card">
       <div class="mb-4 flex items-center justify-between gap-4">
         <h3 class="gradient-heading-sm flex items-center space-x-2 text-lg font-semibold">
@@ -52,22 +53,20 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
         </div>
       </div>
       <div class="relative" aria-label="2019-2025 タイムライン (選択式)">
-        <!-- 中央ライン -->
         <div
           class="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-primary-500/30 via-primary-500/20 to-primary-500/30"
         >
         </div>
         <ol
-          class="year-markers-condensed relative flex justify-center gap-16 py-10"
           id="yearMarkers"
+          class="year-markers-condensed relative flex justify-center gap-16 py-10"
         >
           {
-            displayYears.slice().map(year => {
-              // 2025 左 / 2019 右 （reverse削除で並び順反転）
+            displayYears.map(year => {
               const items = timelineByYear[year] || [];
               return (
                 <li
-                  class="year-node relative flex flex-col items-center"
+                  class={`year-node relative flex flex-col items-center ${year === '2025' ? 'is-active' : ''}`}
                   data-year={year}
                   tabindex="0"
                   role="button"
@@ -87,7 +86,6 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
             })
           }
         </ol>
-        <!-- 詳細パネル -->
         <div id="yearDetails" class="relative mt-4">
           {
             displayYears.map(year => {
@@ -178,88 +176,110 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
 </Layout>
 
 <script is:inline>
-  // 年選択: デフォルト2025
-  const markers = Array.from(document.querySelectorAll('.year-node'));
-  const panels = Array.from(document.querySelectorAll('[data-year-panel]'));
-  function computePanelHeights() {
+  /* eslint-disable no-console */
+  // util (inline 化して import 依存排除)
+  function computeAndLockPanelHeights(panels) {
     if (!panels.length) return;
-    // 一旦全パネルを表示して最大高さ計測
     const states = panels.map(p => p.classList.contains('hidden'));
     panels.forEach(p => p.classList.remove('hidden'));
     let max = 0;
     panels.forEach(p => {
-      // 現在高さ計測 (padding含む)
       const h = p.scrollHeight;
       if (h > max) max = h;
     });
-    // 元の表示状態を戻す
     panels.forEach((p, i) => {
       if (states[i]) p.classList.add('hidden');
-      // 各パネルに min-height を付与して高さ揺れ防止
       p.style.minHeight = max + 'px';
     });
   }
-  // リサイズで再計測 (フォント折返し等による高さ変動対応)
-  let _resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(_resizeTimer);
-    _resizeTimer = setTimeout(() => computePanelHeights(), 180);
-  });
-  const selectYear = y => {
-    let activeEl = null;
-    markers.forEach(m => {
-      const active = m.getAttribute('data-year') === y;
-      m.classList.toggle('is-active', active);
-      m.setAttribute('aria-pressed', active ? 'true' : 'false');
-      if (active) activeEl = m;
+  function attachResponsiveRecalc(panels, delay = 180) {
+    let t;
+    window.addEventListener('resize', () => {
+      if (t) clearTimeout(t);
+      t = setTimeout(() => computeAndLockPanelHeights(panels), delay);
     });
-    panels.forEach(p => {
-      const active = p.getAttribute('data-year-panel') === y;
-      p.classList.toggle('hidden', !active);
-      p.setAttribute('aria-hidden', active ? 'false' : 'true');
-    });
-    // 一回だけのポップアニメーション付与
-    if (activeEl) {
-      activeEl.classList.remove('activating');
-      // 再トリガーのためリフロー
-      void activeEl.offsetWidth;
-      activeEl.classList.add('activating');
-      activeEl.addEventListener(
-        'animationend',
-        () => {
-          activeEl.classList.remove('activating');
-        },
-        { once: true }
-      );
-    }
-    // 切替後も高さ維持 (内容差分で最大が更新される可能性低いが保険で1フレーム後再計測)
-    requestAnimationFrame(() => computePanelHeights());
-  };
-  markers.forEach((m, idx) => {
-    m.addEventListener('click', () => selectYear(m.getAttribute('data-year')));
-    m.addEventListener('keydown', e => {
-      const i = markers.indexOf(m);
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        selectYear(m.getAttribute('data-year'));
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        markers[(i + 1) % markers.length].focus();
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        markers[(i - 1 + markers.length) % markers.length].focus();
-      } else if (e.key === 'Home') {
-        e.preventDefault();
-        markers[0].focus();
-      } else if (e.key === 'End') {
-        e.preventDefault();
-        markers[markers.length - 1].focus();
+  }
+
+  (function initTimeline() {
+    let attempt = 0;
+    function tryInit() {
+      attempt++;
+      const markers = [...document.querySelectorAll('.year-node')];
+      const panels = [...document.querySelectorAll('[data-year-panel]')];
+      if (!markers.length || !panels.length) {
+        if (attempt < 10) {
+          console.log('[timeline] retry init attempt', attempt);
+          return setTimeout(tryInit, 50 * attempt);
+        }
+        console.warn('[timeline] init failed: no markers/panels');
+        return;
       }
-    });
-  });
-  selectYear('2025');
-  // 初期ロード後高さ統一
-  computePanelHeights();
+      console.log('[timeline] init ok markers', markers.length, 'panels', panels.length);
+      function selectYear(year) {
+        if (!year) return;
+        let activeEl = null;
+        markers.forEach(m => {
+          const active = m.getAttribute('data-year') === year;
+          m.classList.toggle('is-active', active);
+          m.setAttribute('aria-pressed', active ? 'true' : 'false');
+          if (active) activeEl = m;
+        });
+        panels.forEach(p => {
+          const active = p.getAttribute('data-year-panel') === year;
+          p.classList.toggle('hidden', !active);
+          p.setAttribute('aria-hidden', active ? 'false' : 'true');
+          if (active) p.style.removeProperty('display');
+          else p.style.display = 'none';
+        });
+        if (activeEl) {
+          activeEl.classList.remove('activating');
+          void activeEl.offsetWidth;
+          activeEl.classList.add('activating');
+          activeEl.addEventListener('animationend', () => activeEl.classList.remove('activating'), {
+            once: true,
+          });
+        }
+        requestAnimationFrame(() => computeAndLockPanelHeights(panels));
+        console.log('[timeline] selectYear', year);
+      }
+      // expose for debugging
+      window.__selectYear = selectYear;
+      markers.forEach(m => {
+        m.addEventListener('click', () => selectYear(m.getAttribute('data-year')));
+        m.addEventListener('keydown', e => {
+          const i = markers.indexOf(m);
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectYear(m.getAttribute('data-year'));
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            markers[(i + 1) % markers.length].focus();
+          } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            markers[(i - 1 + markers.length) % markers.length].focus();
+          } else if (e.key === 'Home') {
+            e.preventDefault();
+            markers[0].focus();
+          } else if (e.key === 'End') {
+            e.preventDefault();
+            markers[markers.length - 1].focus();
+          }
+        });
+      });
+      computeAndLockPanelHeights(panels);
+      attachResponsiveRecalc(panels, 160);
+      window.addEventListener('orientationchange', () => computeAndLockPanelHeights(panels));
+      selectYear('2025');
+      console.log('[timeline] ready');
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', tryInit);
+    } else {
+      tryInit();
+    }
+    document.addEventListener('astro:page-load', tryInit);
+  })();
+  /* eslint-enable no-console */
 </script>
 
 <style>
@@ -326,10 +346,12 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
   }
   .year-node.is-active .year-dot {
     background: linear-gradient(135deg, var(--yr-active) 15%, var(--yr-active-accent) 85%);
-    box-shadow:
+    box-shadow: var(
+      --shadow-year-active,
       0 0 0 3px rgba(52, 211, 153, 0.25),
       0 0 12px 5px rgba(52, 211, 153, 0.4),
-      0 0 32px 14px rgba(52, 211, 153, 0.15);
+      0 0 32px 14px rgba(52, 211, 153, 0.15)
+    );
     transform: scale(var(--_scale));
     animation: timeline-pulse 2.4s ease-in-out infinite;
   }
@@ -387,10 +409,12 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
   }
   .year-node:not(.is-active) .year-dot {
     background: linear-gradient(135deg, #475569, #2e3a48);
-    box-shadow:
+    box-shadow: var(
+      --shadow-year-inactive,
       0 0 0 2px rgba(128, 144, 168, 0.28),
       0 0 6px 0 rgba(20, 28, 42, 0.55),
-      0 0 10px -2px rgba(128, 144, 168, 0.35);
+      0 0 10px -2px rgba(128, 144, 168, 0.35)
+    );
     filter: grayscale(0.35) brightness(0.98) saturate(0.85) contrast(1.05);
   }
   .year-node:not(.is-active):hover .year-dot,
@@ -503,6 +527,164 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
       animation: none !important;
     }
   }
+
+  /* Timeline color and gap adjustments */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tl-marker-gap-desktop, 4rem);
+  }
+  @media (max-width: 1024px) {
+    .timeline {
+      gap: var(--tl-marker-gap-md, 3.25rem);
+    }
+  }
+  @media (max-width: 640px) {
+    .timeline {
+      gap: var(--tl-marker-gap-sm, 2.6rem);
+    }
+  }
+  .tl-item {
+    position: relative;
+  }
+  .tl-marker {
+    position: absolute;
+    left: -2.4rem;
+    top: 0.35rem;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--tl-inactive, #64748b);
+    box-shadow:
+      0 0 0 3px rgba(255, 255, 255, 0.07),
+      0 0 0 6px rgba(100, 116, 139, 0.15);
+    transition:
+      background 0.35s,
+      box-shadow 0.35s,
+      transform 0.35s;
+  }
+  .tl-item.active .tl-marker {
+    background: var(--tl-active, #34d399);
+    box-shadow:
+      0 0 0 3px rgba(255, 255, 255, 0.14),
+      0 0 12px -2px rgba(52, 211, 153, 0.75);
+    transform: scale(1.08);
+  }
+  .tl-line {
+    position: absolute;
+    left: -1.67rem;
+    top: 1.65rem;
+    bottom: -2.8rem;
+    width: 2px;
+    background: linear-gradient(
+      var(--tl-line-angle, 180deg),
+      rgba(255, 255, 255, 0.18),
+      rgba(255, 255, 255, 0)
+    );
+    opacity: 0.65;
+  }
+  .tl-item:last-child .tl-line {
+    display: none;
+  }
+  .tl-panel {
+    position: relative;
+    padding: 1.15rem 1.2rem 1.2rem 1.2rem;
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    backdrop-filter: blur(6px) saturate(120%);
+    box-shadow:
+      0 3px 10px -4px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(255, 255, 255, 0.04);
+    transition:
+      box-shadow 0.35s,
+      border-color 0.35s,
+      background 0.35s;
+  }
+  .tl-item.active .tl-panel {
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 4px 16px -6px rgba(0, 0, 0, 0.65),
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      0 0 20px -8px rgba(52, 211, 153, 0.5);
+  }
+  .tl-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+  }
+  .tl-year {
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: 0.5px;
+    background: linear-gradient(
+      135deg,
+      var(--tl-active, #34d399),
+      var(--tl-active-accent, #10b981)
+    );
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+  .tl-title {
+    font-weight: 600;
+    color: #e2e8f0;
+    letter-spacing: 0.5px;
+  }
+  .tl-desc {
+    margin-top: 0.45rem;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: #b6c2d3;
+  }
+  .tl-tags {
+    margin-top: 0.7rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .tl-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.6px;
+    padding: 2px 7px 2px 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+    font-weight: 600;
+    color: #e2e8f0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .tl-item.active .tl-tag.primary {
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 0 0 4px rgba(52, 211, 153, 0.15);
+  }
+  @media (max-width: 860px) {
+    .tl-marker {
+      left: -2.1rem;
+    }
+    .tl-line {
+      left: -1.38rem;
+    }
+  }
+  @media (max-width: 640px) {
+    .tl-marker {
+      left: -1.9rem;
+    }
+    .tl-line {
+      left: -1.16rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tl-marker,
+    .tl-item.active .tl-marker {
+      transition: none;
+    }
+  }
 </style>
 
 <style is:global>
@@ -515,6 +697,7 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
   #yearMarkers.year-markers-condensed .year-node {
     padding: 0 6px;
   }
+  /* REFACTOR-STAGE2: gap, sizing を CSS カスタムプロパティ化して別ページ再利用 (Stage4) */
   @media (max-width: 900px) {
     #yearMarkers.year-markers-condensed {
       gap: 3rem;
