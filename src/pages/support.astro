@@ -2,219 +2,739 @@
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 // @ts-ignore
-import data from '../data/support.yml';
+import data from '../data/support.yaml';
+
+interface CloudCase {
+  title: string;
+  ops?: number;
+  category?: string;
+  desc?: string;
+  diagram?: string;
+  tags?: string[];
+  colors?: string[];
+  stack?: string;
+}
+interface AppPattern {
+  name: string;
+  desc?: string;
+  diagram?: string;
+  color?: string;
+}
+
+const cloudCases: CloudCase[] = (data as any).cloudCases ?? [];
+const appPatterns: AppPattern[] = (data as any).appPatterns ?? [];
+
+// 指定順序（ユーザー指定最新順）
+// 表示名と実データカテゴリ名称の差異を吸収（"Application Integration" vs "Application integrations"）
+const targetCategories = [
+  'Compute',
+  'Database',
+  'Storage',
+  'Application Integration',
+  'Network & Content Delivery',
+  'Developer Tools',
+  'Financial Management',
+  'Analytics',
+  'Security Identity & Compliance',
+];
+
+type CatStat = { name: string; total: number; items: CloudCase[] };
+const catStats: CatStat[] = targetCategories.map(name => {
+  const items = cloudCases.filter(c => {
+    const cat = (c.category || '').trim();
+    if (name === 'Application Integration')
+      return cat === 'Application Integration' || cat === 'Application integrations';
+    return cat === name;
+  });
+  const total = items.reduce((s, c) => s + (c.ops || 0), 0);
+  return { name, total, items };
+});
+
+// Y軸: 最大値を含む10刻みスケール
+const rawMax = Math.max(...catStats.map(c => c.total), 0);
+const yMax = rawMax === 0 ? 10 : Math.ceil(rawMax / 10) * 10; // 10単位に丸め上げ
+const catTicks: number[] = [];
+for (let v = 0; v <= yMax; v += 10) catTicks.push(v);
+
+// カテゴリごとの明確な配色 + パターン指定（色が近い場合の視覚差分強化）
+interface CatStyle {
+  color: string;
+  pattern?: string;
+}
+const categoryStyles: Record<string, CatStyle> = {
+  Compute: { color: 'purple', pattern: 'cross' },
+  Database: { color: 'yellow', pattern: 'diag2' },
+  Storage: { color: 'teal', pattern: 'vdash' },
+  'Application Integration': { color: 'blue', pattern: 'diag' },
+  'Network & Content Delivery': { color: 'red', pattern: 'hstripe' },
+  'Developer Tools': { color: 'orange', pattern: 'grid' },
+  'Financial Management': { color: 'green', pattern: 'dot' },
+  Analytics: { color: 'cyan', pattern: 'none' },
+  'Security Identity & Compliance': { color: 'pink', pattern: 'checker' },
+};
+function catStyle(name: string): CatStyle {
+  return categoryStyles[name] || { color: 'cyan', pattern: 'none' };
+}
 ---
 
-<Layout
-  title="アーキテクチャ - i7s7-ymp Portfolio"
-  headerTitle="architecture:patterns"
-  headerPills={['build:ok']}
->
-  <div class="space-y-10">
-    <PageHeader
-      title={data.header.title}
-      subtitle={data.header.subtitle}
-      icon={data.header.icon}
-      iconBgClass={data.header.iconBgClass}
+<Layout title="アーキテクチャ - i7s7-ymp Portfolio">
+  <PageHeader
+    title={data.header.title}
+    subtitle={data.header.subtitle}
+    icon={data.header.icon}
+    iconBgClass={data.header.iconBgClass}
+  />
+  <div class="vchart-wrapper py-10">
+    <div
+      class="vchart"
+      role="img"
+      aria-label={`クラウドカテゴリ別運用件数 Y軸最大 ${yMax}`}
+      aria-describedby="cat-note"
     >
-      <div slot="extra" class="flex flex-wrap gap-2 text-xs">
-        {data.header.tags.map((t: string) => <span class="badge-pill">{t}</span>)}
-      </div>
-    </PageHeader>
-    <div class="space-y-6">
-      <div class="section-card">
-        <h3 class="mb-4 text-lg font-semibold text-green-400">クラウドアーキテクチャ事例</h3>
-
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div class="plot" data-count={catStats.length}>
+        <div class="grid-y" aria-hidden="true">
           {
-            data.cloudCases.map((c: any) => {
-              const primaryColor = c.colors?.[0] || 'cyan';
+            catTicks.map(t => {
+              const pct = (t / yMax) * 100;
+              const top = 100 - pct;
               return (
-                <div class="section-card overflow-hidden p-0">
-                  <button
-                    class="flex w-full items-start justify-between gap-4 px-4 py-3 text-left hover:bg-primary-600/10 focus:outline-none focus:ring-2 focus:ring-accent-cyan/40"
-                    data-toggle
-                    aria-expanded="false"
-                  >
-                    <div class="w-12 shrink-0" aria-hidden="true" />
-                    <div>
-                      <h4 class={`font-semibold text-${primaryColor}-400`}>{c.title}</h4>
-                      <span class="block text-xs text-yellow-400">{c.stack}</span>
-                    </div>
-                    <span
-                      data-chevron
-                      class="ml-auto select-none rounded border border-primary-500/30 px-2 font-mono text-sm text-primary-300"
-                    >
-                      +
-                    </span>
-                  </button>
-                  <div class="collapsible hidden border-t border-primary-600/20 px-4 pb-4 pt-3">
-                    <div class="mb-3 rounded bg-gray-800/70 p-3">
-                      <pre class="whitespace-pre-wrap text-[11px] leading-relaxed text-green-400">
-                        {c.diagram}
-                      </pre>
-                    </div>
-                    <p class="text-sm text-gray-300">{c.desc}</p>
-                    <div class="mt-3 flex flex-wrap gap-2">
-                      {c.tags.map((t: string, i: number) => (
-                        <span
-                          class={`rounded bg-${c.colors[i]}-400/20 px-2 py-1 text-xs text-${c.colors[i]}-400`}
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
+                <div class="grid-row" style={`top:${top}%;`}>
+                  <span class="grid-line" />
+                  <span class="grid-label">{t}</span>
+                </div>
+              );
+            })
+          }
+        </div>
+        <div class="bars" data-count={catStats.length} style="--bar-w:70px;">
+          {
+            catStats.map(cat => {
+              const hPct = cat.total === 0 ? 0 : (cat.total / yMax) * 100;
+              const isHigh = hPct > 90; // 高さが上限付近
+              const { color, pattern } = catStyle(cat.name);
+              const id = `cat-${cat.name.replace(/\s+/g, '-').toLowerCase()}`;
+              return (
+                <div
+                  class="bar-box"
+                  style={`--h:${hPct}%;`}
+                  data-color={color}
+                  data-id={id}
+                  data-zero={cat.total === 0}
+                  data-pattern={pattern}
+                  title={`${cat.name}: ${cat.total} ops`}
+                  data-high={isHigh}
+                >
+                  <div class="bar-hit" aria-label={`${cat.name} ${cat.total} ops`}>
+                    <span class="bar-fill" />
+                    <span class="bar-value font-mono">{cat.total}</span>
                   </div>
                 </div>
               );
             })
           }
         </div>
+        <div class="axis-x" aria-hidden="true"></div>
       </div>
-
-      <!-- アプリケーションアーキテクチャ -->
-      <div class="section-card">
-        <h3 class="mb-4 text-lg font-semibold text-green-400">アプリケーションパターン</h3>
-
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {
-            data.appPatterns.map((p: any) => (
-              <div class="section-card overflow-hidden p-0">
-                <button
-                  class="flex w-full items-start justify-between gap-4 px-4 py-3 text-left hover:bg-primary-600/10 focus:outline-none focus:ring-2 focus:ring-accent-cyan/40"
-                  data-toggle
-                  aria-expanded="false"
-                >
-                  <h4 class={`font-semibold text-${p.color}-400`}>{p.name}</h4>
-                  <span
-                    data-chevron
-                    class="ml-auto select-none rounded border border-primary-500/30 px-2 font-mono text-sm text-primary-300"
-                  >
-                    +
-                  </span>
-                </button>
-                <div class="collapsible hidden border-t border-primary-600/20 px-4 pb-4 pt-3">
-                  <div class="mb-2 rounded bg-gray-800/70 p-2">
-                    <pre class="whitespace-pre-wrap text-[11px] leading-relaxed text-gray-300">
-                      {p.diagram}
-                    </pre>
-                  </div>
-                  <p class="text-xs text-gray-400">{p.desc}</p>
-                </div>
+      <div class="bar-labels" aria-hidden="false">
+        {
+          catStats.map(cat => {
+            const { color } = catStyle(cat.name);
+            const id = `cat-${cat.name.replace(/\s+/g, '-').toLowerCase()}`;
+            return (
+              <div
+                class="x-label badge-pill"
+                data-color={color}
+                data-id={id}
+                tabindex="0"
+                aria-label={`${cat.name} カテゴリ`}
+              >
+                {cat.name}
               </div>
-            ))
-          }
-        </div>
-      </div>
-
-      <!-- 技術スタック (Marquee/電光掲示板) -->
-      <div class="section-card overflow-hidden">
-        <h3 class="mb-4 text-lg font-semibold text-green-400">技術スタック</h3>
-        <div class="relative">
-          <div
-            class="marquee-mask pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-dark-900 to-transparent"
-          >
-          </div>
-          <div
-            class="marquee-mask pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-dark-900 to-transparent"
-          >
-          </div>
-          <div class="marquee-track flex w-fit gap-12 py-2 will-change-transform" data-marquee>
-            <div class="flex flex-nowrap gap-12" data-segment aria-hidden="true">
-              {
-                data.techStack.categories.map((cat: any) => (
-                  <div class="min-w-[220px] shrink-0">
-                    <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-yellow-400">
-                      {cat.title}
-                    </h4>
-                    <div class="flex flex-wrap gap-2">
-                      {cat.items.map((it: any) => (
-                        <span
-                          class={`flex items-center gap-1 rounded-full border border-${it.color}-400/30 bg-${it.color}-400/10 px-3 py-1 font-mono text-[11px] text-${it.color}-300 shadow-sm`}
-                        >
-                          <span class={`h-2 w-2 rounded-full bg-${it.color}-400`} />
-                          {it.name}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))
-              }
-            </div>
-            <!-- 1周目と2周目の間のスペース (以前: w-32) -->
-            <div class="w-16 shrink-0" aria-hidden="true"></div>
-            <div class="flex flex-nowrap gap-12" data-segment aria-hidden="true">
-              {
-                data.techStack.categories.map((cat: any) => (
-                  <div class="min-w-[220px] shrink-0">
-                    <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-yellow-400">
-                      {cat.title}
-                    </h4>
-                    <div class="flex flex-wrap gap-2">
-                      {cat.items.map((it: any) => (
-                        <span
-                          class={`flex items-center gap-1 rounded-full border border-${it.color}-400/30 bg-${it.color}-400/10 px-3 py-1 font-mono text-[11px] text-${it.color}-300 shadow-sm`}
-                        >
-                          <span class={`h-2 w-2 rounded-full bg-${it.color}-400`} />
-                          {it.name}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))
-              }
-            </div>
-          </div>
-        </div>
-        <div class="mt-4 flex items-center gap-3 text-[11px] text-primary-400">
-          <span class="h-2 w-2 animate-pulse rounded-full bg-accent-neon"></span>
-          <span>横スクロール自動再生 / ホバーで一時停止</span>
-        </div>
+            );
+          })
+        }
       </div>
     </div>
   </div>
+  <p id="cat-note" class="chart-note" aria-label="カテゴリ分類注釈">
+    ※ カテゴリ区分は主に AWS サービス分類 (Console / Docs, 2025年時点)
+    を参考にしつつポートフォリオ用途で簡略化・統合しています。
+  </p>
+  <script>
+    // ホバー/フォーカス同期 + キーボード操作
+    document.addEventListener('DOMContentLoaded', () => {
+      // 型指定を避けてビルドエラー解消（プレーンJS）
+      const bars = Array.from(document.querySelectorAll('.bar-box')) as any[];
+      const labels = Array.from(document.querySelectorAll('.bar-labels .x-label')) as any[];
+
+      /**
+       * @param {string|null} id
+       */
+      /**
+       * @param {string|null} id
+       */
+      // @ts-ignore implicit any 回避
+      const activate = (id: any) => {
+        bars.forEach((b: any) => b.classList.toggle('active', !!id && b.dataset.id === id));
+        labels.forEach((l: any) => l.classList.toggle('active', !!id && l.dataset.id === id));
+      };
+      const clear = () => activate(null);
+
+      bars.forEach((b: any) => {
+        const id = b.dataset.id || '';
+        const hit = b.querySelector('.bar-hit') as any;
+        if (hit) hit.tabIndex = 0;
+        ['mouseenter', 'focus'].forEach(ev => b.addEventListener(ev, () => activate(id)));
+        ['mouseleave', 'blur'].forEach(ev => b.addEventListener(ev, clear));
+        b.addEventListener('click', () => activate(id));
+      });
+
+      labels.forEach((l: any) => {
+        const id = l.dataset.id || '';
+        ['mouseenter', 'focus'].forEach(ev => l.addEventListener(ev, () => activate(id)));
+        ['mouseleave', 'blur'].forEach(ev => l.addEventListener(ev, clear));
+        l.addEventListener('click', () => activate(id));
+        l.addEventListener('keydown', (e: any) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            activate(id);
+          } else if (e.key === 'Escape') {
+            clear();
+          }
+        });
+      });
+
+      document.addEventListener('keydown', (e: any) => {
+        if (e.key === 'Escape') clear();
+      });
+    });
+  </script>
+
+  <section class="patterns-section pb-16">
+    <h3 class="mb-6 text-lg font-semibold text-green-400">アプリケーションパターン</h3>
+    <div class="pattern-grid">
+      {
+        appPatterns.map(p => (
+          <div class="pattern-card" data-color={p.color || 'cyan'}>
+            <div class="pc-head">
+              <h4 class={`pc-title text-${p.color || 'cyan'}-300`}>{p.name}</h4>
+            </div>
+            {p.diagram && <pre class="pc-diagram">{p.diagram}</pre>}
+            {p.desc && <p class="pc-desc">{p.desc}</p>}
+          </div>
+        ))
+      }
+    </div>
+  </section>
 </Layout>
 
-<script is:inline>
-  // トグル挙動: 折りたたみ/展開
-  const toggleButtons = document.querySelectorAll('[data-toggle]');
-  toggleButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const expanded = btn.getAttribute('aria-expanded') === 'true';
-      const panel = btn.nextElementSibling;
-      if (!panel) return;
-      btn.setAttribute('aria-expanded', (!expanded).toString());
-      panel.classList.toggle('hidden', expanded);
-      const chevron = btn.querySelector('[data-chevron]');
-      if (chevron) chevron.textContent = expanded ? '+' : '−';
-    });
-  });
-
-  // Marquee関連コードは削除済み
-</script>
+<!-- （棒グラフのみ表示のため追加スクリプト不要） -->
 
 <style>
-  /* Marquee animation */
-  [data-marquee] {
-    animation: marquee-scroll 40s linear infinite;
+  .vchart-wrapper {
+    position: relative;
   }
-  [data-marquee]:hover {
-    animation-play-state: paused;
+  .vchart {
+    position: relative;
+    min-height: 320px;
   }
-  @keyframes marquee-scroll {
-    0% {
-      transform: translateX(0);
+  .plot {
+    position: relative;
+    padding: 0 0 46px 56px;
+  }
+  .grid-y {
+    position: absolute;
+    inset: 0 0 46px 0;
+  }
+  .grid-row {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+  }
+  .grid-line {
+    position: absolute;
+    left: 56px;
+    right: 0;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.18), transparent 55%);
+  }
+  .grid-label {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    font-family: ui-monospace, monospace;
+    color: #94a3b8;
+    padding-right: 6px;
+  }
+  .bars {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 1.25rem;
+    height: 250px;
+    margin-left: 56px;
+  }
+  .bars {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  .bars::-webkit-scrollbar {
+    height: 8px;
+  }
+  .bars::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .bars::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 4px;
+  }
+  .bar-box {
+    position: relative;
+    width: var(--bar-w, 70px);
+    flex: 0 0 var(--bar-w, 70px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    height: 100%;
+  }
+  .bar-hit {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    outline: none;
+  }
+  .bar-fill {
+    width: 100%;
+    height: var(--h);
+    min-height: 2px;
+    border-radius: 6px 6px 4px 4px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent),
+      var(--bar-color, rgba(34, 211, 238, 0.55));
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 5px 14px -4px rgba(0, 0, 0, 0.65);
+    position: relative;
+    overflow: hidden;
+    animation: grow-bar 0.9s cubic-bezier(0.25, 0.85, 0.3, 1) both;
+  }
+  .bar-box[data-zero='false'] .bar-fill {
+    min-height: 8px;
+  }
+  .bar-box[data-zero='true'] .bar-fill {
+    filter: grayscale(0.45) brightness(0.75);
+    opacity: 0.55;
+  }
+  .bar-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 40% 18%, rgba(255, 255, 255, 0.48), transparent 62%);
+    mix-blend-mode: overlay;
+    opacity: 0.42;
+  }
+  .bar-value {
+    position: absolute;
+    bottom: calc(var(--h) + 6px);
+    font-size: 11px;
+    background: rgba(15, 23, 42, 0.88);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-family: ui-monospace, monospace;
+    color: #e2e8f0;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 5px -2px rgba(0, 0, 0, 0.6);
+  }
+  /* 高さが90%以上のバーは内部上部にラベルを反転表示 */
+  .bar-box[data-high='true'] .bar-value {
+    bottom: auto;
+    top: 4px;
+    background: rgba(0, 0, 0, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    mix-blend-mode: screen;
+  }
+  .bar-box[data-zero='true'] .bar-value {
+    bottom: 8px;
+  }
+  /* in-bar labels removed; external labels below */
+  .axis-x {
+    position: absolute;
+    left: 56px;
+    right: 0;
+    bottom: 46px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.05));
+  }
+  .bar-box:hover .bar-fill,
+  .bar-box:focus-within .bar-fill {
+    filter: brightness(1.18) saturate(1.2);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.22),
+      0 10px 26px -6px rgba(0, 0, 0, 0.85);
+  }
+  .bar-box:hover .bar-value,
+  .bar-box:focus-within .bar-value {
+    background: rgba(15, 23, 42, 0.95);
+  }
+  @keyframes grow-bar {
+    from {
+      height: 0;
+      filter: brightness(0.7) saturate(0.8);
     }
-    100% {
-      transform: translateX(-50%);
+    65% {
+      filter: brightness(1.15) saturate(1.1);
+    }
+    to {
+      filter: brightness(1) saturate(1);
     }
   }
-  .marquee-mask {
+  .bar-box[data-color='cyan'] .bar-fill {
+    --bar-color: linear-gradient(180deg, #22d3ee, #0891b2);
+  }
+  .bar-box[data-color='blue'] .bar-fill {
+    --bar-color: linear-gradient(180deg, #3b82f6, #1d4ed8);
+  }
+  .bar-box[data-color='green'] .bar-fill {
+    --bar-color: linear-gradient(180deg, #10b981, #047857);
+  }
+  .bar-box[data-color='purple'] .bar-fill {
+    --bar-color: linear-gradient(180deg, #8b5cf6, #6d28d9);
+  }
+  .bar-box[data-color='yellow'] .bar-fill {
+    --bar-color: linear-gradient(180deg, #fbbf24, #d97706);
+  }
+  .bar-box[data-color='orange'] .bar-fill {
+    --bar-color: linear-gradient(180deg, #fb923c, #c2410c);
+  }
+  .bar-box[data-color='red'] .bar-fill {
+    --bar-color: linear-gradient(180deg, #ef4444, #b91c1c);
+  }
+  .bar-box[data-color='teal'] .bar-fill {
+    --bar-color: linear-gradient(180deg, #14b8a6, #0f766e);
+  }
+  .bar-box[data-color='pink'] .bar-fill {
+    --bar-color: linear-gradient(180deg, #ec4899, #be185d);
+  }
+  /* パターンオーバーレイ */
+  .bar-box[data-pattern]:not([data-pattern='none']) .bar-fill::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.45;
+    mix-blend-mode: overlay;
+    background-size: 16px 16px;
+    background-repeat: repeat;
+  }
+  .bar-box[data-pattern='dot'] .bar-fill::before {
+    background-image:
+      radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.6) 12%, transparent 13%),
+      radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.6) 12%, transparent 13%);
+  }
+  .bar-box[data-pattern='diag'] .bar-fill::before {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.55) 0 4px,
+      transparent 4px 8px
+    );
+  }
+  .bar-box[data-pattern='diag2'] .bar-fill::before {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.5) 0 3px,
+      transparent 3px 7px
+    );
+  }
+  .bar-box[data-pattern='cross'] .bar-fill::before {
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.5) 0 2px, transparent 2px 8px),
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.5) 0 2px, transparent 2px 8px);
+  }
+  .bar-box[data-pattern='grid'] .bar-fill::before {
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.45) 0 1px, transparent 1px 8px),
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.45) 0 1px, transparent 1px 8px);
+  }
+  .bar-box[data-pattern='hstripe'] .bar-fill::before {
+    background-image: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.55) 0 3px,
+      transparent 3px 6px
+    );
+  }
+  .bar-box[data-pattern='vdash'] .bar-fill::before {
+    background-image: repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.55) 0 2px,
+      transparent 2px 6px
+    );
+  }
+  .bar-box[data-pattern='checker'] .bar-fill::before {
+    background-image:
+      linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.55) 25%,
+        transparent 25% 50%,
+        rgba(255, 255, 255, 0.55) 50% 75%,
+        transparent 75%
+      ),
+      linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.35) 25%,
+        transparent 25% 50%,
+        rgba(255, 255, 255, 0.35) 50% 75%,
+        transparent 75%
+      );
+    background-size: 12px 12px;
+    background-position:
+      0 0,
+      6px 6px;
+    opacity: 0.5;
+  }
+  /* App patterns */
+  .patterns-section {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .pattern-grid {
+    display: grid;
+    gap: 1.1rem;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  .pattern-card {
+    position: relative;
+    padding: 1rem 0.95rem 1.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(6px);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .pattern-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(140deg, rgba(255, 255, 255, 0.06), transparent 55%);
     pointer-events: none;
   }
+  .pc-title {
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+  .pc-diagram {
+    font-family: ui-monospace, monospace;
+    font-size: 10px;
+    line-height: 1.35;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 0.55rem 0.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    margin: 0;
+    white-space: pre-wrap;
+    color: #cbd5e1;
+  }
+  .pc-desc {
+    font-size: 11px;
+    line-height: 1.5;
+    color: #94a3b8;
+    margin: 0;
+  }
+  .pattern-card[data-color='cyan'] {
+    box-shadow:
+      0 0 0 1px rgba(34, 211, 238, 0.18),
+      0 4px 12px -3px rgba(0, 0, 0, 0.55);
+  }
+  .pattern-card[data-color='purple'] {
+    box-shadow:
+      0 0 0 1px rgba(139, 92, 246, 0.18),
+      0 4px 12px -3px rgba(0, 0, 0, 0.55);
+  }
+  .pattern-card[data-color='blue'] {
+    box-shadow:
+      0 0 0 1px rgba(59, 130, 246, 0.18),
+      0 4px 12px -3px rgba(0, 0, 0, 0.55);
+  }
+  .pattern-card[data-color='green'] {
+    box-shadow:
+      0 0 0 1px rgba(16, 185, 129, 0.18),
+      0 4px 12px -3px rgba(0, 0, 0, 0.55);
+  }
+  .pattern-card[data-color='orange'] {
+    box-shadow:
+      0 0 0 1px rgba(249, 115, 22, 0.18),
+      0 4px 12px -3px rgba(0, 0, 0, 0.55);
+  }
+  .pattern-card[data-color='yellow'] {
+    box-shadow:
+      0 0 0 1px rgba(251, 191, 36, 0.18),
+      0 4px 12px -3px rgba(0, 0, 0, 0.55);
+  }
+  .pattern-card:hover {
+    outline: 1px solid rgba(255, 255, 255, 0.16);
+  }
+  .bar-labels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 0.65rem;
+    margin: 1.25rem 0 0 56px;
+    font-size: 11px;
+    line-height: 1.2;
+    max-width: calc(100% - 56px);
+  }
+  /* badge-pill ベース (header と統一) */
+  .badge-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 4px 10px 4px 8px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.6));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      0.25s background,
+      0.25s border-color,
+      0.25s box-shadow,
+      0.25s transform;
+    backdrop-filter: blur(6px);
+  }
+  .badge-pill::before {
+    content: '';
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--pill-color, #38bdf8);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.35),
+      0 0 8px -1px var(--pill-color, #38bdf8);
+  }
+  .badge-pill[data-color='cyan'] {
+    --pill-color: #22d3ee;
+  }
+  .badge-pill[data-color='blue'] {
+    --pill-color: #3b82f6;
+  }
+  .badge-pill[data-color='green'] {
+    --pill-color: #10b981;
+  }
+  .badge-pill[data-color='purple'] {
+    --pill-color: #8b5cf6;
+  }
+  .badge-pill[data-color='yellow'] {
+    --pill-color: #fbbf24;
+  }
+  .badge-pill[data-color='orange'] {
+    --pill-color: #fb923c;
+  }
+  .badge-pill[data-color='red'] {
+    --pill-color: #ef4444;
+  }
+  .badge-pill[data-color='teal'] {
+    --pill-color: #14b8a6;
+  }
+  .badge-pill[data-color='pink'] {
+    --pill-color: #ec4899;
+  }
+  .badge-pill:hover,
+  .badge-pill:focus {
+    background: linear-gradient(135deg, rgba(45, 55, 72, 0.9), rgba(25, 32, 48, 0.75));
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow:
+      0 0 0 1px var(--pill-color, #38bdf8),
+      0 0 14px -2px var(--pill-color, #38bdf8);
+    outline: none;
+  }
+  .badge-pill.active {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(15, 23, 42, 0.7));
+    border-color: var(--pill-color, #38bdf8);
+    box-shadow:
+      0 0 0 1px var(--pill-color, #38bdf8),
+      0 0 18px -2px var(--pill-color, #38bdf8);
+    transform: translateY(-2px);
+  }
+  .chart-note {
+    margin: 0.75rem 0 2rem 56px;
+    max-width: 780px;
+    font-size: 10px;
+    line-height: 1.5;
+    color: #94a3b8;
+    background: rgba(15, 23, 42, 0.55);
+    padding: 6px 10px 7px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+  }
+  @media (max-width: 640px) {
+    .chart-note {
+      margin-left: 46px;
+      font-size: 9px;
+    }
+  }
+  .bar-box.active .bar-fill {
+    filter: brightness(1.15) saturate(1.2);
+    box-shadow:
+      0 0 0 2px rgba(255, 255, 255, 0.15),
+      0 0 18px -2px rgba(255, 255, 255, 0.35);
+  }
+  .bar-box.active .bar-value {
+    transform: translateY(-4px) scale(1.05);
+  }
+  @media (max-width: 900px) {
+    .bars {
+      gap: 1rem;
+    }
+    .plot {
+      padding: 0 0 46px 50px;
+    }
+    .axis-x {
+      left: 50px;
+    }
+    .bar-labels {
+      margin-left: 50px;
+    }
+  }
+  @media (max-width: 640px) {
+    .bars {
+      gap: 0.9rem;
+    }
+    .plot {
+      padding: 0 0 52px 46px;
+    }
+    .axis-x {
+      left: 46px;
+      bottom: 52px;
+    }
+    .bar-value {
+      font-size: 10px;
+    }
+    .bar-labels {
+      margin-left: 46px;
+      font-size: 10px;
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
-    [data-marquee] {
-      animation: none;
+    .bar-fill {
+      animation: none !important;
     }
   }
 </style>

@@ -1,159 +1,52 @@
 header:
-  title: アーキテクチャ経験
-  subtitle: クラウド & アプリケーション設計
-  icon: 🧱
-  iconBgClass: bg-gradient-to-r from-accent-cyan to-accent-blue
-  tags: [cloud, scalability, design]
+	title: アーキテクチャ経験
+	subtitle: クラウド & アプリケーション設計
+	icon: rocket
+	iconBgClass: bg-purple-600
+
 cloudCases:
-  - id: aws-microservices
-    title: AWS マイクロサービス構成
-    stack: AWS • Kubernetes • Docker
-    diagram: |-
-      Clients
-        ↓
-      CloudFront + Route53
-        ↓
-      ALB
-        ↓
-      EKS Cluster
-        ├─ API Gateway Service
-        ├─ User Service (RDS)
-        ├─ Order Service (DynamoDB)
-        └─ Payment Service (ElastiCache)
-      Observability: CloudWatch, X-Ray
-    desc: AWSを活用したマイクロサービスアーキテクチャ。EKSとAPI Gatewayによるスケーラブルな構成。
-    tags: [AWS, Kubernetes, Microservices]
-    colors: [blue, green, orange]
-  - id: gcp-data-pipeline
-    title: GCP データパイプライン
-    stack: GCP • BigQuery • Dataflow
-    diagram: |-
-      Ingestion: Cloud Storage (Data Lake)
-        ↓
-      Dataflow Pipelines
-        ├─ ETL Processing
-        ├─ Real-time Analytics
-        └─ ML Pipeline (Vertex AI)
-        ↓
-      BigQuery (Warehouse)
-        ↓
-      Visualization: Looker / Data Studio
-    desc: GCPベースのデータパイプライン。リアルタイム分析とML統合のアーキテクチャ。
-    tags: [GCP, BigQuery, ML Pipeline]
-    colors: [yellow, purple, cyan]
-  - id: azure-devops
-    title: Azure DevOps 統合
-    stack: Azure • AKS • DevOps
-    diagram: |-
-      Azure DevOps Pipelines (CI/CD)
-        ↓
-      Container Registry (Artifacts)
-        ↓
-      AKS Cluster
-        ├─ App Gateway
-        ├─ Workload Pods / Container Instances
-        └─ Azure SQL Database
-      Monitoring: Azure Monitor / Logs
-    desc: Azure環境でのCI/CD統合アーキテクチャ。AKSとDevOpsパイプラインの組み合わせ。
-    tags: [Azure, AKS, CI/CD]
-    colors: [cyan, green, orange]
-  - id: serverless
-    title: サーバーレス構成
-    stack: AWS Lambda • API Gateway • DynamoDB
-    diagram: |-
-      Clients
-        ↓
-      CloudFront
-        ↓
-      API Gateway
-        ↓
-      Lambda Functions
-        ├─ Auth (Cognito)
-        ├─ Business Logic
-        └─ Data Processing
-      Data Stores: DynamoDB, S3
-    desc: 完全サーバーレス構成のWebアプリケーション。コスト効率とスケーラビリティを両立。
-    tags: [Serverless, Lambda, DynamoDB]
-    colors: [purple, yellow, blue]
+	- title: Web API 基盤
+		ops: 18
+		category: Compute
+	- title: 課金分析バッチ
+		ops: 4
+		category: Developer Tools
+	- title: 監査ログ集約
+		ops: 5
+		category: Analytics
+	- title: 課金最適化タグ運用
+		ops: 2
+		category: Financial Management
+	- title: 連携メッセージング基盤
+		ops: 3
+		category: Application Integration
+	- title: 静的コンテンツ配信
+		ops: 1
+		category: Network & Content Delivery
+	- title: バックアップバケット
+		ops: 2
+		category: Storage
+	- title: 認証統合 PoC
+		ops: 1
+		category: Security Identity & Compliance
+	- title: 構成管理DB
+		ops: 2
+		category: Database
+
 appPatterns:
-  - name: Clean Architecture
-    color: green
-    diagram: |-
-      ┌─────────────── Presentation ───────────────┐
-      │ Controllers / ViewModels                   │
-      └────────────────────────────────────────────┘
-                       ↓ depends on
-      ┌──────────────── Application ───────────────┐
-      │ Use Cases (Interactors)                    │
-      └────────────────────────────────────────────┘
-                       ↓ depends on
-      ┌────────────────── Domain ──────────────────┐
-      │ Entities / Value Objects / Domain Services │
-      └────────────────────────────────────────────┘
-                       ↓ depends on (inverted)
-      ┌───────────── Infrastructure ───────────────┐
-      │ Repositories / Gateways / External APIs    │
-      └────────────────────────────────────────────┘
-    desc: 依存関係逆転による保守性の高いアーキテクチャ
-  - name: CQRS Pattern
-    color: blue
-    diagram: |-
-      +-----------+     +----------------+     +-----------+
-      | Commands  | --> | CommandHandler | --> | Write DB  |
-      +-----------+     +----------------+     +-----------+
-             | emits Events                           ▲
-             v                                        │ project
-        +---------+          update           +---------------+
-        | Event   | ------------------------> | Read Model(s) |
-        |  Bus    | <------------------------ | (Read DB)     |
-        +---------+         rehydrate         +---------------+
-             ▲                                        │ query
-             |                                        v
-      +-----------+     +---------------+      +-------------+
-      | Queries   | --> | QueryHandler  | ---> | Responses   |
-      +-----------+     +---------------+      +-------------+
-    desc: 読み取りと書き込みの分離によるパフォーマンス最適化
-  - name: Event Sourcing
-    color: purple
-    diagram: |-
-      User Action
-        ↓
-      Command Handler
-        ↓ emits Event
-      Event Store (Append Only)
-        ↓ replay / time-travel
-      Projection Handlers
-        ↓ build
-      Materialized Views (Read Models)
-        ↓
-      API / UI Queries
-    desc: イベント駆動による監査可能なシステム設計
-techStack:
-  categories:
-    - title: Container
-      color: yellow
-      items:
-        - name: Docker
-          color: blue
-        - name: Kubernetes
-          color: purple
-        - name: Helm
-          color: green
-    - title: Database
-      color: yellow
-      items:
-        - name: PostgreSQL
-          color: blue
-        - name: DynamoDB
-          color: orange
-        - name: Redis
-          color: red
-    - title: Monitoring
-      color: yellow
-      items:
-        - name: Prometheus
-          color: orange
-        - name: Grafana
-          color: yellow
-        - name: Jaeger
-          color: purple
+	- name: API Gateway + Lambda + DynamoDB
+		desc: サーバーレスでスケーラブルな CRUD/API パターン。
+		color: purple
+	- name: Event-Driven Fan-out
+		desc: イベントを複数コンシューマに非同期配信する疎結合パターン。
+		color: blue
+	- name: Data Lake Ingestion
+		desc: オブジェクトストレージに生データを集約し分析基盤へ段階投入。
+		color: cyan
+	- name: Centralized Logging
+		desc: ログを一括収集・検索できる監視/追跡パターン。
+		color: green
+	- name: Cost Tag Governance
+		desc: コスト配賦と最適化のためのタグ統制フロー。
+		color: yellow
+
