@@ -8,9 +8,9 @@ export interface Props {
 
 const {
   title,
-  description = 'Pop City Portfolio - i7s7-ymp',
+  description = 'Portfolio - i7s7-ymp',
   headerTitle = 'i7s7-ymp',
-  headerPills = ['creative', 'build:ok'],
+  headerPills = ['build:ok'],
 } = Astro.props as Props;
 ---
 
@@ -133,7 +133,7 @@ const {
         <header class="neo-header" aria-label="Minimal retro cyber header">
           <div class="nh-inner">
             <div class="nh-left">
-              <span class="nh-logo" aria-hidden="true">i7</span>
+              <!-- <span class="nh-logo" aria-hidden="true">i7</span> -->
               <h2 class="nh-title">{headerTitle}<span class="caret" aria-hidden="true">_</span></h2>
             </div>
             <div class="nh-status font-mono" role="status">
@@ -319,28 +319,6 @@ const {
         display: flex;
         align-items: center;
         gap: 0.85rem;
-      }
-      .nh-logo {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        font-size: 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 10px;
-        background: radial-gradient(
-          circle at 30% 30%,
-          rgba(34, 211, 238, 0.35),
-          rgba(15, 23, 42, 0.85)
-        );
-        color: #fff;
-        text-shadow: 0 0 6px #22d3ee;
-        box-shadow:
-          0 0 0 1px rgba(34, 211, 238, 0.4) inset,
-          0 0 10px -4px rgba(34, 211, 238, 0.6);
       }
       .nh-title {
         font-family: ui-monospace, Menlo, monospace;
