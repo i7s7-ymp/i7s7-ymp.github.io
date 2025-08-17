@@ -207,6 +207,7 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
               catStats.map(cat => {
                 const hPct = cat.total === 0 ? 0 : (cat.total / yMax) * 100;
                 const isHigh = hPct > 90;
+                const isTall = hPct > 38; // 視認性閾値: 値ラベルを内部に収める境界
                 const { color } = catStyle(cat.name);
                 const id = `cat-${cat.name.replace(/\s+/g, '-').toLowerCase()}`;
                 return (
@@ -218,6 +219,7 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
                     data-zero={cat.total === 0}
                     title={`${catLabel(cat.name)}: ${cat.total}件`}
                     data-high={isHigh}
+                    data-tall={isTall}
                   >
                     <div class="bar-hit" aria-label={`${catLabel(cat.name)} ${cat.total}件`}>
                       <span class="bar-fill" />
@@ -260,12 +262,18 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
   <script>
     // @ts-nocheck 単一プロバイダ版: バー/ラベル相互ハイライト
     document.addEventListener('DOMContentLoaded', () => {
-      function attachInteractions(root = document) {
-        const bars = Array.from(root.querySelectorAll('.vchart .bar-box'));
-        const labels = Array.from(root.querySelectorAll('.vchart .bar-labels .x-label'));
+      function attachChartInteractions(chartSelector) {
+        const chartEl = document.querySelector(chartSelector);
+        if (!chartEl) return;
+        const bars = Array.from(chartEl.querySelectorAll('.bar-box'));
+        const labels = Array.from(chartEl.querySelectorAll('.bar-labels .x-label'));
         const activate = id => {
           bars.forEach(b => b.classList.toggle('active', !!id && b.dataset.id === id));
-          labels.forEach(l => l.classList.toggle('active', !!id && l.dataset.id === id));
+          labels.forEach(l => {
+            const on = !!id && l.dataset.id === id;
+            l.classList.toggle('active', on);
+            l.classList.toggle('glow', on); // 追加: 光るエフェクト
+          });
         };
         const clear = () => activate(null);
         bars.forEach(b => {
@@ -275,6 +283,13 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
           ['mouseenter', 'focus'].forEach(ev => b.addEventListener(ev, () => activate(id)));
           ['mouseleave', 'blur'].forEach(ev => b.addEventListener(ev, clear));
           b.addEventListener('click', () => activate(id));
+          b.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              activate(id);
+            }
+            if (e.key === 'Escape') clear();
+          });
         });
         labels.forEach(l => {
           const id = l.dataset.id || '';
@@ -288,11 +303,20 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
             } else if (e.key === 'Escape') clear();
           });
         });
-        document.addEventListener('keydown', e => {
-          if (e.key === 'Escape') clear();
-        });
       }
-      attachInteractions();
+      // クラウド & アプリ両方に適用
+      attachChartInteractions('.vchart');
+      attachChartInteractions('.pchart');
+      // Esc で全解除
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          document
+            .querySelectorAll('.badge-pill.active, .badge-pill.glow, .bar-box.active')
+            .forEach(el => {
+              el.classList.remove('active', 'glow');
+            });
+        }
+      });
       // トグル制御
       const toggleButtons = Array.from(document.querySelectorAll('[data-chart-toggle]'));
       const cloudSection = document.getElementById('cloud-chart-section');
@@ -368,6 +392,7 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
                 const hPct = p.total === 0 ? 0 : (p.total / patternYMax) * 100;
                 const id = `pat-${p.name.replace(/\s+/g, '-').toLowerCase()}`;
                 const isHigh = hPct > 90;
+                const isTall = hPct > 38;
                 return (
                   <div
                     class="bar-box"
@@ -376,6 +401,7 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
                     data-id={id}
                     data-zero={p.total === 0}
                     data-high={isHigh}
+                    data-tall={isTall}
                   >
                     <div class="bar-hit" aria-label={`${patternLabel(p.name)} ${p.total}件`}>
                       <span class="bar-fill" />

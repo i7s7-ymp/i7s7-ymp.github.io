@@ -104,9 +104,26 @@
   border-radius: var(--radius-md, 6px) var(--radius-md, 6px) var(--radius-sm, 4px)
     var(--radius-sm, 4px);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.28) 0%,
+      rgba(255, 255, 255, 0.1) 18%,
+      rgba(0, 0, 0, 0.08) 65%,
+      rgba(0, 0, 0, 0.22) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.12),
+      rgba(255, 255, 255, 0.04) 45%,
+      rgba(0, 0, 0, 0.15) 90%
+    ),
     var(--bar-color, rgba(34, 211, 238, 0.55));
-  box-shadow: var(--shadow-bar);
+  box-shadow: var(
+    --shadow-bar,
+    0 3px 8px -2px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 2px 0 0 rgba(255, 255, 255, 0.18) inset
+  );
   position: relative;
   overflow: hidden;
   animation: var(--anim-bar-grow, grow-bar) 0.9s cubic-bezier(0.25, 0.85, 0.3, 1) both;
@@ -115,48 +132,49 @@
   min-height: 8px;
 }
 .bar-box[data-zero='true'] .bar-fill {
-  filter: grayscale(0.45) brightness(0.75);
-  opacity: 0.55;
+  filter: grayscale(0.4) brightness(0.7);
+  opacity: 0.5;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.1) 0 6px,
+      rgba(255, 255, 255, 0.04) 6px 12px
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent 55%),
+    var(--bar-color, rgba(120, 120, 130, 0.3));
 }
-.bar-fill::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 40% 18%, rgba(255, 255, 255, 0.48), transparent 62%);
-  mix-blend-mode: overlay;
-  opacity: 0.42;
-}
+/* dot highlight removed */
 .bar-value {
   position: absolute;
   bottom: calc(var(--h) + 6px);
   font-size: 11px;
-  background: var(--bar-value-bg, rgba(15, 23, 42, 0.88));
-  padding: 2px 6px;
+  line-height: 1.15;
+  background: var(--bar-value-bg, rgba(11, 18, 30, 0.9));
+  padding: 2px 6px 3px;
   border-radius: var(--radius-sm, 4px);
-  border: 1px solid var(--bar-value-border, rgba(255, 255, 255, 0.15));
+  border: 1px solid var(--bar-value-border, rgba(255, 255, 255, 0.18));
   font-family: ui-monospace, monospace;
-  color: var(--bar-value-fg, #e2e8f0);
-  letter-spacing: 0.5px;
-  box-shadow: var(--shadow-tooltip, 0 2px 5px -2px rgba(0, 0, 0, 0.6));
-}
-.bar-box[data-high='true'] .bar-value {
-  bottom: auto;
-  top: 4px;
-  background: var(--bar-value-bg-alt, rgba(0, 0, 0, 0.28));
-  border: 1px solid var(--bar-value-border-alt, rgba(255, 255, 255, 0.25));
-  mix-blend-mode: screen;
-}
-.bar-box[data-zero='true'] .bar-value {
-  bottom: 8px;
-  /* ゼロ値は常時表示せずホバー/フォーカス時のみ見せることで下部に並ぶ数字を抑制 */
-  opacity: 0;
+  color: var(--bar-value-fg, #f1f5f9);
+  letter-spacing: 0.4px;
+  font-weight: 500;
+  box-shadow: var(--shadow-tooltip, 0 2px 6px -2px rgba(0, 0, 0, 0.7));
+  transition:
+    0.25s background,
+    0.25s color,
+    0.25s transform,
+    0.25s opacity;
   pointer-events: none;
+  will-change: transform, opacity;
+}
+/* inside positioning removed: labels always above the bar */
+.bar-box[data-zero='true'] .bar-value {
+  bottom: 6px;
+  opacity: 0;
 }
 .bar-box[data-zero='true']:hover .bar-value,
 .bar-box[data-zero='true']:focus-within .bar-value,
 .bar-box[data-zero='true'].active .bar-value {
   opacity: 1;
-  pointer-events: auto;
 }
 .axis-x {
   position: absolute;
@@ -171,12 +189,19 @@
 }
 .bar-box:hover .bar-fill,
 .bar-box:focus-within .bar-fill {
-  filter: brightness(1.18) saturate(1.2);
-  box-shadow: var(--shadow-bar-hover);
+  filter: brightness(1.22) saturate(1.25);
+  box-shadow: var(
+    --shadow-bar-hover,
+    0 0 0 2px rgba(255, 255, 255, 0.18),
+    0 0 14px -2px rgba(255, 255, 255, 0.35)
+  );
 }
 .bar-box:hover .bar-value,
-.bar-box:focus-within .bar-value {
+.bar-box:focus-within .bar-value,
+.bar-box.active .bar-value {
   background: rgba(15, 23, 42, 0.95);
+  transform: translateY(-2px) scale(1.04);
+  pointer-events: auto;
 }
 @keyframes grow-bar {
   from {
@@ -217,19 +242,7 @@
 .bar-box[data-color='pink'] {
   --bar-color: var(--bar-grad-pink, linear-gradient(180deg, #ec4899, #be185d));
 }
-.bar-fill::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: 0.48;
-  mix-blend-mode: overlay;
-  background-image: radial-gradient(
-    circle at 3px 3px,
-    rgba(255, 255, 255, 0.55) 0 1.6px,
-    transparent 1.7px
-  );
-  background-size: 10px 10px;
-}
+/* dot pattern removed */
 .patterns-section,
 .cloud-arch-section {
   max-width: 1100px;
@@ -355,6 +368,13 @@
   border-color: var(--pill-color, #38bdf8);
   box-shadow: var(--shadow-badge-active);
   transform: translateY(-2px);
+}
+.badge-pill.glow {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 10px -1px var(--pill-color, #38bdf8),
+    0 0 22px -4px var(--pill-color, #38bdf8);
+  filter: brightness(1.15) saturate(1.2);
 }
 .chart-note {
   margin: 0.75rem 0 0 var(--chart-axis-left);
