@@ -115,30 +115,25 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
     opacity: 0.75;
   }
   .ph-icon-core::after {
-    background: linear-gradient(
-      120deg,
-      rgba(56, 189, 248, 0.28),
-      rgba(236, 72, 153, 0.18),
-      rgba(139, 92, 246, 0.28)
-    );
-    opacity: 0.45;
+    background: linear-gradient(120deg, rgba(90, 174, 196, 0.22), rgba(182, 169, 201, 0.18));
+    opacity: 0.38;
   }
   .ph-icon-ring {
     position: absolute;
     inset: 0;
-    border: 2px solid rgba(255, 255, 255, 0.12);
+    border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: inherit;
-    box-shadow: 0 0 8px -2px rgba(255, 255, 255, 0.45) inset;
-    animation: ringPulse 9s ease-in-out infinite;
-    opacity: 0.45;
+    box-shadow: 0 0 6px -2px rgba(255, 255, 255, 0.35) inset;
+    animation: ringPulse 11s ease-in-out infinite;
+    opacity: 0.35;
   }
   .ph-icon-glow {
     position: absolute;
-    inset: -30%;
-    background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.4), transparent 75%);
-    filter: blur(18px);
-    opacity: 0.35;
-    animation: iconGlow 8s ease-in-out infinite;
+    inset: -32%;
+    background: radial-gradient(circle at 50% 50%, rgba(90, 174, 196, 0.28), transparent 76%);
+    filter: blur(16px);
+    opacity: 0.28;
+    animation: iconGlow 10s ease-in-out infinite;
   }
   .ph-icon {
     font-size: 1.9rem;
@@ -155,22 +150,13 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
     margin: 0;
     font-size: clamp(1.55rem, 1.05rem + 1.5vw, 2.15rem);
     font-weight: 700;
-    letter-spacing: 0.8px;
-    line-height: 1.1;
-    background: linear-gradient(90deg, #e2f6ff, #3abff0 30%, #d960a8 70%, #c59bff);
-    -webkit-background-clip: text;
-    color: transparent;
-    filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.55));
+    letter-spacing: 0.55px;
+    line-height: 1.08;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
   }
   .ph-title::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: #fff;
-    opacity: 0.04;
-    transform: translate(1px, 0.5px);
-    pointer-events: none;
+    content: none;
   }
   .ph-sub {
     margin: 0.5rem 0 0;
@@ -188,12 +174,12 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
     content: '';
     width: 5px;
     height: 5px;
-    background: linear-gradient(135deg, #38bdf8, #ec4899);
+    background: linear-gradient(135deg, #5daec4, #b690c9);
     border-radius: 2px;
     box-shadow:
-      0 0 4px #38bdf8,
-      0 0 6px #ec4899;
-    opacity: 0.85;
+      0 0 3px #5daec4,
+      0 0 4px #b690c9;
+    opacity: 0.7;
   }
   .ph-accent-bar {
     position: relative;
@@ -206,11 +192,11 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
   .ph-accent-bar .ab {
     display: block;
     height: 2px;
-    background: linear-gradient(90deg, #38bdf8, #ec4899, #a855f7);
+    background: linear-gradient(90deg, rgba(90, 174, 196, 0.95), rgba(180, 169, 201, 0.95));
     box-shadow:
-      0 0 4px -1px #38bdf8,
-      0 0 6px -2px #ec4899;
-    opacity: 0.9;
+      0 0 3px -1px rgba(90, 174, 196, 0.6),
+      0 0 5px -2px rgba(180, 169, 201, 0.55);
+    opacity: 0.75;
   }
   .ph-accent-bar .ab-l {
     width: 42px;
@@ -254,10 +240,10 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
   }
   .fx-glow {
     background:
-      radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.22), transparent 60%),
-      radial-gradient(circle at 15% 85%, rgba(56, 189, 248, 0.28), transparent 65%);
-    filter: blur(20px);
-    opacity: 0.35;
+      radial-gradient(circle at 78% 22%, rgba(182, 169, 201, 0.18), transparent 60%),
+      radial-gradient(circle at 18% 80%, rgba(90, 174, 196, 0.18), transparent 62%);
+    filter: blur(18px);
+    opacity: 0.28;
   }
 
   /* Animations */
@@ -269,23 +255,23 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
   @keyframes iconGlow {
     0%,
     100% {
-      opacity: 0.32;
+      opacity: 0.25;
       transform: scale(1);
     }
     50% {
-      opacity: 0.55;
-      transform: scale(1.05);
+      opacity: 0.45;
+      transform: scale(1.04);
     }
   }
   @keyframes ringPulse {
     0%,
     100% {
       transform: scale(1);
-      opacity: 0.45;
+      opacity: 0.35;
     }
     55% {
-      transform: scale(1.02);
-      opacity: 0.65;
+      transform: scale(1.015);
+      opacity: 0.5;
     }
   }
   @keyframes widthPulse {
@@ -294,7 +280,7 @@ const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も�
       filter: brightness(1);
     }
     50% {
-      filter: brightness(1.25) saturate(1.25);
+      filter: brightness(1.15) saturate(1.1);
     }
   }
   @keyframes scan {

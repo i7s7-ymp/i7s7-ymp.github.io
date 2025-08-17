@@ -19,8 +19,10 @@ interface AppPattern {
   desc?: string;
   diagram?: string;
   color?: string;
+  uses?: number; // 利用回数など任意メトリック（未指定は1）
 }
 
+// 単一プロバイダ（AWS のみ使用）
 const cloudCases: CloudCase[] = (data as any).cloudCases ?? [];
 const appPatterns: AppPattern[] = (data as any).appPatterns ?? [];
 
@@ -39,22 +41,29 @@ const targetCategories = [
 ];
 
 type CatStat = { name: string; total: number; items: CloudCase[] };
-const catStats: CatStat[] = targetCategories.map(name => {
-  const items = cloudCases.filter(c => {
-    const cat = (c.category || '').trim();
-    if (name === 'Application Integration')
-      return cat === 'Application Integration' || cat === 'Application integrations';
-    return cat === name;
+function buildStats(cases: CloudCase[]): CatStat[] {
+  return targetCategories.map(name => {
+    const items = cases.filter(c => {
+      const cat = (c.category || '').trim();
+      if (name === 'Application Integration')
+        return cat === 'Application Integration' || cat === 'Application integrations';
+      return cat === name;
+    });
+    const total = items.reduce((s, c) => s + (c.ops || 0), 0);
+    return { name, total, items };
   });
-  const total = items.reduce((s, c) => s + (c.ops || 0), 0);
-  return { name, total, items };
-});
+}
+let catStats: CatStat[] = buildStats(cloudCases);
 
 // Y軸: 最大値を含む10刻みスケール
-const rawMax = Math.max(...catStats.map(c => c.total), 0);
-const yMax = rawMax === 0 ? 10 : Math.ceil(rawMax / 10) * 10; // 10単位に丸め上げ
-const catTicks: number[] = [];
-for (let v = 0; v <= yMax; v += 10) catTicks.push(v);
+function computeScale(stats: CatStat[]) {
+  const rawMax = Math.max(...stats.map(c => c.total), 0);
+  const yMax = rawMax === 0 ? 10 : Math.ceil(rawMax / 10) * 10;
+  const ticks: number[] = [];
+  for (let v = 0; v <= yMax; v += 10) ticks.push(v);
+  return { yMax, ticks };
+}
+let { yMax, ticks: catTicks } = computeScale(catStats);
 
 // カテゴリごとの明確な配色 + パターン指定（色が近い場合の視覚差分強化）
 interface CatStyle {
@@ -75,6 +84,47 @@ const categoryStyles: Record<string, CatStyle> = {
 function catStyle(name: string): CatStyle {
   return categoryStyles[name] || { color: 'cyan', pattern: 'none' };
 }
+
+// アプリケーション設計カテゴリ（横軸固定順序）
+const patternCategories = [
+  'Data-Centric',
+  'Layered',
+  'Component-Based',
+  'Service-Oriented',
+  'Distributed System',
+  'Domain-Driven',
+  'Event-Driven',
+  'Separation Of Concern',
+  'Interpreter',
+  'Concurrency',
+];
+// カテゴリ毎の集計（name一致）: 同名が複数あれば uses 合計、存在しなければ0
+type PatternStat = { name: string; total: number; color: string; sourceCount: number };
+const patternStats: PatternStat[] = patternCategories.map(cat => {
+  const matched = appPatterns.filter(p => p.name === cat);
+  const total = matched.reduce((s, p) => s + (typeof p.uses === 'number' ? p.uses : 1), 0);
+  // 最初のマッチ色 or fallback palette
+  const palette = [
+    'cyan',
+    'blue',
+    'green',
+    'purple',
+    'yellow',
+    'orange',
+    'teal',
+    'pink',
+    'red',
+    'cyan',
+  ];
+  const fallback = palette[patternCategories.indexOf(cat) % palette.length];
+  const color = (matched[0]?.color ?? fallback) as string;
+  return { name: cat, total, color, sourceCount: matched.length } as PatternStat;
+});
+const patternRawMax = Math.max(...patternStats.map(p => p.total), 0);
+const patternYMax = patternRawMax === 0 ? 1 : Math.ceil(patternRawMax / 5) * 5; // 5刻み程度
+const patternTicks: number[] = [];
+for (let v = 0; v <= patternYMax; v += Math.max(1, Math.round(patternYMax / 5)))
+  patternTicks.push(v);
 ---
 
 <Layout title="アーキテクチャ - i7s7-ymp Portfolio">
@@ -84,7 +134,7 @@ function catStyle(name: string): CatStyle {
     icon={data.header.icon}
     iconBgClass={data.header.iconBgClass}
   />
-  <div class="vchart-wrapper py-10">
+  <div class="vchart-wrapper pb-10 pt-4">
     <div
       class="vchart"
       role="img"
@@ -110,7 +160,7 @@ function catStyle(name: string): CatStyle {
           {
             catStats.map(cat => {
               const hPct = cat.total === 0 ? 0 : (cat.total / yMax) * 100;
-              const isHigh = hPct > 90; // 高さが上限付近
+              const isHigh = hPct > 90;
               const { color, pattern } = catStyle(cat.name);
               const id = `cat-${cat.name.replace(/\s+/g, '-').toLowerCase()}`;
               return (
@@ -161,74 +211,123 @@ function catStyle(name: string): CatStyle {
     を参考にしつつポートフォリオ用途で簡略化・統合しています。
   </p>
   <script>
-    // ホバー/フォーカス同期 + キーボード操作
+    // @ts-nocheck 単一プロバイダ版: バー/ラベル相互ハイライト
     document.addEventListener('DOMContentLoaded', () => {
-      // 型指定を避けてビルドエラー解消（プレーンJS）
-      const bars = Array.from(document.querySelectorAll('.bar-box')) as any[];
-      const labels = Array.from(document.querySelectorAll('.bar-labels .x-label')) as any[];
-
-      /**
-       * @param {string|null} id
-       */
-      /**
-       * @param {string|null} id
-       */
-      // @ts-ignore implicit any 回避
-      const activate = (id: any) => {
-        bars.forEach((b: any) => b.classList.toggle('active', !!id && b.dataset.id === id));
-        labels.forEach((l: any) => l.classList.toggle('active', !!id && l.dataset.id === id));
-      };
-      const clear = () => activate(null);
-
-      bars.forEach((b: any) => {
-        const id = b.dataset.id || '';
-        const hit = b.querySelector('.bar-hit') as any;
-        if (hit) hit.tabIndex = 0;
-        ['mouseenter', 'focus'].forEach(ev => b.addEventListener(ev, () => activate(id)));
-        ['mouseleave', 'blur'].forEach(ev => b.addEventListener(ev, clear));
-        b.addEventListener('click', () => activate(id));
-      });
-
-      labels.forEach((l: any) => {
-        const id = l.dataset.id || '';
-        ['mouseenter', 'focus'].forEach(ev => l.addEventListener(ev, () => activate(id)));
-        ['mouseleave', 'blur'].forEach(ev => l.addEventListener(ev, clear));
-        l.addEventListener('click', () => activate(id));
-        l.addEventListener('keydown', (e: any) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            activate(id);
-          } else if (e.key === 'Escape') {
-            clear();
-          }
+      function attachInteractions(root = document) {
+        const bars = Array.from(root.querySelectorAll('.vchart .bar-box'));
+        const labels = Array.from(root.querySelectorAll('.vchart .bar-labels .x-label'));
+        const activate = id => {
+          bars.forEach(b => b.classList.toggle('active', !!id && b.dataset.id === id));
+          labels.forEach(l => l.classList.toggle('active', !!id && l.dataset.id === id));
+        };
+        const clear = () => activate(null);
+        bars.forEach(b => {
+          const id = b.dataset.id || '';
+          const hit = b.querySelector('.bar-hit');
+          if (hit) hit.tabIndex = 0;
+          ['mouseenter', 'focus'].forEach(ev => b.addEventListener(ev, () => activate(id)));
+          ['mouseleave', 'blur'].forEach(ev => b.addEventListener(ev, clear));
+          b.addEventListener('click', () => activate(id));
         });
-      });
-
-      document.addEventListener('keydown', (e: any) => {
-        if (e.key === 'Escape') clear();
-      });
+        labels.forEach(l => {
+          const id = l.dataset.id || '';
+          ['mouseenter', 'focus'].forEach(ev => l.addEventListener(ev, () => activate(id)));
+          ['mouseleave', 'blur'].forEach(ev => l.addEventListener(ev, clear));
+          l.addEventListener('click', () => activate(id));
+          l.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              activate(id);
+            } else if (e.key === 'Escape') clear();
+          });
+        });
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape') clear();
+        });
+      }
+      attachInteractions();
     });
   </script>
 
-  <section class="patterns-section pb-16">
-    <h3 class="mb-6 text-lg font-semibold text-green-400">アプリケーションパターン</h3>
-    <div class="pattern-grid">
-      {
-        appPatterns.map(p => (
-          <div class="pattern-card" data-color={p.color || 'cyan'}>
-            <div class="pc-head">
-              <h4 class={`pc-title text-${p.color || 'cyan'}-300`}>{p.name}</h4>
-            </div>
-            {p.diagram && <pre class="pc-diagram">{p.diagram}</pre>}
-            {p.desc && <p class="pc-desc">{p.desc}</p>}
+  <section class="patterns-section pb-20" aria-labelledby="pattern-chart-title">
+    <h3 id="pattern-chart-title" class="mb-6 text-lg font-semibold text-green-400">
+      アプリケーションパターン
+    </h3>
+    <div class="pchart-wrapper">
+      <div
+        class="pchart"
+        role="img"
+        aria-label={`アプリケーションパターン出現数 Y軸最大 ${patternYMax}`}
+        aria-describedby="pattern-note"
+      >
+        <div class="plot" data-count={patternStats.length}>
+          <div class="grid-y" aria-hidden="true">
+            {
+              patternTicks.map(t => {
+                const pct = (t / patternYMax) * 100;
+                const top = 100 - pct;
+                return (
+                  <div class="grid-row" style={`top:${top}%;`}>
+                    <span class="grid-line" />
+                    <span class="grid-label">{t}</span>
+                  </div>
+                );
+              })
+            }
           </div>
-        ))
-      }
+          <div class="bars pattern-bars" data-count={patternStats.length} style="--bar-w:60px;">
+            {
+              patternStats.map(p => {
+                const hPct = p.total === 0 ? 0 : (p.total / patternYMax) * 100;
+                const id = `pat-${p.name.replace(/\s+/g, '-').toLowerCase()}`;
+                const isHigh = hPct > 90;
+                return (
+                  <div
+                    class="bar-box"
+                    style={`--h:${hPct}%;`}
+                    data-color={p.color}
+                    data-id={id}
+                    data-zero={p.total === 0}
+                    data-high={isHigh}
+                  >
+                    <div class="bar-hit" aria-label={`${p.name} ${p.total} uses`}>
+                      <span class="bar-fill" />
+                      <span class="bar-value font-mono">{p.total}</span>
+                    </div>
+                  </div>
+                );
+              })
+            }
+          </div>
+          <div class="axis-x" aria-hidden="true"></div>
+        </div>
+        <div class="bar-labels pattern-labels" aria-hidden="false">
+          {
+            patternStats.map(p => {
+              const id = `pat-${p.name.replace(/\s+/g, '-').toLowerCase()}`;
+              return (
+                <div
+                  class="x-label badge-pill"
+                  data-color={p.color}
+                  data-id={id}
+                  tabindex="0"
+                  aria-label={`${p.name} パターン`}
+                >
+                  {p.name}
+                </div>
+              );
+            })
+          }
+        </div>
+      </div>
     </div>
+    <p id="pattern-note" class="chart-note mt-4">
+      ※ 各パターンの値は uses プロパティ（未指定は 1）です。YAML に <code>uses:</code> を追加して調整できます。
+    </p>
   </section>
 </Layout>
 
-<!-- （棒グラフのみ表示のため追加スクリプト不要） -->
+<!-- プロバイダ切替関連コード除去後 -->
 
 <style>
   .vchart-wrapper {
@@ -509,85 +608,18 @@ function catStyle(name: string): CatStyle {
     max-width: 1100px;
     margin: 0 auto;
   }
-  .pattern-grid {
-    display: grid;
-    gap: 1.1rem;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  }
-  .pattern-card {
+  .pchart-wrapper {
     position: relative;
-    padding: 1rem 0.95rem 1.1rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(15, 23, 42, 0.55);
-    backdrop-filter: blur(6px);
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
   }
-  .pattern-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(140deg, rgba(255, 255, 255, 0.06), transparent 55%);
-    pointer-events: none;
+  .pchart {
+    position: relative;
+    min-height: 300px;
   }
-  .pc-title {
-    font-weight: 600;
-    font-size: 14px;
-    letter-spacing: 0.5px;
+  .pattern-bars {
+    height: 220px;
   }
-  .pc-diagram {
-    font-family: ui-monospace, monospace;
-    font-size: 10px;
-    line-height: 1.35;
-    background: rgba(0, 0, 0, 0.35);
-    padding: 0.55rem 0.6rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 6px;
-    margin: 0;
-    white-space: pre-wrap;
-    color: #cbd5e1;
-  }
-  .pc-desc {
-    font-size: 11px;
-    line-height: 1.5;
-    color: #94a3b8;
-    margin: 0;
-  }
-  .pattern-card[data-color='cyan'] {
-    box-shadow:
-      0 0 0 1px rgba(34, 211, 238, 0.18),
-      0 4px 12px -3px rgba(0, 0, 0, 0.55);
-  }
-  .pattern-card[data-color='purple'] {
-    box-shadow:
-      0 0 0 1px rgba(139, 92, 246, 0.18),
-      0 4px 12px -3px rgba(0, 0, 0, 0.55);
-  }
-  .pattern-card[data-color='blue'] {
-    box-shadow:
-      0 0 0 1px rgba(59, 130, 246, 0.18),
-      0 4px 12px -3px rgba(0, 0, 0, 0.55);
-  }
-  .pattern-card[data-color='green'] {
-    box-shadow:
-      0 0 0 1px rgba(16, 185, 129, 0.18),
-      0 4px 12px -3px rgba(0, 0, 0, 0.55);
-  }
-  .pattern-card[data-color='orange'] {
-    box-shadow:
-      0 0 0 1px rgba(249, 115, 22, 0.18),
-      0 4px 12px -3px rgba(0, 0, 0, 0.55);
-  }
-  .pattern-card[data-color='yellow'] {
-    box-shadow:
-      0 0 0 1px rgba(251, 191, 36, 0.18),
-      0 4px 12px -3px rgba(0, 0, 0, 0.55);
-  }
-  .pattern-card:hover {
-    outline: 1px solid rgba(255, 255, 255, 0.16);
+  .pattern-labels {
+    margin-top: 1rem;
   }
   .bar-labels {
     display: flex;
@@ -738,3 +770,5 @@ function catStyle(name: string): CatStyle {
     }
   }
 </style>
+
+<!-- provider switch 用スタイル削除 -->
