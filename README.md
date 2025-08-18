@@ -244,6 +244,37 @@ npm run check
 
 開発時は `tokens.css` を基準に差分レビューすることで、スタイリング意図 (ローカル調整 vs グローバルテーマ拡張) を識別しやすくなります。
 
+## 🗺️ Architecture Diagram Policy
+
+本リポジトリでは以前 **PlantUML + Kroki を用いた自動図生成パイプライン** ( `scripts/gen-arch-diagrams.mjs` と `public/diagrams/generated/` ) を試験導入しましたが、以下の理由で撤廃し、手動メンテナンス方針に統一しました。
+
+- 外部 includes (C4-PlantUML / AWS Icons) の可用性とバージョン揺れによる非決定性
+- CI / ローカル差異 (PlantUML 有無・Java ランタイム) に起因する再現性低下
+- 図の表現品質を細かく調整 (余白整理 / 命名 / ローカライズ) する際に自動再生成が衝突
+- ポートフォリオ用途では “安定した最終アセット” のほうがレビューフロー簡潔
+
+### 現在の運用
+
+| ディレクトリ                 | 役割                                         |
+| ---------------------------- | -------------------------------------------- |
+| `public/diagrams/`           | 手動で最適化した最終 SVG（カードで直接参照） |
+| `public/diagrams/generated/` | (削除済) 旧自動生成成果物置き場。再作成禁止  |
+
+### コントリビューション指針
+
+1. 新規図は任意のツール（例: Excalidraw / Figma / manually edited SVG）で作成し **SVG 最適化** (不要 metadata / inline styles 最小化) を行ってから `public/diagrams/` に追加
+2. 既存図を差し替える場合は視覚差分 (主要レイアウト/要素名称) がある際に PR 説明へ “Before / After” スクリーンショットを添付
+3. `generated` サブディレクトリや PlantUML ソース (`*.puml`) を新規追加しない
+4. 自動化再導入を検討する場合は Issue を立て、決定性確保 (ローカル完全 vendor 化 / icon キャッシュ) の設計提案を添付
+
+### 追加禁止リスト (守れない場合 CI ルール化予定)
+
+- `scripts/gen-arch-diagrams.mjs` の復活
+- `public/diagrams/generated/` 以下の再作成
+- ビルド時に外部ネットワークへ依存する図生成ステップ
+
+これにより、図は “安定アセット” として扱われ、ページビルドは純粋な静的生成を維持します。
+
 ## 🤝 Contributing
 
 1. フォークを作成

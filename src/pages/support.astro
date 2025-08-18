@@ -2,8 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import { computeUnifiedScale } from '../lib/chart/scale';
-// Experimental component extraction (dev parity)
-// (Removed experimental chart component imports)
+import CloudArchCard from '../components/CloudArchCard.astro';
 // @ts-ignore
 import data from '../data/support.yml';
 
@@ -16,67 +15,18 @@ interface ExperienceItem {
 }
 // REFACTOR-STAGE2: experiences 読み込み → 汎用 data adapter 化検討 (将来 /src/lib/data/experiences.ts)
 const experiences: ExperienceItem[] = (data as any).experiences ?? [];
-
-// 指定順序: 既存クラウド分類
-// REFACTOR-STAGE2 DUPLICATION: 並列チャート (カテゴリ / パターン) 間で同様の "ターゲット配列→集計→stats[]" パターンが存在
-const targetCategories = [
-  'Compute',
-  'Database',
-  'Storage',
-  'Application Integration',
-  'Network & Content Delivery',
-  'Developer Tools',
-  'Financial Management',
-  'Analytics',
-  'Security Identity & Compliance',
-];
-type CatStat = { name: string; total: number };
-const catStats: CatStat[] = targetCategories.map(name => ({ name, total: 0 }));
-for (const exp of experiences) {
-  const cats = Array.isArray(exp.category) ? exp.category : [];
-  for (const c of cats) {
-    const key = c === 'Application integrations' ? 'Application Integration' : c;
-    const stat = catStats.find(s => s.name === key);
-    if (stat) stat.total += 1; // uses 未適用（仕様#3 決定前）
-  }
+interface CloudArchCard {
+  id: string;
+  title: string;
+  summary: string;
+  image?: string;
+  services?: string[];
+  year?: number;
+  provider?: string;
 }
+const cloudArchitectures: CloudArchCard[] = (data as any).cloudArchitectures ?? [];
 
-// 個別スケール計算は廃止し unified スケールを使用
-
-// カテゴリごとの明確な配色
-// REFACTOR-STAGE2 NOTE: color マップは後で CSS カスタムプロパティへ移行予定 (Stage4)
-interface CatStyle {
-  color: string;
-}
-const categoryStyles: Record<string, CatStyle> = {
-  Compute: { color: 'purple' },
-  Database: { color: 'yellow' },
-  Storage: { color: 'teal' },
-  'Application Integration': { color: 'blue' },
-  'Network & Content Delivery': { color: 'red' },
-  'Developer Tools': { color: 'orange' },
-  'Financial Management': { color: 'green' },
-  Analytics: { color: 'cyan' },
-  'Security Identity & Compliance': { color: 'pink' },
-};
-function catStyle(name: string): CatStyle {
-  return categoryStyles[name] || { color: 'cyan' };
-}
-
-// 表示用: カテゴリ日本語ラベルマップ（内部集計キーは英語維持）
-// REFACTOR-STAGE2 DUPLICATION: patternLabelMap と構造類似 → i18n/labels.ts 集約候補
-const catLabelMap: Record<string, string> = {
-  Compute: 'コンピュート',
-  Database: 'データベース',
-  Storage: 'ストレージ',
-  'Application Integration': 'アプリケーション統合',
-  'Network & Content Delivery': 'ネットワーク / コンテンツ配信',
-  'Developer Tools': '開発ツール',
-  'Financial Management': 'コスト管理',
-  Analytics: '分析',
-  'Security Identity & Compliance': 'セキュリティ / ID / コンプライアンス',
-};
-const catLabel = (name: string) => catLabelMap[name] || name;
+// クラウドカテゴリ棒グラフは廃止 (ユーザー要求)。関連ロジック削除。
 
 // アプリケーションアーキテクチャ カテゴリ
 // REFACTOR-STAGE2: patternCategories も targetCategories と同じ集計 DSL で統合抽象化可能
@@ -119,12 +69,8 @@ for (const exp of experiences) {
   if (stat) stat.total += 1; // uses 未適用（仕様#3 決定前）
 }
 
-// 統一Y軸スケール: 両チャートで同じ高さ基準を共有 (computeUnifiedScale は util 化済)
-// REFACTOR-STAGE2 DUPLICATION: 似たスケール計算が再出現する場合 lib/chart/scale.ts へ抽出
-const allValues = [...catStats.map(c => c.total), ...patternStats.map(p => p.total)];
-const unified = computeUnifiedScale(allValues);
-const yMax = unified.yMax;
-const catTicks = unified.ticks;
+// 単一 (アプリケーションパターン) 用スケール
+const unified = computeUnifiedScale(patternStats.map(p => p.total));
 const patternYMax = unified.yMax;
 const patternTicks = unified.ticks;
 
@@ -151,114 +97,7 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
     icon={data.header.icon}
     iconBgClass={data.header.iconBgClass}
   />
-  <div class="chart-toggle-wrapper" role="group" aria-label="チャート種別切替">
-    <button
-      type="button"
-      class="chart-toggle-btn active"
-      data-chart-toggle
-      data-target="cloud"
-      aria-pressed="true"
-      aria-controls="cloud-chart-section">クラウド</button
-    >
-    <button
-      type="button"
-      class="chart-toggle-btn"
-      data-chart-toggle
-      data-target="app"
-      aria-pressed="false"
-      aria-controls="app-chart-section">アプリ</button
-    >
-  </div>
-  <section
-    class="cloud-arch-section chart-section"
-    aria-labelledby="cloud-arch-title"
-    id="cloud-chart-section"
-  >
-    {
-      /** REFACTOR-STAGE2 BLOCK START: BaseChart-like 構造 (grid -> bars -> labels -> note). dom/class を変えないまま将来 <Chart/> に抽出 */
-    }
-    <h3 id="cloud-arch-title" class="mb-6 text-lg font-semibold text-cyan-400">
-      クラウドアーキテクチャ
-    </h3>
-    <div class="chart-wrapper">
-      <div
-        class="vchart"
-        role="img"
-        aria-label={`クラウドカテゴリ別運用件数 Y軸最大 ${yMax}`}
-        aria-describedby="cat-note"
-      >
-        <div class="plot" data-count={catStats.length}>
-          <div class="grid-y" aria-hidden="true">
-            {
-              catTicks.map(t => {
-                const pct = (t / yMax) * 100;
-                const top = 100 - pct;
-                return (
-                  <div class="grid-row" style={`top:${top}%;`}>
-                    <span class="grid-line" />
-                    <span class="grid-label">{t}</span>
-                  </div>
-                );
-              })
-            }
-          </div>
-          <div class="bars" data-count={catStats.length} style="--bar-w:70px;">
-            {
-              catStats.map(cat => {
-                const hPct = cat.total === 0 ? 0 : (cat.total / yMax) * 100;
-                const isHigh = hPct > 90;
-                const isTall = hPct > 38; // 視認性閾値: 値ラベルを内部に収める境界
-                const { color } = catStyle(cat.name);
-                const id = `cat-${cat.name.replace(/\s+/g, '-').toLowerCase()}`;
-                return (
-                  <div
-                    class="bar-box"
-                    style={`--h:${hPct}%;`}
-                    data-color={color}
-                    data-id={id}
-                    data-zero={cat.total === 0}
-                    title={`${catLabel(cat.name)}: ${cat.total}件`}
-                    data-high={isHigh}
-                    data-tall={isTall}
-                  >
-                    <div class="bar-hit" aria-label={`${catLabel(cat.name)} ${cat.total}件`}>
-                      <span class="bar-fill" />
-                      <span class="bar-value font-mono">{cat.total}</span>
-                    </div>
-                  </div>
-                );
-              })
-            }
-          </div>
-          <div class="axis-x" aria-hidden="true"></div>
-        </div>
-        <div class="bar-labels" aria-hidden="false">
-          {
-            catStats.map(cat => {
-              const { color } = catStyle(cat.name);
-              const id = `cat-${cat.name.replace(/\s+/g, '-').toLowerCase()}`;
-              return (
-                <div
-                  class="x-label badge-pill"
-                  data-color={color}
-                  data-id={id}
-                  tabindex="0"
-                  aria-label={`${catLabel(cat.name)} カテゴリ`}
-                >
-                  {catLabel(cat.name)}
-                </div>
-              );
-            })
-          }
-        </div>
-      </div>
-    </div>
-    <p id="cat-note" class="chart-note unified-note" aria-label="カテゴリ分類注釈">
-      ※ カテゴリ区分は主に AWS サービス分類 (Console / Docs, 2025年時点)
-      を参考にしつつポートフォリオ用途で簡略化・統合しています。
-    </p>
-    {/** Experimental duplicate cloud chart removed */}
-  </section>
+  {/** クラウド棒グラフ UI/トグル削除済み **/}
   <script>
     // @ts-nocheck 単一プロバイダ版: バー/ラベル相互ハイライト
     document.addEventListener('DOMContentLoaded', () => {
@@ -304,10 +143,8 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
           });
         });
       }
-      // クラウド & アプリ両方に適用
-      attachChartInteractions('.vchart');
+      // アプリケーションパターンのみ
       attachChartInteractions('.pchart');
-      // Esc で全解除
       document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
           document
@@ -317,38 +154,6 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
             });
         }
       });
-      // トグル制御
-      const toggleButtons = Array.from(document.querySelectorAll('[data-chart-toggle]'));
-      const cloudSection = document.getElementById('cloud-chart-section');
-      const appSection = document.getElementById('app-chart-section');
-      function setChart(which) {
-        if (!cloudSection || !appSection) return;
-        const showCloud = which === 'cloud';
-        cloudSection.hidden = !showCloud;
-        appSection.hidden = showCloud;
-        toggleButtons.forEach(btn => {
-          const active = btn.dataset.target === which;
-          btn.classList.toggle('active', active);
-          btn.setAttribute('aria-pressed', String(active));
-        });
-      }
-      toggleButtons.forEach(btn => {
-        btn.addEventListener('click', () => setChart(btn.dataset.target));
-        btn.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            setChart(btn.dataset.target);
-          }
-          if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-            e.preventDefault();
-            const idx = toggleButtons.indexOf(btn);
-            const dir = e.key === 'ArrowRight' ? 1 : -1;
-            const next = (idx + dir + toggleButtons.length) % toggleButtons.length;
-            toggleButtons[next].focus();
-          }
-        });
-      });
-      setChart('cloud');
     });
   </script>
 
@@ -358,7 +163,6 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
     class="patterns-section chart-section"
     aria-labelledby="pattern-chart-title"
     id="app-chart-section"
-    hidden
   >
     {/** REFACTOR-STAGE2 BLOCK START: 重複チャート構造 (cloud と対) */}
     <h3 id="pattern-chart-title" class="mb-6 text-lg font-semibold text-green-400">
@@ -386,7 +190,7 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
               })
             }
           </div>
-          <div class="bars pattern-bars" data-count={patternStats.length} style="--bar-w:60px;">
+          <div class="bars pattern-bars" data-count={patternStats.length} style="--bar-w:70px;">
             {
               patternStats.map(p => {
                 const hPct = p.total === 0 ? 0 : (p.total / patternYMax) * 100;
@@ -439,12 +243,42 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
     </p>
     {/** Experimental duplicate pattern chart removed */}
   </section>
+  <section class="cloud-architectures-section mt-16" aria-labelledby="cloud-arch-gallery-title">
+    <h3 id="cloud-arch-gallery-title" class="mb-6 text-lg font-semibold text-cyan-400">
+      クラウドアーキテクチャ
+    </h3>
+    <div class="cloud-arch-grid" role="list">
+      {
+        cloudArchitectures.map(c => (
+          <CloudArchCard
+            id={c.id}
+            title={c.title}
+            summary={c.summary}
+            image={c.image}
+            services={c.services}
+            year={c.year}
+            provider={c.provider}
+          />
+        ))
+      }
+    </div>
+  </section>
 </Layout>
 
 <!-- refactor markers present; provider switch legacy removed -->
 
 <style>
   @import '../styles/chart-base.css';
+  /* Cloud Architecture Cards */
+  .cloud-architectures-section {
+  }
+  .cloud-arch-grid {
+    --min: 260px;
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(var(--min), 1fr));
+    align-items: start;
+  }
 </style>
 
 <!-- provider switch 用スタイル削除 -->

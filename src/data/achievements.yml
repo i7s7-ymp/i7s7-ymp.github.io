@@ -7,6 +7,14 @@ header:
 # certifications[]: code, title, level, color
 
 timeline:
+  - role: 'レストラン Hiro鎌倉のHP作成'
+    company: '.'
+    period: '2025'
+    color: gold
+    points:
+      - 'レストランの雰囲気に合わせたデザインを作成'
+      - 'ウェブサイトのSEOと広告運用を担当'
+    badges: [Astro, Google Cloud]
   - role: 'DLPシステム開発'
     company: 'Nifty Co.'
     period: '2025'
@@ -78,7 +86,7 @@ timeline:
     period: '2020'
     color: gold
     points:
-      - 'ニフティ会員基盤とのID統合'
+      - 'ニフティ会員基盤とポイントサイト会員基盤のID統合'
       - 'ログイン時のブロック機能を開発'
     badges: [ROR, PostgreSQL]
   - role: 'ポイントサイト デベロッパー'

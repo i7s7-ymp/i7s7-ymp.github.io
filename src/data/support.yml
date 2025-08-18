@@ -11,36 +11,45 @@ header:
 # TODO(uses-weighting Stage7): 集計時 total += uses ?? 1 に変更するフックを実装
 
 experiences:
-  - title: Web API 基盤
-    category: [Compute, Storage]
+  - title: レストラン Hiro鎌倉のHP作成
+    category:
+      [
+        Compute,
+        Storage,
+        Network & Content Delivery,
+        Security Identity & Compliance,
+        Financial Management,
+      ]
+    architecture: none
+    description: 静的サイト／アセット配信
+  - title: DLPシステム開発
+    category: [Compute, Storage, Database, Security Identity & Compliance, Application Integration]
     architecture: Layered
     description: API + データ層の基本レイヤード構成
-  - title: 課金分析バッチ
-    category: [Developer Tools, Analytics]
-    architecture: Data-Centric
-    description: 分析用 ETL / バッチ指向
-  - title: 監査ログ集約
-    category: [Analytics, Security Identity & Compliance]
-    architecture: Event-Driven
-    description: ログイベントの集約 / 検索
-  - title: 連携メッセージング基盤
-    category: [Application Integration]
-    architecture: Event-Driven
-    description: Fan-out / 非同期疎結合
-  - title: バックアップバケット
-    category: [Storage]
-    architecture: Separation Of Concern
-    description: 保持 / 境界分離
-  - title: 構成管理DB
-    category: [Database]
-    architecture: Domain-Driven
-    description: CMDB 的ドメインモデル
-  - title: 認証統合 PoC
-    category: [Security Identity & Compliance]
-    architecture: Component-Based
-    description: 認証コンポーネント統合
-  - title: 静的コンテンツ配信
-    category: [Network & Content Delivery]
-    architecture: Distributed System
-    description: エッジ配信 / キャッシュ
+
   # (legacy sections removed)
+
+# 追加: クラウドアーキテクチャ設計図カード用データ
+# image: public/diagrams 下のファイルパス (存在しなければプレースホルダ表示)
+cloudArchitectures:
+  - id: vpc-microservices
+    title: VPCマイクロサービス基盤
+    summary: ECS(Fargate) + ALB + RDS + VPC サブネット分離構成。
+    image: /diagrams/vpc-microservices.svg
+    services: [ECS, Fargate, ALB, RDS, CloudWatch, VPC]
+    year: 2024
+    provider: AWS
+  - id: serverless-event-driven
+    title: サーバーレスイベント駆動
+    summary: API Gateway + Lambda + DynamoDB + EventBridge による疎結合イベント処理。
+    image: /diagrams/serverless-event-driven.svg
+    services: [APIGateway, Lambda, DynamoDB, EventBridge, CloudWatch]
+    year: 2025
+    provider: GCP
+  - id: data-analytics-pipeline
+    title: データ分析パイプライン
+    summary: Kinesis 収集 → S3 レイク → Glue ETL → Athena/QuickSight 分析のバッチ+準リアルタイム基盤。
+    image: /diagrams/data-analytics-pipeline.svg
+    services: [Kinesis, S3, Glue, Athena, QuickSight]
+    year: 2023
+    provider: AWS
