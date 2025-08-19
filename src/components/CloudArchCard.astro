@@ -190,20 +190,28 @@ const placeholderDataUri = `data:image/svg+xml;utf8,${encodeURIComponent(placeho
     margin-left: 0.15rem;
   }
   .ca-media {
-    aspect-ratio: 4 / 3;
+    /* 固定サイズ (全カード統一) */
+    --media-h: var(--cloud-arch-media-h, 180px);
+    height: var(--media-h);
+    width: 100%;
     border-radius: 8px;
     overflow: hidden;
     background: #0f172a;
     border: 1px solid rgba(255, 255, 255, 0.05);
     margin-bottom: 0.6rem;
     position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .ca-media img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain; /* 図をトリミングせず全体表示 */
     display: block;
     filter: saturate(1.05);
+    image-rendering: -webkit-optimize-contrast;
   }
   .ca-media-placeholder {
     width: 100%;
