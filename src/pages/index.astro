@@ -177,14 +177,35 @@ if (ghUser) {
       </div>
     </div>
 
-    <!-- Footer Animation (replaces Creative Banner) -->
-    <div class="home-footer-anim mt-10" aria-hidden="true">
-      <div class="hfa-layer shimmer"></div>
-      <div class="hfa-layer grid-pattern"></div>
-      <div class="hfa-horizon"></div>
-      <div class="hfa-particles" id="hfa-particles"></div>
-      <div class="hfa-glow"></div>
-    </div>
+    <!-- AI Agent への誘導 CTA -->
+    <a
+      href="/agent"
+      class="agent-cta group block focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/70"
+    >
+      <div class="agent-cta-inner">
+        <div class="agent-cta-bg" aria-hidden="true"></div>
+        <div class="agent-cta-glow" aria-hidden="true"></div>
+        <div
+          class="relative z-10 flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between"
+        >
+          <div>
+            <h3 class="text-lg font-semibold tracking-wide text-white md:text-xl">
+              <span
+                class="mr-2 inline-block rounded-sm bg-accent-neon/20 px-2 py-0.5 font-mono text-[11px] text-accent-neon"
+                >AI</span
+              >
+              AI Agent プロフィールを見る
+            </h3>
+            <p class="mt-1 max-w-xl text-sm text-primary-200">
+              自動化・分析パイプライン・クラウド設計の思考過程とエージェント活用スタックをまとめています。採用ご担当者様はこちらをご覧ください。
+            </p>
+          </div>
+          <span class="agent-cta-button font-mono text-xs"
+            >View Agent<span class="ml-2">→</span></span
+          >
+        </div>
+      </div>
+    </a>
   </div>
 
   <style>
@@ -386,121 +407,117 @@ if (ghUser) {
       }
     }
 
-    /* ===== Footer Animation ===== */
-    .home-footer-anim {
+    /* ===== AI Agent CTA ===== */
+    .agent-cta {
       position: relative;
-      height: 180px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      display: block;
+      text-decoration: none;
+    }
+    .agent-cta-inner {
+      position: relative;
+      padding: 2rem 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 18px;
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.35));
       overflow: hidden;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.6)) padding-box;
       box-shadow:
         0 4px 18px -6px rgba(0, 0, 0, 0.65),
-        0 0 16px -4px rgba(34, 211, 238, 0.25),
-        0 0 28px -6px rgba(236, 72, 153, 0.25);
-      backdrop-filter: blur(6px);
+        0 0 18px -6px rgba(34, 211, 238, 0.25),
+        0 0 26px -8px rgba(236, 72, 153, 0.25);
+      transition: 0.6s;
+      backdrop-filter: blur(8px);
     }
-    .home-footer-anim .hfa-layer {
+    .agent-cta-bg {
       position: absolute;
       inset: 0;
-    }
-    .home-footer-anim .grid-pattern {
       background:
-        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 80px),
-        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 60px);
+        radial-gradient(circle at 85% 25%, rgba(236, 72, 153, 0.25), transparent 65%),
+        radial-gradient(circle at 12% 80%, rgba(34, 211, 238, 0.25), transparent 55%);
       mix-blend-mode: overlay;
-      animation: hfa-grid-move 60s linear infinite;
+      filter: blur(28px);
+      opacity: 0.65;
+      transition: 1s;
     }
-    .home-footer-anim .shimmer {
-      background:
-        radial-gradient(circle at 75% 25%, rgba(236, 72, 153, 0.18), transparent 60%),
-        radial-gradient(circle at 15% 80%, rgba(34, 211, 238, 0.22), transparent 55%);
-      filter: blur(30px);
-      opacity: 0.9;
-    }
-    @keyframes hfa-grid-move {
-      0% {
-        background-position:
-          0 0,
-          0 0;
-      }
-      100% {
-        background-position:
-          400px 0,
-          0 300px;
-      }
-    }
-    .home-footer-anim .hfa-horizon {
+    .agent-cta-glow {
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 58px;
-      height: 2px;
-      background: linear-gradient(90deg, #22d3ee, #6366f1, #ec4899, #22d3ee);
-      background-size: 240% 100%;
-      animation: hfa-horizon-shift 22s linear infinite;
-      box-shadow:
-        0 0 6px rgba(34, 211, 238, 0.6),
-        0 0 18px -4px rgba(236, 72, 153, 0.6);
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        rgba(34, 211, 238, 0.18),
+        rgba(236, 72, 153, 0.12) 55%,
+        transparent
+      );
+      opacity: 0;
+      transition: 0.8s;
     }
-    @keyframes hfa-horizon-shift {
+    .agent-cta:hover .agent-cta-inner,
+    .agent-cta:focus-visible .agent-cta-inner {
+      border-color: rgba(255, 255, 255, 0.18);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+        0 6px 28px -10px rgba(0, 0, 0, 0.7),
+        0 0 24px -6px rgba(34, 211, 238, 0.45),
+        0 0 34px -10px rgba(236, 72, 153, 0.4);
+      transform: translateY(-2px);
+    }
+    .agent-cta:hover .agent-cta-glow,
+    .agent-cta:focus-visible .agent-cta-glow {
+      opacity: 1;
+    }
+    .agent-cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.75rem 1.2rem;
+      background: linear-gradient(90deg, #22d3ee, #6366f1, #ec4899, #22d3ee);
+      background-size: 220% 100%;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 10px;
+      color: #fff;
+      letter-spacing: 0.08em;
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+        0 4px 14px -6px rgba(0, 0, 0, 0.65);
+      transition: 0.6s;
+    }
+    .agent-cta-button::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        transparent 0 40%,
+        rgba(255, 255, 255, 0.4) 50%,
+        transparent 60%
+      );
+      mix-blend-mode: overlay;
+      animation: ctaSheen 9s linear infinite;
+      opacity: 0.6;
+    }
+    .agent-cta:hover .agent-cta-button {
+      animation: gradShift 10s linear infinite;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+        0 4px 20px -8px rgba(0, 0, 0, 0.7),
+        0 0 22px -4px rgba(34, 211, 238, 0.5),
+        0 0 30px -8px rgba(236, 72, 153, 0.45);
+    }
+    @keyframes gradShift {
       0% {
         background-position: 0 0;
       }
       100% {
-        background-position: 240% 0;
+        background-position: 220% 0;
       }
     }
-    .home-footer-anim .hfa-glow {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 120px;
-      background: linear-gradient(
-        180deg,
-        rgba(34, 211, 238, 0.35),
-        rgba(236, 72, 153, 0.18) 40%,
-        transparent 80%
-      );
-      filter: blur(30px);
-      opacity: 0.55;
-      pointer-events: none;
-    }
-    .home-footer-anim .hfa-particles {
-      position: absolute;
-      inset: 0;
-    }
-    .home-footer-anim .hfa-particle {
-      position: absolute;
-      width: 2px;
-      height: 12px;
-      background: linear-gradient(180deg, #fff, transparent);
-      opacity: 0.65;
-      filter: drop-shadow(0 0 4px #22d3ee);
-      animation: hfa-drop 8s linear infinite;
-    }
-    @keyframes hfa-drop {
+    @keyframes ctaSheen {
       0% {
-        transform: translateY(-20%);
-        opacity: 0;
-      }
-      10% {
-        opacity: 0.9;
-      }
-      90% {
-        opacity: 0.8;
+        transform: translateX(-30%);
       }
       100% {
-        transform: translateY(120%);
-        opacity: 0;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .home-footer-anim .grid-pattern,
-      .home-footer-anim .hfa-horizon,
-      .home-footer-anim .hfa-particle {
-        animation: none !important;
+        transform: translateX(30%);
       }
     }
 
@@ -509,9 +526,7 @@ if (ghUser) {
       .cyber-home::before,
       .cyber-card::after,
       .energy-bar::after,
-      .activity-row::after,
-      .home-footer-anim .hfa-horizon,
-      .home-footer-anim .grid-pattern {
+      .activity-row::after {
         animation: none !important;
       }
     }
@@ -730,10 +745,7 @@ if (ghUser) {
       .cyber-sign h1,
       .cyber-sign h1::after,
       .cyber-sign p.long span,
-      .cyber-sign .sign-bottom-bar,
-      .home-footer-anim .hfa-horizon,
-      .home-footer-anim .grid-pattern,
-      .home-footer-anim .hfa-particle {
+      .cyber-sign .sign-bottom-bar {
         animation: none !important;
       }
     }
@@ -852,21 +864,5 @@ if (ghUser) {
       }
     }
   </style>
-  <script>
-    // Generate footer particles (lightweight, runs only on Home page)
-    const footerParticlesRoot = document.getElementById('hfa-particles');
-    if (footerParticlesRoot) {
-      const COUNT = 34;
-      for (let i = 0; i < COUNT; i++) {
-        const el = document.createElement('div');
-        el.className = 'hfa-particle';
-        const delay = (Math.random() * 8).toFixed(2);
-        el.style.left = (Math.random() * 100).toFixed(2) + '%';
-        el.style.animationDelay = `-${delay}s`;
-        el.style.animationDuration = 6 + Math.random() * 8 + 's';
-        el.style.height = 8 + Math.random() * 26 + 'px';
-        footerParticlesRoot.appendChild(el);
-      }
-    }
-  </script>
+  <!-- No additional script needed for static CTA -->
 </Layout>
