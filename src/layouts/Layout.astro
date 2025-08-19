@@ -23,6 +23,24 @@ const {
     <!-- tokens.css は frontmatter import 済み -->
   </head>
   <body class="min-h-screen overflow-x-hidden font-sans text-white antialiased">
+    <!-- モバイル/タブレット向け PC 推奨バナー -->
+    <div
+      id="device-advisory"
+      class="fixed inset-x-0 top-0 z-[100] hidden items-center justify-between gap-4 border-b border-accent-cyan/30 bg-dark-900/95 px-4 py-2 font-mono text-[11px] text-primary-200 shadow-lg backdrop-blur-md"
+      role="status"
+      aria-live="polite"
+    >
+      <div class="flex items-center gap-2">
+        <span class="inline-flex h-2 w-2 animate-pulse rounded-full bg-accent-cyan/80"></span>
+        <span>より快適な体験のため PC (幅 ≥ 1280px) での閲覧を推奨しています。</span>
+      </div>
+      <button
+        type="button"
+        id="device-advisory-close"
+        class="rounded border border-primary-500/40 px-2 py-0.5 text-primary-300 transition hover:border-accent-cyan/60 hover:text-white"
+        aria-label="案内を閉じる">×</button
+      >
+    </div>
     <div class="fixed inset-0 -z-10">
       <div
         class="absolute inset-0 bg-gradient-to-br from-fuchsia-800 via-indigo-900 to-slate-950 opacity-90"
@@ -149,6 +167,17 @@ const {
       body {
         background: linear-gradient(135deg, #9333ea 0%, #6b21a8 50%, #3b0764 100%);
         background-attachment: fixed;
+      }
+      /* Device advisory visibility */
+      @media (max-width: 1023px) {
+        #device-advisory {
+          display: flex;
+        }
+      }
+      @media (min-width: 1024px) {
+        #device-advisory {
+          display: none !important;
+        }
       }
       html,
       body {
@@ -357,6 +386,51 @@ const {
           animation: none !important;
         }
       }
+      /* Large screen scaling */
+      @media (min-width: 1600px) {
+        html {
+          font-size: 17px;
+        }
+        .nh-inner-only-pills {
+          max-width: 1550px;
+        }
+        .section-card {
+          padding: 2rem;
+        }
+      }
+      @media (min-width: 1920px) {
+        html {
+          font-size: 18px;
+        }
+        .nh-inner-only-pills {
+          max-width: 1750px;
+        }
+        .section-card {
+          padding: 2.25rem;
+        }
+      }
+      @media (min-width: 2300px) {
+        html {
+          font-size: 19px;
+        }
+        .nh-inner-only-pills {
+          max-width: 1950px;
+        }
+        .section-card {
+          padding: 2.5rem;
+        }
+      }
+      @media (min-width: 2600px) {
+        html {
+          font-size: 20px;
+        }
+        .nh-inner-only-pills {
+          max-width: 2100px;
+        }
+        .section-card {
+          padding: 2.75rem;
+        }
+      }
       /* =============================================================== */
       /* =============================================================== */
       @media (prefers-reduced-motion: reduce) {
@@ -406,10 +480,31 @@ const {
           }, i * 900);
         }
       }
+      function setupDeviceAdvisory() {
+        const banner = document.getElementById('device-advisory');
+        const closeBtn = document.getElementById('device-advisory-close');
+        if (!banner) return;
+        const mqDesktop = window.matchMedia('(min-width: 1024px)');
+        function refreshVisibility() {
+          if (!banner) return;
+          if (mqDesktop.matches || localStorage.getItem('hideDeviceAdvisory') === '1') {
+            banner.style.display = 'none';
+          } else {
+            banner.style.display = 'flex';
+          }
+        }
+        refreshVisibility();
+        mqDesktop.addEventListener('change', refreshVisibility);
+        closeBtn?.addEventListener('click', () => {
+          localStorage.setItem('hideDeviceAdvisory', '1');
+          refreshVisibility();
+        });
+      }
       document.addEventListener('DOMContentLoaded', () => {
         updateTime();
         updateUptime();
         updateActiveNav();
+        setupDeviceAdvisory();
         setInterval(updateTime, 1000);
         setInterval(updateUptime, 1000);
         setInterval(createParticles, 8000);

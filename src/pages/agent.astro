@@ -260,14 +260,12 @@ const agentData = data;
     function adjustAgentLayoutHeight() {
       if (!agentLayout) return;
       const rect = agentLayout.getBoundingClientRect();
-      const bottomGap = 16; // 余白を少し減らす
-      let available = window.innerHeight - rect.top - bottomGap;
-      if (available < 200) available = 200; // 安全域
-      agentLayout.style.height = available + 'px';
+      const vh = window.innerHeight;
+      // 利用可能な全高 (下に最小余白 8px)
+      const target = Math.max(320, vh - rect.top - 8);
+      agentLayout.style.height = target + 'px';
       agentLayout.classList.add('agent-layout--fixed');
-      if (chatContainer) {
-        chatContainer.style.height = available + 'px';
-      }
+      if (chatContainer) chatContainer.style.height = target + 'px';
     }
 
     // 初期化シーケンス: layout shift 対策で複数回再計算
@@ -358,5 +356,81 @@ const agentData = data;
     .hide-scrollbar::-webkit-scrollbar {
       display: none;
     }
+    /* =============== Large Screen Progressive Scaling ================= */
+    @media (min-width: 1600px) {
+      .arch-page-grid {
+        --arch-max: 1250px;
+      }
+      #chat-messages {
+        padding: 1.5rem;
+      }
+      #chat-container > .border-t,
+      #chat-container .p-4 {
+        padding: 1.5rem !important;
+      }
+      #chat-input {
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
+      }
+      .quick-question {
+        padding: 0.9rem 1rem;
+        font-size: 0.85rem;
+      }
+      .agent-layout {
+        gap: 2rem;
+      }
+    }
+    @media (min-width: 1920px) {
+      .arch-page-grid {
+        --arch-max: 1400px;
+      }
+      #chat-messages {
+        padding: 1.75rem;
+      }
+      #chat-input {
+        font-size: 1.05rem;
+      }
+      .quick-question {
+        font-size: 0.9rem;
+      }
+      .agent-layout {
+        gap: 2.25rem;
+      }
+    }
+    @media (min-width: 2300px) {
+      .arch-page-grid {
+        --arch-max: 1600px;
+      }
+      #chat-messages {
+        padding: 2rem;
+      }
+      #chat-input {
+        font-size: 1.08rem;
+      }
+      .quick-question {
+        font-size: 0.95rem;
+      }
+      .agent-layout {
+        gap: 2.5rem;
+      }
+    }
+    @media (min-width: 2600px) {
+      .arch-page-grid {
+        --arch-max: 1750px;
+      }
+      #chat-messages {
+        padding: 2.25rem;
+      }
+      #chat-input {
+        font-size: 1.12rem;
+      }
+      .quick-question {
+        font-size: 1rem;
+      }
+      .agent-layout {
+        gap: 2.75rem;
+      }
+    }
+    /* =================================================================== */
   </style>
 </Layout>
