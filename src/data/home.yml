@@ -1,6 +1,6 @@
 header:
   title: 'My Portfolio'
-  subtitle: '基本情報と最近の活動'
+  subtitle: '基本情報'
   tags:
     - label: '#Creative'
       color: cyan
