@@ -73,9 +73,7 @@ if (ghUser) {
 ---
 
 <Layout title="Home - i7s7-ymp Portfolio" headerPills={['build:ok']}>
-  <div
-    class="cyber-home mx-auto w-full max-w-[min(1200px,calc(100vw-19rem))] space-y-10 overflow-x-hidden px-4 lg:px-6"
-  >
+  <div class="cyber-home space-y-10 overflow-x-hidden">
     <!-- 統一ヘッダー -->
     <PageHeader
       title={home.header.title}
@@ -269,11 +267,17 @@ if (ghUser) {
           push('Hireable', u.hireable ? 'Yes' : 'No', colorByKey.Hireable);
         if (u.created_at) push('Since', new Date(u.created_at).getFullYear(), colorByKey.Since);
         // escape HTML (single definition)
-        const esc = s =>
-          s.replace(
-            /[&<>"']/g,
-            c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]
-          );
+        const esc = s => {
+          const entries = [
+            ['&', '&amp;'],
+            ['<', '&lt;'],
+            ['>', '&gt;'],
+            ['"', '&quot;'],
+            ["'", '&#39;'],
+          ];
+          const map = Object.fromEntries(entries);
+          return s.replace(/[&<>"']/g, c => map[c]);
+        };
         el.innerHTML = items
           .map(
             it =>
