@@ -20,31 +20,28 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
 ---
 
 <Layout title="実績 - i7s7-ymp Portfolio" headerPills={['build:ok']}>
-  <div class="space-y-10">
-    <PageHeader
-      title={data.header.title}
-      subtitle={data.header.subtitle}
-      icon="🏆"
-      iconBgClass="bg-gradient-to-r from-accent-gold to-accent-pink"
-    >
-      {
-        Array.isArray(data.header.tags) && data.header.tags.length > 0 && (
-          <div slot="extra" class="flex flex-wrap gap-2 text-xs">
-            {data.header.tags.map((t: string) => (
-              <span class="badge-pill">{t}</span>
-            ))}
-          </div>
-        )
-      }
-    </PageHeader>
-
+  <PageHeader
+    title={data.header.title}
+    subtitle={data.header.subtitle}
+    icon="🏆"
+    iconBgClass="bg-gradient-to-r from-accent-gold to-accent-pink"
+  >
+    {
+      Array.isArray(data.header.tags) && data.header.tags.length > 0 && (
+        <div slot="extra" class="flex flex-wrap gap-2 text-xs">
+          {data.header.tags.map((t: string) => (
+            <span class="badge-pill">{t}</span>
+          ))}
+        </div>
+      )
+    }
+  </PageHeader>
+  <div class="arch-page-grid">
     <!-- 職歴・経験タイムライン -->
-    <div class="section-card">
-      <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="gradient-heading-sm flex items-center space-x-2 text-lg font-semibold">
-          <span class="text-accent-cyan">職務経歴</span>
-        </h3>
-      </div>
+    <div class="section-card arch-block">
+      <h3 class="gradient-heading-sm flex items-center space-x-2 text-lg font-semibold">
+        <span class="text-accent-cyan">職務経歴</span>
+      </h3>
       <div class="relative" aria-label="2019-2025 タイムライン (選択式)">
         <div
           class="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-primary-500/30 via-primary-500/20 to-primary-500/30"
@@ -179,8 +176,8 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
     </div>
 
     <!-- 資格・認定 -->
-    <div class="section-card">
-      <h3 class="gradient-heading-sm mb-3 flex items-center space-x-2 text-lg font-semibold">
+    <div class="section-card arch-block">
+      <h3 class="gradient-heading-sm flex items-center space-x-2 text-lg font-semibold">
         <span class="text-accent-cyan">資格・認定</span>
       </h3>
       <ul class="grid grid-cols-1 gap-3 md:grid-cols-2" aria-label="資格・認定一覧">
@@ -312,6 +309,33 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
 </script>
 
 <style>
+  /* Page vertical grid (unified with support page) */
+  .arch-page-grid {
+    --arch-max: 1100px;
+    width: 100%;
+    max-width: var(--arch-max);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    row-gap: clamp(3rem, 6vh, 4.5rem);
+    padding-inline: clamp(1rem, 2.5vw, 2rem);
+  }
+  .arch-block {
+    /* future per-block overrides */
+  }
+  @media (max-width: 720px) {
+    .arch-page-grid {
+      row-gap: 3.25rem;
+    }
+  }
+  /* Normalize h3 spacing (match Architecture page) */
+  .arch-block > h3:first-child {
+    margin-top: 0;
+  }
+  .arch-block > h3 {
+    margin-bottom: 1.25rem;
+    line-height: 1.15;
+  }
   /* line clamp helper */
   .line-clamp {
     max-height: 2.4em;

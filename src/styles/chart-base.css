@@ -1,7 +1,8 @@
 /* Chart shared styles extracted (Stage: style extraction only) */
 /* NOTE: DOM is still owned by pages; further tokenization planned. */
 .chart-section {
-  padding-bottom: 3.5rem;
+  /* 以前: 3.5rem → 見出し間隔が過大だったため縮小 */
+  padding-bottom: 2.25rem;
 }
 .chart-wrapper {
   position: relative;

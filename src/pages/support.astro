@@ -159,111 +159,116 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
 
   {/** Parity harness removed */}
 
-  <section
-    class="patterns-section chart-section"
-    aria-labelledby="pattern-chart-title"
-    id="app-chart-section"
-  >
-    {/** REFACTOR-STAGE2 BLOCK START: 重複チャート構造 (cloud と対) */}
-    <h3 id="pattern-chart-title" class="mb-6 text-lg font-semibold text-green-400">
-      アプリケーションパターン
-    </h3>
-    <div class="chart-wrapper">
-      <div
-        class="pchart geek-chart"
-        role="img"
-        aria-label={`アプリケーションパターン出現数 Y軸最大 ${patternYMax}`}
-        aria-describedby="pattern-note"
-      >
-        <div class="plot" data-count={patternStats.length}>
-          <div class="grid-y" aria-hidden="true">
-            {
-              patternTicks.map(t => {
-                const pct = (t / patternYMax) * 100;
-                const top = 100 - pct;
-                return (
-                  <div class="grid-row" style={`top:${top}%;`}>
-                    <span class="grid-line" />
-                    <span class="grid-label">{t}</span>
-                  </div>
-                );
-              })
-            }
+  <div class="arch-page-grid">
+    <section
+      class="patterns-section chart-section arch-block"
+      aria-labelledby="pattern-chart-title"
+      id="app-chart-section"
+    >
+      {/** REFACTOR-STAGE2 BLOCK START: 重複チャート構造 (cloud と対) */}
+      <h3 id="pattern-chart-title" class="mb-6 text-lg font-semibold text-green-400">
+        アプリケーションパターン
+      </h3>
+      <div class="chart-wrapper">
+        <div
+          class="pchart geek-chart"
+          role="img"
+          aria-label={`アプリケーションパターン出現数 Y軸最大 ${patternYMax}`}
+          aria-describedby="pattern-note"
+        >
+          <div class="plot" data-count={patternStats.length}>
+            <div class="grid-y" aria-hidden="true">
+              {
+                patternTicks.map(t => {
+                  const pct = (t / patternYMax) * 100;
+                  const top = 100 - pct;
+                  return (
+                    <div class="grid-row" style={`top:${top}%;`}>
+                      <span class="grid-line" />
+                      <span class="grid-label">{t}</span>
+                    </div>
+                  );
+                })
+              }
+            </div>
+            <div class="bars pattern-bars" data-count={patternStats.length} style="--bar-w:70px;">
+              {
+                patternStats.map(p => {
+                  const hPct = p.total === 0 ? 0 : (p.total / patternYMax) * 100;
+                  const id = `pat-${p.name.replace(/\s+/g, '-').toLowerCase()}`;
+                  const isHigh = hPct > 90;
+                  const isTall = hPct > 38;
+                  return (
+                    <div
+                      class="bar-box"
+                      style={`--h:${hPct}%;`}
+                      data-color={p.color}
+                      data-id={id}
+                      data-zero={p.total === 0}
+                      data-high={isHigh}
+                      data-tall={isTall}
+                    >
+                      <div class="bar-hit" aria-label={`${patternLabel(p.name)} ${p.total}件`}>
+                        <span class="bar-fill" />
+                        <span class="bar-value font-mono">{p.total}</span>
+                      </div>
+                    </div>
+                  );
+                })
+              }
+            </div>
+            <div class="axis-x" aria-hidden="true"></div>
           </div>
-          <div class="bars pattern-bars" data-count={patternStats.length} style="--bar-w:70px;">
+          <div class="bar-labels pattern-labels" aria-hidden="false">
             {
               patternStats.map(p => {
-                const hPct = p.total === 0 ? 0 : (p.total / patternYMax) * 100;
                 const id = `pat-${p.name.replace(/\s+/g, '-').toLowerCase()}`;
-                const isHigh = hPct > 90;
-                const isTall = hPct > 38;
                 return (
                   <div
-                    class="bar-box"
-                    style={`--h:${hPct}%;`}
+                    class="x-label badge-pill"
                     data-color={p.color}
                     data-id={id}
-                    data-zero={p.total === 0}
-                    data-high={isHigh}
-                    data-tall={isTall}
+                    tabindex="0"
+                    aria-label={`${patternLabel(p.name)} パターン`}
                   >
-                    <div class="bar-hit" aria-label={`${patternLabel(p.name)} ${p.total}件`}>
-                      <span class="bar-fill" />
-                      <span class="bar-value font-mono">{p.total}</span>
-                    </div>
+                    {patternLabel(p.name)}
                   </div>
                 );
               })
             }
           </div>
-          <div class="axis-x" aria-hidden="true"></div>
-        </div>
-        <div class="bar-labels pattern-labels" aria-hidden="false">
-          {
-            patternStats.map(p => {
-              const id = `pat-${p.name.replace(/\s+/g, '-').toLowerCase()}`;
-              return (
-                <div
-                  class="x-label badge-pill"
-                  data-color={p.color}
-                  data-id={id}
-                  tabindex="0"
-                  aria-label={`${patternLabel(p.name)} パターン`}
-                >
-                  {patternLabel(p.name)}
-                </div>
-              );
-            })
-          }
         </div>
       </div>
-    </div>
-    <p id="pattern-note" class="chart-note unified-note">
-      ※ カテゴリは ByteByteGo - Top 5 Software Architectural
-      Patterns(https://bytebytego.com/guides/top-5-software-architectural-patterns/) より引用
-    </p>
-    {/** Experimental duplicate pattern chart removed */}
-  </section>
-  <section class="cloud-architectures-section mt-16" aria-labelledby="cloud-arch-gallery-title">
-    <h3 id="cloud-arch-gallery-title" class="mb-6 text-lg font-semibold text-cyan-400">
-      クラウドアーキテクチャ
-    </h3>
-    <div class="cloud-arch-grid geek-arch-grid" role="list">
-      {
-        cloudArchitectures.map(c => (
-          <CloudArchCard
-            id={c.id}
-            title={c.title}
-            summary={c.summary}
-            image={c.image}
-            services={c.services}
-            year={c.year}
-            provider={c.provider}
-          />
-        ))
-      }
-    </div>
-  </section>
+      <p id="pattern-note" class="chart-note unified-note">
+        ※ カテゴリは ByteByteGo - Top 5 Software Architectural
+        Patterns(https://bytebytego.com/guides/top-5-software-architectural-patterns/) より引用
+      </p>
+      {/** Experimental duplicate pattern chart removed */}
+    </section>
+    <section
+      class="cloud-architectures-section arch-block"
+      aria-labelledby="cloud-arch-gallery-title"
+    >
+      <h3 id="cloud-arch-gallery-title" class="mb-6 text-lg font-semibold text-cyan-400">
+        クラウドアーキテクチャ
+      </h3>
+      <div class="cloud-arch-grid geek-arch-grid" role="list">
+        {
+          cloudArchitectures.map(c => (
+            <CloudArchCard
+              id={c.id}
+              title={c.title}
+              summary={c.summary}
+              image={c.image}
+              services={c.services}
+              year={c.year}
+              provider={c.provider}
+            />
+          ))
+        }
+      </div>
+    </section>
+  </div>
 </Layout>
 
 <!-- refactor markers present; provider switch legacy removed -->
@@ -279,6 +284,38 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
     gap: 1.5rem;
     grid-template-columns: repeat(auto-fit, minmax(var(--min), 1fr));
     align-items: start;
+  }
+  /* Unified page grid & vertical rhythm */
+  .arch-page-grid {
+    --arch-col-gap: clamp(1.5rem, 2vw, 2rem);
+    --arch-max: 1100px;
+    width: 100%;
+    max-width: var(--arch-max);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    row-gap: clamp(3rem, 6vh, 4.5rem); /* セクション間間隔統一 */
+    padding-inline: clamp(1rem, 2.5vw, 2rem);
+  }
+  .arch-block > h3 {
+    margin-top: 0; /* ブロック先頭で上マージン除去 */
+    margin-bottom: 1.25rem; /* 見出し下余白統一 */
+    line-height: 1.15;
+  }
+  /* パターンチャート内で見出し直後の余白を .mb-6 で指定 → 調整: utility を上書き */
+  #pattern-chart-title.mb-6 {
+    margin-bottom: 1.25rem !important;
+  }
+  #cloud-arch-gallery-title.mb-6 {
+    margin-bottom: 1.25rem !important;
+  }
+  @media (max-width: 720px) {
+    .arch-page-grid {
+      row-gap: 3.25rem;
+    }
+    .arch-block > h3 {
+      margin-bottom: 1rem;
+    }
   }
   /* Geek unified styling for Cloud Architecture grid/cards */
   .geek-arch-grid {
