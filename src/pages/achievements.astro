@@ -19,11 +19,7 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
 // REFACTOR-STAGE2: displayYears と timelineByYear の同期ロジック（空年の扱い）を utility 化予定
 ---
 
-<Layout
-  title="実績 - i7s7-ymp Portfolio"
-  headerTitle="achievements:timeline"
-  headerPills={['build:ok']}
->
+<Layout title="実績 - i7s7-ymp Portfolio" headerPills={['build:ok']}>
   <div class="space-y-10">
     <PageHeader
       title={data.header.title}

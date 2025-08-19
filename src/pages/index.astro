@@ -8,11 +8,7 @@ const homeMod = await import('../data/home.yml');
 const home = homeMod && homeMod.default ? homeMod.default : homeMod;
 ---
 
-<Layout
-  title="Home - i7s7-ymp Portfolio"
-  headerTitle="welcome to my portfolio"
-  headerPills={['build:ok']}
->
+<Layout title="Home - i7s7-ymp Portfolio" headerPills={['build:ok']}>
   <div
     class="cyber-home mx-auto w-full max-w-[min(1200px,calc(100vw-19rem))] space-y-10 overflow-x-hidden px-4 lg:px-6"
   >
