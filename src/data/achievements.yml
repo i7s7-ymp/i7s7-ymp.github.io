@@ -3,7 +3,7 @@ header:
   subtitle: 'マイルストーンと技術的達成'
 
 # DATA SCHEMA
-# timeline[]: role, company, period(YYYY or range), color(token), points[], badges[]
+# timeline[]: role, company, period(YYYY or range), color(token), points[], badges[], url(optional external detail)
 # certifications[]: code, title, level, color
 
 timeline:
@@ -11,6 +11,7 @@ timeline:
     company: '.'
     period: '2025'
     color: gold
+    url: 'https://hiro-kamakura'
     points:
       - 'レストランの雰囲気に合わせたデザインを作成'
       - 'ウェブサイトのSEOと広告運用を担当'
@@ -35,6 +36,7 @@ timeline:
     company: 'Nifty Co.'
     period: '2025'
     color: cyan
+    url: 'https://example.com/nifty-tech-day-2025'
     points:
       - 'LTでメタバース業務有用性評価プロジェクトの成果を発表'
       - '参加者アンケートで社内最高の評価を獲得'

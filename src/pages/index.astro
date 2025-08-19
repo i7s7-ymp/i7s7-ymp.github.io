@@ -95,11 +95,35 @@ if (ghUser) {
         <div class="absolute -right-10 -top-10 h-20 w-20 rounded-full bg-accent-gold/20 blur-2xl">
         </div>
         <div class="relative z-10">
-          <div class="mb-4 flex items-center space-x-3">
-            <div class="h-3 w-3 animate-pulse rounded-full bg-accent-neon"></div>
-            <h3 class="text-xl font-bold text-white">{home.profile.heading}</h3>
+          <div class="mb-4 flex items-start justify-between gap-4">
+            <div class="flex items-center space-x-3">
+              <div class="h-3 w-3 animate-pulse rounded-full bg-accent-neon"></div>
+              <h3 class="text-xl font-bold text-white">{home.profile.heading}</h3>
+            </div>
+            <a
+              href="https://github.com/i7s7-ymp"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group block rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/60"
+            >
+              <img
+                src={ghUser?.avatar_url
+                  ? `${ghUser.avatar_url}&s=80`
+                  : 'https://github.com/i7s7-ymp.png?size=80'}
+                alt="GitHub Avatar"
+                width="56"
+                height="56"
+                loading="lazy"
+                class="h-14 w-14 rounded-full object-cover ring-2 ring-accent-neon/40 transition group-hover:ring-accent-cyan/60"
+              />
+            </a>
           </div>
-          <div class="space-y-3 font-mono text-sm">
+          <div
+            id="ghProfileItems"
+            data-source={ghUser ? 'build' : 'fallback'}
+            class="space-y-3 font-mono text-sm"
+            aria-live="polite"
+          >
             {
               dynamicProfileItems.map(item => (
                 <div class="flex justify-between">
@@ -109,6 +133,15 @@ if (ghUser) {
               ))
             }
           </div>
+          <p
+            class="mt-3 flex items-center gap-2 font-mono text-[10px] tracking-wide text-primary-400/70"
+          >
+            <span class="inline-flex h-2 w-2 rounded-full bg-accent-neon/70" id="ghProfileLiveDot"
+            ></span>
+            <span id="ghProfileSourceLabel"
+              >{ghUser ? 'GitHub API (build time cache)' : 'Fallback (YAML)'}</span
+            >
+          </p>
         </div>
       </div>
 
@@ -207,6 +240,61 @@ if (ghUser) {
       </div>
     </a>
   </div>
+
+  <script is:inline>
+    // クライアント側でもう一度最新の GitHub 公開プロフィールを取得し、ビルド時キャッシュを上書き
+    (async () => {
+      const el = document.getElementById('ghProfileItems');
+      if (!el) return;
+      try {
+        const r = await fetch('https://api.github.com/users/i7s7-ymp', {
+          headers: { 'User-Agent': 'i7s7-ymp-astro-site' },
+        });
+        if (!r.ok) return;
+        const u = await r.json();
+        const items = [];
+        const push = (k, v, cls) => {
+          if (v) items.push({ k, v: String(v), cls });
+        };
+        push('Name', u.name || u.login, 'text-white');
+        push('Company', u.company, 'text-accent-neon');
+        push('Bio', u.bio, 'text-accent-pink');
+        push('Location', u.location, 'text-accent-cyan');
+        push('Twitter', u.twitter_username ? '@' + u.twitter_username : '', 'text-accent-blue');
+        if (u.email) push('Email', u.email, 'text-accent-blue');
+        if (typeof u.hireable === 'boolean')
+          push(
+            'Hireable',
+            u.hireable ? 'Yes' : 'No',
+            u.hireable ? 'text-accent-neon' : 'text-primary-400'
+          );
+        if (u.created_at) push('Since', new Date(u.created_at).getFullYear(), 'text-accent-neon');
+        // escape HTML
+        const esc = s =>
+          s.replace(
+            /[&<>"']/g,
+            c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]
+          );
+        el.innerHTML = items
+          .map(
+            it =>
+              `<div class="flex justify-between"><span class="text-primary-300">${esc(it.k)}:</span><span class="${esc(it.cls)}">${esc(it.v)}</span></div>`
+          )
+          .join('');
+        el.dataset.source = 'live';
+        const label = document.getElementById('ghProfileSourceLabel');
+        if (label) label.textContent = 'GitHub API (live)';
+        const dot = document.getElementById('ghProfileLiveDot');
+        if (dot) {
+          dot.classList.add('animate-pulse');
+          dot.classList.remove('bg-accent-neon/70');
+          dot.classList.add('bg-accent-cyan');
+        }
+      } catch {
+        /* ignore */
+      }
+    })();
+  </script>
 
   <style>
     /* 既存スキルアニメ維持 */
