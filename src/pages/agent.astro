@@ -18,9 +18,10 @@ const agentData = data;
     <section class="arch-block" aria-labelledby="agent-chat-heading">
       <h3 id="agent-chat-heading" class="sr-only">Agent Chat</h3>
       <!-- メインチャットエリア -->
-      <div class="agent-layout flex min-h-[640px] flex-col lg:flex-row lg:space-x-6">
+      <div id="agent-layout" class="agent-layout flex flex-col lg:flex-row lg:space-x-6">
         <!-- チャットコンテナ -->
         <div
+          id="chat-container"
           class="flex min-h-0 flex-1 flex-col rounded-2xl border border-primary-600/30 bg-dark-900/80 shadow-2xl backdrop-blur-md"
         >
           <!-- チャットヘッダー -->
@@ -270,6 +271,38 @@ const agentData = data;
         }
       });
     });
+
+    // ===== ビューポート高さに収めるレイアウト調整 =====
+    const agentLayout = document.getElementById('agent-layout');
+    const chatContainer = document.getElementById('chat-container');
+
+    function adjustAgentLayoutHeight() {
+      if (!agentLayout) return;
+      const rect = agentLayout.getBoundingClientRect();
+      const bottomGap = 16; // 余白を少し減らす
+      let available = window.innerHeight - rect.top - bottomGap;
+      if (available < 200) available = 200; // 安全域
+      agentLayout.style.height = available + 'px';
+      agentLayout.classList.add('agent-layout--fixed');
+      if (chatContainer) {
+        chatContainer.style.height = available + 'px';
+      }
+    }
+
+    // 初期化シーケンス: layout shift 対策で複数回再計算
+    function scheduleAdjustments() {
+      adjustAgentLayoutHeight();
+      setTimeout(adjustAgentLayoutHeight, 150);
+      setTimeout(adjustAgentLayoutHeight, 400);
+    }
+
+    window.addEventListener('load', scheduleAdjustments);
+    requestAnimationFrame(scheduleAdjustments);
+    window.addEventListener('resize', adjustAgentLayoutHeight);
+    window.addEventListener('orientationchange', adjustAgentLayoutHeight);
+    window.addEventListener('visibilitychange', () => {
+      if (!document.hidden) scheduleAdjustments();
+    });
   </script>
   <style>
     /* Page unified grid */
@@ -299,7 +332,35 @@ const agentData = data;
     .agent-layout {
       gap: 1.5rem;
     }
-
+    /* 高さ固定時の挙動: 縦に overflow を許可しつつ横スクロール抑止 */
+    .agent-layout.agent-layout--fixed {
+      overflow: hidden; /* 全体は隠して各内部でスクロール */
+      position: relative;
+    }
+    /* チャットコンテナ内でメッセージ領域を柔軟にスクロール */
+    #chat-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 0; /* flex 子の内部スクロール許可 */
+      overflow: hidden;
+    }
+    #chat-container > #chat-messages {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+    }
+    @media (max-width: 1023px) {
+      /* 縦積み時は高さ制御を少し緩める */
+      .agent-layout.agent-layout--fixed {
+        height: auto !important;
+        max-height: none !important;
+      }
+      #chat-container,
+      #chat-container > #chat-messages {
+        height: auto !important;
+        max-height: none !important;
+      }
+    }
     /* チャット欄スクロールバー非表示 */
     #chat-messages {
       scrollbar-width: none;
