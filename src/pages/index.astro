@@ -23,43 +23,52 @@ try {
 interface ProfileItem {
   key: string;
   value: string;
-  valueClass?: string;
+  valueClass: string; // 必須化して undefined を排除
 }
 let dynamicProfileItems: ProfileItem[];
 if (ghUser) {
   const createdYear = ghUser.created_at ? new Date(ghUser.created_at).getFullYear() : undefined;
+  // 固有色マッピング（値ごと差別化）
+  const colorByKey = {
+    Name: 'text-accent-gold',
+    Company: 'text-accent-neon', // ネオン
+    Location: 'text-accent-cyan', // シアン
+    Hireable: ghUser.hireable ? 'text-accent-coral' : 'text-primary-400', // コーラル (可変)
+    Since: 'text-accent-pink', // ピンク
+  } as const;
   const tmp: (ProfileItem | null)[] = [
-    { key: 'Name', value: ghUser.name || ghUser.login, valueClass: 'text-white' },
+    { key: 'Name', value: String(ghUser.name || ghUser.login), valueClass: colorByKey.Name },
     ghUser.company
-      ? { key: 'Company', value: ghUser.company, valueClass: 'text-accent-neon' }
+      ? { key: 'Company', value: String(ghUser.company), valueClass: colorByKey.Company }
       : null,
-    ghUser.bio ? { key: 'Bio', value: ghUser.bio, valueClass: 'text-accent-pink' } : null,
     ghUser.location
-      ? { key: 'Location', value: ghUser.location, valueClass: 'text-accent-cyan' }
+      ? { key: 'Location', value: String(ghUser.location), valueClass: colorByKey.Location }
       : null,
-    ghUser.twitter_username
-      ? { key: 'Twitter', value: '@' + ghUser.twitter_username, valueClass: 'text-accent-blue' }
-      : null,
-    ghUser.email ? { key: 'Email', value: ghUser.email, valueClass: 'text-accent-blue' } : null,
     ghUser.hireable === true || ghUser.hireable === false
-      ? {
-          key: 'Hireable',
-          value: ghUser.hireable ? 'Yes' : 'No',
-          valueClass: ghUser.hireable ? 'text-accent-neon' : 'text-primary-400',
-        }
+      ? { key: 'Hireable', value: ghUser.hireable ? 'Yes' : 'No', valueClass: colorByKey.Hireable }
       : null,
-    createdYear
-      ? { key: 'Since', value: String(createdYear), valueClass: 'text-accent-neon' }
-      : null,
+    createdYear ? { key: 'Since', value: String(createdYear), valueClass: colorByKey.Since } : null,
   ];
   dynamicProfileItems = tmp.filter(x => x !== null) as ProfileItem[];
 } else {
-  // fallback to YAML
-  dynamicProfileItems = (home.profile.items || []).map((i: any) => ({
-    key: i.key,
-    value: i.value,
-    valueClass: i.valueClass,
-  }));
+  // fallback: 番号順で色をローテーション
+  const cycle = [
+    'text-accent-gold',
+    'text-accent-neon',
+    'text-accent-pink',
+    'text-accent-cyan',
+    'text-accent-blue',
+    'text-accent-coral',
+    'text-primary-200',
+  ];
+  const exclude = new Set(['Bio', 'Twitter', 'Email']);
+  dynamicProfileItems = (home.profile.items || [])
+    .filter((i: any) => !exclude.has(i.key))
+    .map((i: any, idx: number) => ({
+      key: i.key,
+      value: i.value,
+      valueClass: cycle[idx % cycle.length],
+    }));
 }
 ---
 
@@ -75,19 +84,7 @@ if (ghUser) {
       iconTextClass="text-2xl font-bold text-white tracking-wider drop-shadow-[0_0_6px_#22d3ee]"
       iconBgClass="bg-[radial-gradient(circle_at_30%_30%,#22d3ee_0%,#0f172a_70%)]"
       class="cyber-sign"
-    >
-      <div slot="extra" class="flex flex-wrap gap-2 pt-2">
-        {
-          home.header.tags.map((tag: any) => (
-            <span
-              class={`rounded-full border px-4 py-2 text-xs font-medium text-white border-accent-${tag.color}/50 bg-accent-${tag.color}/30`}
-            >
-              {tag.label}
-            </span>
-          ))
-        }
-      </div>
-    </PageHeader>
+    />
     <!-- プロフィール情報 -->
     <div class="grid max-w-full grid-cols-1 gap-6 overflow-x-hidden lg:grid-cols-2">
       <!-- About -->
@@ -95,28 +92,30 @@ if (ghUser) {
         <div class="absolute -right-10 -top-10 h-20 w-20 rounded-full bg-accent-gold/20 blur-2xl">
         </div>
         <div class="relative z-10">
-          <div class="mb-4 flex items-start justify-between gap-4">
-            <div class="flex items-center space-x-3">
+          <div class="mb-4">
+            <div class="mb-3 flex items-center space-x-3">
               <div class="h-3 w-3 animate-pulse rounded-full bg-accent-neon"></div>
               <h3 class="text-xl font-bold text-white">{home.profile.heading}</h3>
             </div>
-            <a
-              href="https://github.com/i7s7-ymp"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="group block rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/60"
-            >
-              <img
-                src={ghUser?.avatar_url
-                  ? `${ghUser.avatar_url}&s=80`
-                  : 'https://github.com/i7s7-ymp.png?size=80'}
-                alt="GitHub Avatar"
-                width="56"
-                height="56"
-                loading="lazy"
-                class="h-14 w-14 rounded-full object-cover ring-2 ring-accent-neon/40 transition group-hover:ring-accent-cyan/60"
-              />
-            </a>
+            <div class="flex justify-end">
+              <a
+                href="https://github.com/i7s7-ymp"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group block rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/60"
+              >
+                <img
+                  src={ghUser?.avatar_url
+                    ? `${ghUser.avatar_url}&s=80`
+                    : 'https://github.com/i7s7-ymp.png?size=80'}
+                  alt="GitHub Avatar"
+                  width="56"
+                  height="56"
+                  loading="lazy"
+                  class="h-14 w-14 rounded-full object-cover ring-2 ring-accent-neon/40 transition group-hover:ring-accent-cyan/60"
+                />
+              </a>
+            </div>
           </div>
           <div
             id="ghProfileItems"
@@ -256,20 +255,20 @@ if (ghUser) {
         const push = (k, v, cls) => {
           if (v) items.push({ k, v: String(v), cls });
         };
-        push('Name', u.name || u.login, 'text-white');
-        push('Company', u.company, 'text-accent-neon');
-        push('Bio', u.bio, 'text-accent-pink');
-        push('Location', u.location, 'text-accent-cyan');
-        push('Twitter', u.twitter_username ? '@' + u.twitter_username : '', 'text-accent-blue');
-        if (u.email) push('Email', u.email, 'text-accent-blue');
+        const colorByKey = {
+          Name: 'text-accent-gold',
+          Company: 'text-accent-neon',
+          Location: 'text-accent-cyan',
+          Hireable: u.hireable ? 'text-accent-coral' : 'text-primary-400',
+          Since: 'text-accent-pink',
+        };
+        push('Name', u.name || u.login, colorByKey.Name);
+        push('Company', u.company, colorByKey.Company);
+        push('Location', u.location, colorByKey.Location);
         if (typeof u.hireable === 'boolean')
-          push(
-            'Hireable',
-            u.hireable ? 'Yes' : 'No',
-            u.hireable ? 'text-accent-neon' : 'text-primary-400'
-          );
-        if (u.created_at) push('Since', new Date(u.created_at).getFullYear(), 'text-accent-neon');
-        // escape HTML
+          push('Hireable', u.hireable ? 'Yes' : 'No', colorByKey.Hireable);
+        if (u.created_at) push('Since', new Date(u.created_at).getFullYear(), colorByKey.Since);
+        // escape HTML (single definition)
         const esc = s =>
           s.replace(
             /[&<>"']/g,
