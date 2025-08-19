@@ -105,6 +105,7 @@ const placeholderDataUri = `data:image/svg+xml;utf8,${encodeURIComponent(placeho
     position: relative;
     display: flex;
     flex-direction: column;
+    height: var(--cloud-arch-card-h, 360px); /* 一定高さ */
     background: linear-gradient(145deg, rgba(32, 40, 56, 0.9), rgba(18, 22, 30, 0.9));
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 12px;
@@ -220,7 +221,11 @@ const placeholderDataUri = `data:image/svg+xml;utf8,${encodeURIComponent(placeho
     line-height: 1.35;
     color: #cbd5e1;
     margin: 0 0 0.55rem;
-    flex-grow: 0;
+    flex-grow: 1; /* 余白を埋め高さ調整 */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5; /* 行数制限 */
   }
   .ca-services {
     list-style: none;
@@ -229,6 +234,7 @@ const placeholderDataUri = `data:image/svg+xml;utf8,${encodeURIComponent(placeho
     gap: 0.35rem 0.45rem;
     padding: 0;
     margin: 0;
+    margin-top: auto; /* 下端寄せ */
   }
   .ca-svc-item {
     font-size: 0.58rem;
