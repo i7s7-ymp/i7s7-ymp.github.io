@@ -69,29 +69,27 @@ const agentData = data;
 
         <!-- サイドパネル - プロフィール情報 -->
         <div class="mt-6 flex h-full w-full flex-shrink-0 flex-col space-y-4 lg:mt-0 lg:w-80">
-          <!-- アバター & ステータス -->
+          <!-- AIエージェント プロフィール（モデル名＋アイコンのみ） -->
           <div
             class="rounded-2xl border border-primary-500/30 bg-dark-900/80 p-6 shadow-2xl backdrop-blur-md"
+            style="min-height:240px;"
           >
-            <div class="text-center">
+            <div class="flex h-full flex-col items-center justify-start text-center">
               <div class="relative mx-auto mb-4 h-24 w-24">
                 <div
                   class="flex h-full w-full animate-glow items-center justify-center rounded-full bg-gradient-to-r from-primary-500 via-accent-pink to-accent-cyan shadow-lg"
                 >
-                  <span class="text-3xl font-bold text-white">i7</span>
-                </div>
-                <div
-                  class="absolute -bottom-2 -right-2 h-6 w-6 animate-pulse rounded-full border-2 border-dark-900 bg-accent-neon"
-                >
+                  <span class="text-4xl" aria-hidden="true">{agentData.header.icon || '🤖'}</span>
                 </div>
               </div>
-              <h3 class="text-xl font-bold text-white">i7s7-ymp</h3>
-              {/* 役割リスト */}
-              {
-                agentData.avatar.roles.map((r: any, i: number) => (
-                  <p class={i === 0 ? 'text-primary-300' : 'text-sm text-primary-400'}>{r}</p>
-                ))
-              }
+              <h3 class="text-xl font-bold text-white">
+                {agentData.model?.name || 'AI Agent Model'}
+              </h3>
+              <p class="mt-2 text-xs tracking-wide text-primary-300">
+                学習範囲: {agentData.model?.trainingScope || '経歴データ・GitHub・学習資料'}
+              </p>
+              <!-- 高さ維持用のスペーサー微調整 -->
+              <div class="mt-1 h-3 select-none text-transparent">.</div>
             </div>
           </div>
 

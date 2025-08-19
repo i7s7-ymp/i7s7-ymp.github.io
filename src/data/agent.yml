@@ -4,6 +4,9 @@ header:
   statusLabel: オンライン
   icon: 🤖
   iconBgClass: bg-gradient-to-r from-accent-blue to-accent-cyan
+model:
+  name: GPT-5
+  trainingScope: 経歴データ・GitHub・学習資料
 avatar:
   initials: i7
   roles:
