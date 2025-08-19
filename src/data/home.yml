@@ -15,7 +15,7 @@ profile:
       value: '"i7s7-ymp"'
       valueClass: text-white
     - key: role
-      value: '"フルスタックエンジニア"'
+      value: '"バックエンド・インフラエンジニア"'
       valueClass: text-accent-pink
     - key: location
       value: '"東京 🇯🇵"'

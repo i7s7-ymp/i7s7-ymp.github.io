@@ -6,6 +6,61 @@ import PageHeader from '../components/PageHeader.astro';
 const homeMod = await import('../data/home.yml');
 // @ts-ignore
 const home = homeMod && homeMod.default ? homeMod.default : homeMod;
+
+// ============ GitHub Public Profile Fetch ============
+// 公開 GitHub ユーザー情報を API から取得しプロフィール欄を動的生成
+// 非認証 60req/h 制限あり。失敗時は YAML の静的項目にフォールバック。
+let ghUser: any = null;
+try {
+  const res = await fetch('https://api.github.com/users/i7s7-ymp', {
+    headers: { 'User-Agent': 'i7s7-ymp-astro-site' },
+  });
+  if (res.ok) ghUser = await res.json();
+} catch (e) {
+  // ignore network errors
+}
+
+interface ProfileItem {
+  key: string;
+  value: string;
+  valueClass?: string;
+}
+let dynamicProfileItems: ProfileItem[];
+if (ghUser) {
+  const createdYear = ghUser.created_at ? new Date(ghUser.created_at).getFullYear() : undefined;
+  const tmp: (ProfileItem | null)[] = [
+    { key: 'Name', value: ghUser.name || ghUser.login, valueClass: 'text-white' },
+    ghUser.company
+      ? { key: 'Company', value: ghUser.company, valueClass: 'text-accent-neon' }
+      : null,
+    ghUser.bio ? { key: 'Bio', value: ghUser.bio, valueClass: 'text-accent-pink' } : null,
+    ghUser.location
+      ? { key: 'Location', value: ghUser.location, valueClass: 'text-accent-cyan' }
+      : null,
+    ghUser.twitter_username
+      ? { key: 'Twitter', value: '@' + ghUser.twitter_username, valueClass: 'text-accent-blue' }
+      : null,
+    ghUser.email ? { key: 'Email', value: ghUser.email, valueClass: 'text-accent-blue' } : null,
+    ghUser.hireable === true || ghUser.hireable === false
+      ? {
+          key: 'Hireable',
+          value: ghUser.hireable ? 'Yes' : 'No',
+          valueClass: ghUser.hireable ? 'text-accent-neon' : 'text-primary-400',
+        }
+      : null,
+    createdYear
+      ? { key: 'Since', value: String(createdYear), valueClass: 'text-accent-neon' }
+      : null,
+  ];
+  dynamicProfileItems = tmp.filter(x => x !== null) as ProfileItem[];
+} else {
+  // fallback to YAML
+  dynamicProfileItems = (home.profile.items || []).map((i: any) => ({
+    key: i.key,
+    value: i.value,
+    valueClass: i.valueClass,
+  }));
+}
 ---
 
 <Layout title="Home - i7s7-ymp Portfolio" headerPills={['build:ok']}>
@@ -46,7 +101,7 @@ const home = homeMod && homeMod.default ? homeMod.default : homeMod;
           </div>
           <div class="space-y-3 font-mono text-sm">
             {
-              home.profile.items.map((item: any) => (
+              dynamicProfileItems.map(item => (
                 <div class="flex justify-between">
                   <span class="text-primary-300">{item.key}:</span>
                   <span class={item.valueClass}>{item.value}</span>
