@@ -1,6 +1,6 @@
 header:
-  title: 'i7s7-ymp のユニバースへようこそ'
-  subtitle: 'クリエイティブ × コード ✨'
+  title: 'My Portfolio'
+  subtitle: ''
   tags:
     - label: '#Creative'
       color: cyan
@@ -26,25 +26,7 @@ profile:
     - key: mood
       value: '"YOASOBI energy ⚡"'
       valueClass: text-accent-gold
-skills:
-  heading: 'スキル'
-  bars:
-    - label: 'JavaScript / TypeScript'
-      percent: 90
-      barClass: 'from-accent-neon to-accent-cyan'
-      percentClass: text-accent-neon
-    - label: 'React / Vue / Astro'
-      percent: 85
-      barClass: 'from-accent-pink to-primary-400'
-      percentClass: text-accent-pink
-    - label: 'Node.js / Python'
-      percent: 80
-      barClass: 'from-accent-gold to-accent-coral'
-      percentClass: text-accent-gold
-    - label: 'Docker / AWS'
-      percent: 75
-      barClass: 'from-accent-cyan to-primary-600'
-      percentClass: text-accent-cyan
+
 activities:
   heading: '最近の活動'
   liveLabel: LIVE
@@ -62,15 +44,3 @@ activities:
     - date: 2024.09
       color: coral
       text: 'レスポンシブレイアウト改善'
-creativeBanner:
-  title: '✨ クリエイティブ × デベロッパー ✨'
-  emojis:
-    - icon: '🎨'
-      delay: 0s
-    - icon: '💻'
-      delay: 0.2s
-    - icon: '🚀'
-      delay: 0.4s
-    - icon: '✨'
-      delay: 0.6s
-  tagline: 'コードと創造性で未来をハックする'
