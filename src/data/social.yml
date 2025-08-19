@@ -16,6 +16,14 @@ links:
     stats: [Professional, Networking]
     color: blue-600
     icon: linkedin
+  - name: Wantedly
+    # NOTE: ユーザーIDは仮です。WantedlyプロフィールのIDに合わせて修正してください。
+    url: https://www.wantedly.com/id/i7s7_ymp
+    username: 'i7s7_ymp'
+    desc: キャリア / プロジェクトの紹介 (Wantedly)
+    stats: [Career, Projects]
+    color: wantedly
+    icon: wantedly
   - name: Zenn
     # NOTE: 推定プロフィールURL。必要ならユーザー名に合わせて編集してください。
     url: https://zenn.dev/ymp
