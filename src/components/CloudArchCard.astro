@@ -29,8 +29,7 @@ const {
   provider = undefined,
 } = Astro.props as Props;
 const hasImg = !!image;
-
-// Placeholder SVG generator (deterministic by id for color consistency)
+// Placeholder SVG (deterministic)
 function genPlaceholder(id: string, title: string): string {
   const base: number = Array.from(id).reduce((acc, c) => acc + c.charCodeAt(0), 0);
   const hues: number[] = [190, 210, 165, 250, 330, 20];
@@ -46,7 +45,7 @@ function genPlaceholder(id: string, title: string): string {
 const placeholderSvg = genPlaceholder(id, title);
 const placeholderDataUri = `data:image/svg+xml;utf8,${encodeURIComponent(placeholderSvg)}`;
 
-// アイコン/ツールチップ機能は不要のため削除 (シンプルバッジのみ)
+// (legacy feature hooks removed)
 ---
 
 <article class={`cloud-arch-card ${extra}`.trim()} role="listitem" data-id={id}>

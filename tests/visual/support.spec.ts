@@ -28,10 +28,11 @@ function diffImage(a: Buffer, b: Buffer): { changed: number; total: number } {
 }
 
 test.describe('support charts visual baseline', () => {
-  test('cloud chart baseline stable', async ({ page }) => {
+  test('cloud architecture cards visual baseline stable', async ({ page }) => {
     await page.goto('/support/');
-    await page.waitForSelector('.cloud-arch-section .vchart .plot');
-    const screenshot = await page.locator('.cloud-arch-section .vchart .plot').screenshot();
+    // 先頭カードのメディア領域が描画されるまで待機
+    await page.waitForSelector('.cloud-arch-grid .cloud-arch-card .ca-media img');
+    const screenshot = await page.locator('.cloud-arch-grid').screenshot();
 
     await ensureDir(SNAP_DIR);
     const basePath = path.join(SNAP_DIR, 'baseline.png');

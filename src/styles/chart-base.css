@@ -248,42 +248,6 @@
   max-width: 1100px;
   margin: 0 auto;
 }
-.chart-toggle-wrapper {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.6rem;
-  margin: 0 var(--chart-axis-left) 1.25rem var(--chart-axis-left);
-}
-.chart-toggle-btn {
-  position: relative;
-  padding: 6px 18px 6px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.4px;
-  border-radius: var(--radius-pill, 999px);
-  background: var(--toggle-bg);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #e2e8f0;
-  cursor: pointer;
-  transition:
-    0.25s background,
-    0.25s box-shadow,
-    0.25s border-color,
-    0.25s transform;
-  backdrop-filter: blur(var(--blur-sm, 6px));
-}
-.chart-toggle-btn:hover,
-.chart-toggle-btn:focus {
-  outline: none;
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: var(--shadow-toggle-hover);
-}
-.chart-toggle-btn.active {
-  background: var(--toggle-bg-active);
-  border-color: #38bdf8;
-  box-shadow: var(--shadow-toggle-active);
-  transform: translateY(-2px);
-}
 .pattern-bars {
   height: var(--chart-height, 250px);
 }
@@ -461,6 +425,11 @@
 }
 .geek-chart .plot {
   z-index: 10;
+  padding-top: var(--geek-chart-top-pad, 28px); /* 追加: 上部余白 */
+  /* 既存 bottom/left padding は継承されるベース定義を上書きしないため再指定不要 */
+}
+.geek-chart .grid-y {
+  inset: var(--geek-chart-top-pad, 28px) 0 46px 0; /* グリッド/補助線も下げる */
 }
 .geek-chart .grid-line {
   background: var(--grid-line-gradient);
@@ -631,9 +600,6 @@
   .chart-note {
     margin-left: var(--chart-axis-left-sm);
     font-size: 9px;
-  }
-  .chart-toggle-wrapper {
-    margin: 0 var(--chart-axis-left-sm) 1.1rem var(--chart-axis-left-sm);
   }
 }
 @media (prefers-reduced-motion: reduce) {
