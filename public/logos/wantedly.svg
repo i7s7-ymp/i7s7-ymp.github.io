@@ -1,10 +1,1 @@
-<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="w_grad" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#35C4F0"/>
-      <stop offset="1" stop-color="#00A4BB"/>
-    </linearGradient>
-  </defs>
-  <rect width="256" height="256" rx="56" fill="url(#w_grad)"/>
-  <path fill="#fff" d="M176.9 66.7c-4.7 0-8.8 2.9-10.4 7.2l-38.6 105.4L89.7 73.9c-1.6-4.3-5.7-7.2-10.4-7.2H54.2l58 150.6c1.6 4.3 5.7 7.2 10.4 7.2h10.8c4.7 0 8.8-2.9 10.4-7.2l58-150.6h-24.9Z"/>
-</svg>
+<svg id="Logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 394"><defs><style>.cls-1{fill:#21bddb;}.cls-2{fill:#282828;fill-rule:evenodd;}</style></defs><circle class="cls-1" cx="375" cy="122.95" r="38.98"/><path class="cls-2" d="M217.17,234.77c-2.34-1.52-9-10.45-27.42-54.44-1.15-2.76-2.22-5.14-3.23-7.18l-3.77-9.08L150.47,86.12H85.89l32.29,77.95,32.29,78,29.82,72a2.68,2.68,0,0,0,4.94,0l32.45-77.68A1.34,1.34,0,0,0,217.17,234.77Z"/><path class="cls-2" d="M338.15,234.77c-2.34-1.52-9-10.45-27.42-54.44-1.15-2.76-2.23-5.14-3.24-7.19l-3.75-9.07L271.45,86.12H206.87l32.29,77.95,32.29,78,29.82,72a2.68,2.68,0,0,0,4.94,0l32.45-77.67A1.36,1.36,0,0,0,338.15,234.77Z"/></svg>

@@ -63,7 +63,8 @@ const logoUrlMap = {
             const grad = gradMap[icon] || gradMap[l.color] || gradMap.default;
             const glow = glowMap[icon] || glowMap[l.color] || glowMap.default;
             const logoSrc = (logoUrlMap as any)[icon] || logoUrlMap.default;
-            const isWhiteBg = icon === 'zenn' || icon === 'linkedin';
+            // 背景を白にしたいロゴ (SVG自体を編集せず背景コンテナを白にする)
+            const isWhiteBg = icon === 'zenn' || icon === 'linkedin' || icon === 'wantedly';
             const containerBase =
               'flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl p-2 shadow-lg transition-all duration-300 group-hover:rotate-3 group-hover:scale-110';
             const containerClass = isWhiteBg
