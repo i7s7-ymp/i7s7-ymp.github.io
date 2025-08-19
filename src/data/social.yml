@@ -40,12 +40,3 @@ links:
     stats: [Chat, Community]
     color: indigo
     icon: discord
-contacts:
-  - icon: 📧
-    value: ruler0510@gmail.com
-  - icon: 🌐
-    value: https://i7s7-ymp.github.io
-  - icon: 📍
-    value: Tokyo, Japan
-  - icon: 🕒
-    value: JST (UTC+9)

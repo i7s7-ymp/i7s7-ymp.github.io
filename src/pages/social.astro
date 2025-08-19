@@ -105,33 +105,5 @@ const logoUrlMap = {
         })
       }
     </div>
-
-    <div class="section-card">
-      <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
-        <span class="text-accent-cyan">連絡先</span>
-      </h3>
-      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div class="space-y-2">
-          {
-            data.contacts.slice(0, Math.ceil(data.contacts.length / 2)).map((c: any) => (
-              <div class="flex items-center space-x-2">
-                <span class="text-green-400">{c.icon}</span>
-                <span class="text-gray-300">{c.value}</span>
-              </div>
-            ))
-          }
-        </div>
-        <div class="space-y-2">
-          {
-            data.contacts.slice(Math.ceil(data.contacts.length / 2)).map((c: any) => (
-              <div class="flex items-center space-x-2">
-                <span class="text-green-400">{c.icon}</span>
-                <span class="text-gray-300">{c.value}</span>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-    </div>
   </div>
 </Layout>
