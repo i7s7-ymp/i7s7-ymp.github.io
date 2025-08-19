@@ -1,6 +1,6 @@
 header:
   title: AI Agent Chat
-  subtitle: i7s7-ympのパーソナルAIアシスタント
+  subtitle: パーソナルAIアシスタント
   statusLabel: オンライン
   icon: 🤖
   iconBgClass: bg-gradient-to-r from-accent-blue to-accent-cyan

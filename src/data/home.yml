@@ -1,6 +1,6 @@
 header:
   title: 'My Portfolio'
-  subtitle: ''
+  subtitle: '基本情報と最近の活動'
   tags:
     - label: '#Creative'
       color: cyan
@@ -21,10 +21,10 @@ profile:
       value: '"東京 🇯🇵"'
       valueClass: text-accent-cyan
     - key: status
-      value: '"未来を構築中"'
+      value: '"SREに関心"'
       valueClass: text-accent-neon animate-pulse
     - key: mood
-      value: '"YOASOBI energy ⚡"'
+      value: '"energy ⚡"'
       valueClass: text-accent-gold
 
 activities:
@@ -41,6 +41,3 @@ activities:
     - date: 2024.10
       color: pink
       text: 'ドキュメント整備とアップデート'
-    - date: 2024.09
-      color: coral
-      text: 'レスポンシブレイアウト改善'
