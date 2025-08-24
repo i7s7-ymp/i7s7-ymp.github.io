@@ -33,22 +33,22 @@ experiences:
 cloudArchitectures:
   - id: serverless-event-driven
     title: サーバーレスイベント駆動
-    summary: API Gateway + Lambda + DynamoDB + EventBridge による疎結合イベント処理。
+    summary:
     image: /diagrams/dummy.svg
-    services: [APIGateway, Lambda, DynamoDB, EventBridge, CloudWatch]
+    services: [API Gateway, Cloud Run, Firestore, PubSub, Cloud Logging]
     year: 2025
     provider: GCP
   - id: serverless-event-driven
     title: サーバーレスイベント駆動
-    summary: API Gateway + Lambda + DynamoDB + EventBridge による疎結合イベント処理。
+    summary:
     image: /diagrams/dummy.svg
-    services: [APIGateway, Lambda, DynamoDB, EventBridge, CloudWatch]
-    year: 2025
+    services: [Lambda, DynamoDB, SQS, CloudWatch]
+    year: 2024
     provider: AWS
   - id: serverless-data-pipeline
-    title: データパイプライン
-    summary: Kinesis 収集 → S3 レイク → Glue ETL → Athena/QuickSight 分析のバッチ+準リアルタイム基盤。
+    title: サーバーレスデータパイプライン
+    summary:
     image: /diagrams/dummy.svg
-    services: [Kinesis, S3, Glue, Athena, QuickSight]
+    services: [Lambda, S3, EventBridge, CloudWatch]
     year: 2023
     provider: AWS
