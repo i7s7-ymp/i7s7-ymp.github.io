@@ -4,12 +4,6 @@ header:
   icon: rocket
   iconBgClass: bg-purple-600
 
-# DATA SCHEMA
-# - category: [String] 0..n
-# - architecture: String (単一)
-# - uses: Number (optional weighting) 現状未適用
-# TODO(uses-weighting Stage7): 集計時 total += uses ?? 1 に変更するフックを実装
-
 experiences:
   - title: レストラン Hiro鎌倉のHP作成
     architecture: none
@@ -32,30 +26,29 @@ experiences:
   - title: スケジュールデータのパイプラインシステム開発
     architecture: Event-Driven
     description: API + データ層の基本レイヤード構成
+  - title: ニフティポイントクラブ
+    architecture: Separation Of Concern
+    description: RoR
 
-  # (legacy sections removed)
-
-# 追加: クラウドアーキテクチャ設計図カード用データ
-# image: public/diagrams 下のファイルパス (存在しなければプレースホルダ表示)
 cloudArchitectures:
-  - id: vpc-microservices
-    title: VPCマイクロサービス基盤
-    summary: ECS(Fargate) + ALB + RDS + VPC サブネット分離構成。
-    image: /diagrams/vpc-microservices.svg
-    services: [ECS, Fargate, ALB, RDS, CloudWatch, VPC]
-    year: 2024
-    provider: AWS
   - id: serverless-event-driven
     title: サーバーレスイベント駆動
     summary: API Gateway + Lambda + DynamoDB + EventBridge による疎結合イベント処理。
-    image: /diagrams/serverless-event-driven.svg
+    image: /diagrams/dummy.svg
     services: [APIGateway, Lambda, DynamoDB, EventBridge, CloudWatch]
     year: 2025
     provider: GCP
-  - id: data-analytics-pipeline
-    title: データ分析パイプライン
+  - id: serverless-event-driven
+    title: サーバーレスイベント駆動
+    summary: API Gateway + Lambda + DynamoDB + EventBridge による疎結合イベント処理。
+    image: /diagrams/dummy.svg
+    services: [APIGateway, Lambda, DynamoDB, EventBridge, CloudWatch]
+    year: 2025
+    provider: AWS
+  - id: serverless-data-pipeline
+    title: データパイプライン
     summary: Kinesis 収集 → S3 レイク → Glue ETL → Athena/QuickSight 分析のバッチ+準リアルタイム基盤。
-    image: /diagrams/data-analytics-pipeline.svg
+    image: /diagrams/dummy.svg
     services: [Kinesis, S3, Glue, Athena, QuickSight]
     year: 2023
     provider: AWS
