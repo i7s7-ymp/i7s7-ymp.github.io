@@ -71,7 +71,7 @@ npm run dev
 │   │   ├── support.astro  # Architecture & Support
 │   │   ├── achievements.astro # Achievements
 │   │   ├── social.astro   # Social Media
-│   │   └── agent.astro    # AI Agent
+│   │   └── agent.astro    # AI Chatbot
 │   └── styles/            # スタイルファイル
 ├── astro.config.mjs       # Astro設定
 ├── tailwind.config.mjs    # Tailwind CSS設定
@@ -170,7 +170,7 @@ npm run check
 | Architecture  | `/support`      | クラウド / アプリケーションアーキテクチャ    |
 | Achievements  | `/achievements` | 職歴・資格・実績                             |
 | Social Media  | `/social`       | SNSリンクとコンタクト                        |
-| AI Agent      | `/agent`        | シングルスクリーンのインタラクティブチャット |
+| AI Chatbot    | `/agent`        | シングルスクリーンのインタラクティブチャット |
 | Design System | `/design`       | デザインユーティリティ & ガイド              |
 
 ## 🎨 Design System
