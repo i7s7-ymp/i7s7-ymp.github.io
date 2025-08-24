@@ -31,13 +31,13 @@ activities:
   heading: '最近の活動'
   liveLabel: LIVE
   logs:
-    - date: 2024.12
+    - date: 2025.8
       color: neon
-      text: 'デザインシステムを刷新・導入'
+      text: 'Hiro鎌倉のHP作成/ポートフォリオサイトを刷新'
       ping: true
-    - date: 2024.11
+    - date: 2025.7
       color: cyan
-      text: 'コンポーネント構造の最適化'
-    - date: 2024.10
+      text: 'DLPシステム開発'
+    - date: 2025.6
       color: pink
-      text: 'ドキュメント整備とアップデート'
+      text: '社員ID生成システム刷新'

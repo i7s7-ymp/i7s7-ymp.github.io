@@ -12,19 +12,25 @@ header:
 
 experiences:
   - title: レストラン Hiro鎌倉のHP作成
-    category:
-      [
-        Compute,
-        Storage,
-        Network & Content Delivery,
-        Security Identity & Compliance,
-        Financial Management,
-      ]
     architecture: none
     description: 静的サイト／アセット配信
   - title: DLPシステム開発
-    category: [Compute, Storage, Database, Security Identity & Compliance, Application Integration]
     architecture: Layered
+    description: API + データ層の基本レイヤード構成
+  - title: DLPシステム開発
+    architecture: Event-Driven
+    description: API + データ層の基本レイヤード構成
+  - title: 社員ID生成システム
+    architecture: Layered
+    description: API + データ層の基本レイヤード構成
+  - title: 社員ID生成システム
+    architecture: Event-Driven
+    description: API + データ層の基本レイヤード構成
+  - title: スケジュールデータのパイプラインシステム開発
+    architecture: Layered
+    description: API + データ層の基本レイヤード構成
+  - title: スケジュールデータのパイプラインシステム開発
+    architecture: Event-Driven
     description: API + データ層の基本レイヤード構成
 
   # (legacy sections removed)
