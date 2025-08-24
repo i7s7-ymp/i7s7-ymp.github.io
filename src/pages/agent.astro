@@ -433,4 +433,130 @@ const agentData = data;
     }
     /* =================================================================== */
   </style>
+  <!-- Maintenance Overlay: 開発中通知 -->
+  <div class="agent-maint-overlay" role="alert" aria-live="polite">
+    <div
+      class="agent-maint-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="agentMaintTitle"
+      aria-describedby="agentMaintDesc"
+    >
+      <div class="agent-maint-icon" aria-hidden="true">🛠️</div>
+      <h2 id="agentMaintTitle" class="agent-maint-title">AI チャットボット 開発中</h2>
+      <p id="agentMaintDesc" class="agent-maint-desc">
+        現在このエージェントは実装中です。公開準備が整い次第アクセス可能になります。<br />
+        今しばらくお待ちください。
+      </p>
+      <p class="agent-maint-hint">ページ下層の UI はプレビュー表示のみ (操作無効)</p>
+    </div>
+  </div>
+  <style>
+    .agent-maint-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem;
+      backdrop-filter: blur(10px) saturate(1.2);
+      background:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.85)) padding-box,
+        radial-gradient(circle at 78% 22%, rgba(236, 72, 153, 0.35), transparent 70%),
+        radial-gradient(circle at 18% 78%, rgba(34, 211, 238, 0.35), transparent 65%);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+      color: #e2e8f0;
+      text-align: center;
+    }
+    .agent-maint-panel {
+      max-width: 680px;
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(31, 41, 55, 0.7));
+      border-radius: 28px;
+      padding: clamp(1.75rem, 3vw, 2.75rem) clamp(1.25rem, 2.4vw, 2.5rem);
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 8px 30px -10px rgba(0, 0, 0, 0.7),
+        0 0 24px -6px rgba(34, 211, 238, 0.45),
+        0 0 34px -10px rgba(236, 72, 153, 0.4);
+    }
+    .agent-maint-panel::before,
+    .agent-maint-panel::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .agent-maint-panel::before {
+      background:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 82px),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 70px);
+      mix-blend-mode: overlay;
+      opacity: 0.55;
+      animation: maint-grid-move 50s linear infinite;
+    }
+    .agent-maint-panel::after {
+      background: linear-gradient(
+        120deg,
+        rgba(34, 211, 238, 0.18),
+        rgba(236, 72, 153, 0.18) 55%,
+        transparent
+      );
+      opacity: 0.55;
+    }
+    @keyframes maint-grid-move {
+      0% {
+        background-position:
+          0 0,
+          0 0;
+      }
+      100% {
+        background-position:
+          360px 0,
+          0 280px;
+      }
+    }
+    .agent-maint-icon {
+      font-size: clamp(2.5rem, 4vw, 3.5rem);
+      filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.6));
+    }
+    .agent-maint-title {
+      margin-top: 1rem;
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      background: linear-gradient(90deg, #22d3ee, #6366f1, #ec4899);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .agent-maint-desc {
+      margin-top: 1rem;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+    .agent-maint-hint {
+      margin-top: 1.25rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+    /* 背景 UI 無効化 */
+    body:has(.agent-maint-overlay) #agent-layout,
+    body:has(.agent-maint-overlay) #chat-input,
+    body:has(.agent-maint-overlay) #send-btn,
+    body:has(.agent-maint-overlay) .quick-question {
+      pointer-events: none !important;
+      user-select: none;
+    }
+    body:has(.agent-maint-overlay) #chat-input {
+      opacity: 0.4;
+    }
+    body:has(.agent-maint-overlay) #send-btn {
+      opacity: 0.5;
+    }
+  </style>
 </Layout>
