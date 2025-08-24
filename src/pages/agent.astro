@@ -1,0 +1,562 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+// @ts-ignore
+import data from '../data/agent.yml';
+const agentData = data;
+---
+
+<Layout title="AI Chatbot - i7s7-ymp Portfolio" headerPills={['build:ok']}>
+  <PageHeader
+    title={agentData.header.title}
+    subtitle={agentData.header.subtitle}
+    icon={agentData.header.icon}
+    statusLabel={agentData.header.statusLabel}
+    iconBgClass={agentData.header.iconBgClass}
+  />
+  <div class="arch-page-grid">
+    <section class="arch-block" aria-labelledby="agent-chat-heading">
+      <h3 id="agent-chat-heading" class="sr-only">Agent Chat</h3>
+      <!-- メインチャットエリア -->
+      <div id="agent-layout" class="agent-layout flex flex-col lg:flex-row lg:space-x-6">
+        <!-- チャットコンテナ -->
+        <div
+          id="chat-container"
+          class="flex min-h-0 flex-1 flex-col rounded-2xl border border-primary-600/30 bg-dark-900/80 shadow-2xl backdrop-blur-md"
+        >
+          <!-- チャットメッセージエリア (ヘッダー削除で全高活用) -->
+          <div id="chat-messages" class="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
+            <!-- 初期メッセージ -->
+            <div class="flex items-start space-x-3">
+              <div
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-primary-500 to-accent-pink"
+              >
+                <span class="text-sm">🎯</span>
+              </div>
+              <div class="flex-1">
+                <div class="rounded-2xl bg-primary-600/20 p-3 backdrop-blur-sm">
+                  <p class="text-white">こんにちは！i7s7-ympのAIアシスタントです✨</p>
+                  <p class="mt-1 text-primary-200">
+                    私の経歴、スキル、プロジェクトについて何でも聞いてください！
+                  </p>
+                </div>
+                <p class="mt-1 text-xs text-primary-400">たった今</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- チャット入力エリア -->
+          <div class="border-t border-primary-500/30 p-4">
+            <div class="flex items-center space-x-3">
+              <div class="relative flex-1">
+                <input
+                  type="text"
+                  id="chat-input"
+                  placeholder="メッセージを入力してください..."
+                  class="w-full rounded-xl border border-primary-500/30 bg-dark-800/50 px-4 py-3 text-white placeholder-primary-400 backdrop-blur-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400/20"
+                  autocomplete="off"
+                />
+              </div>
+              <button
+                id="send-btn"
+                class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-primary-500 to-accent-pink text-white transition-all hover:scale-105 hover:shadow-lg"
+              >
+                <span class="text-xl">➤</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- サイドパネル - プロフィール情報 -->
+        <div class="mt-6 flex h-full w-full flex-shrink-0 flex-col space-y-4 lg:mt-0 lg:w-80">
+          <!-- AIエージェント プロフィール（モデル名＋アイコンのみ） -->
+          <div
+            class="rounded-2xl border border-primary-500/30 bg-dark-900/80 p-6 shadow-2xl backdrop-blur-md"
+            style="min-height:240px;"
+          >
+            <div class="flex h-full flex-col items-center justify-start text-center">
+              <div class="relative mx-auto mb-4 h-24 w-24">
+                <div
+                  class="flex h-full w-full animate-glow items-center justify-center rounded-full bg-gradient-to-r from-primary-500 via-accent-pink to-accent-cyan shadow-lg"
+                >
+                  <span class="text-4xl" aria-hidden="true">{agentData.header.icon || '🤖'}</span>
+                </div>
+              </div>
+              <h3 class="text-xl font-bold text-white">
+                {agentData.model?.name || 'Agent Model'}
+              </h3>
+              <p class="mt-2 text-xs tracking-wide text-primary-300">
+                学習範囲: {agentData.model?.trainingScope || '経歴データ・GitHub・学習資料'}
+              </p>
+              <!-- 高さ維持用のスペーサー微調整 -->
+              <div class="mt-1 h-3 select-none text-transparent">.</div>
+            </div>
+          </div>
+
+          <!-- クイック質問 -->
+          <div
+            class="hide-scrollbar flex-1 overflow-y-auto rounded-2xl border border-primary-500/30 bg-dark-900/80 p-4 shadow-2xl backdrop-blur-md"
+          >
+            <h4 class="mb-3 font-semibold text-white">💡 よくある質問</h4>
+            <div class="space-y-2">
+              {
+                agentData.quickQuestions.map((q: any) => (
+                  <button class="quick-question w-full rounded-lg bg-primary-600/20 p-3 text-left text-sm text-primary-200 transition-colors hover:bg-primary-600/30">
+                    {q}
+                  </button>
+                ))
+              }
+            </div>
+          </div>
+
+          <!-- スキル概要 -->
+          <!-- 主要スキルセクション削除済み -->
+        </div>
+        <!-- /サイドパネル -->
+      </div>
+      <!-- /agent-layout -->
+    </section>
+  </div>
+
+  <script>
+    // YAMLデータ (Astroフロントマターから直接利用できないので再参照)
+    // @ts-ignore
+  </script>
+  <script is:inline>
+    // チャット機能の詳細な実装
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const quickQuestions = document.querySelectorAll('.quick-question');
+
+    // i7s7-ympの詳細な経歴データ
+    // @ts-ignore
+    const profileData = (window && window.agentProfileData) || data.profileData;
+
+    // AIレスポンス生成
+    function generateResponse(userMessage) {
+      const message = userMessage.toLowerCase();
+
+      if (message.includes('経歴') || message.includes('キャリア') || message.includes('仕事')) {
+        return profileData.career.content;
+      } else if (
+        message.includes('技術') ||
+        message.includes('スキル') ||
+        message.includes('言語')
+      ) {
+        return profileData.skills.content;
+      } else if (
+        message.includes('プロジェクト') ||
+        message.includes('作品') ||
+        message.includes('開発')
+      ) {
+        return profileData.projects.content;
+      } else if (message.includes('趣味') || message.includes('興味') || message.includes('好き')) {
+        return profileData.interests.content;
+      } else if (message.includes('こんにちは') || message.includes('はじめまして')) {
+        return data.responses.hello;
+      } else if (message.includes('ありがとう')) {
+        return data.responses.thanks;
+      } else {
+        const responses = data.responses.fallback;
+        return (
+          responses[Math.floor(Math.random() * responses.length)] ||
+          '申し訳ありませんが、うまく回答できませんでした。別の質問をしてみてください。'
+        );
+      }
+    }
+
+    // メッセージを追加
+    function addMessage(content, isUser = false) {
+      if (!chatMessages) return;
+
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'flex items-start space-x-3';
+
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+
+      if (isUser) {
+        messageDiv.innerHTML = `
+          <div class="flex-1 flex justify-end">
+            <div>
+              <div class="rounded-2xl bg-gradient-to-r from-primary-500 to-accent-pink p-3 backdrop-blur-sm">
+                <p class="text-white">${content}</p>
+              </div>
+              <p class="text-xs text-primary-400 mt-1 text-right">${timeStr}</p>
+            </div>
+          </div>
+          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-accent-cyan to-accent-neon">
+            <span class="text-sm">👤</span>
+          </div>
+        `;
+      } else {
+        messageDiv.innerHTML = `
+          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-primary-500 to-accent-pink">
+            <span class="text-sm">🎯</span>
+          </div>
+          <div class="flex-1">
+            <div class="rounded-2xl bg-primary-600/20 p-3 backdrop-blur-sm">
+              <p class="text-white whitespace-pre-line">${content}</p>
+            </div>
+            <p class="text-xs text-primary-400 mt-1">${timeStr}</p>
+          </div>
+        `;
+      }
+
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // メッセージ送信
+    function sendMessage() {
+      if (!chatInput) return;
+
+      const message = chatInput.value.trim();
+      if (!message) return;
+
+      // ユーザーメッセージを表示
+      addMessage(message, true);
+      chatInput.value = '';
+
+      // AIの返答をタイピング風に表示
+      setTimeout(
+        () => {
+          const response = generateResponse(message);
+          addMessage(response, false);
+        },
+        500 + Math.random() * 1000
+      );
+    }
+
+    // イベントリスナー
+    if (sendBtn) {
+      sendBtn.addEventListener('click', sendMessage);
+    }
+
+    if (chatInput) {
+      chatInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') {
+          sendMessage();
+        }
+      });
+    }
+
+    // クイック質問
+    quickQuestions.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const question = btn.textContent;
+        if (question && chatInput) {
+          chatInput.value = question;
+          sendMessage();
+        }
+      });
+    });
+
+    // ===== ビューポート高さに収めるレイアウト調整 =====
+    const agentLayout = document.getElementById('agent-layout');
+    const chatContainer = document.getElementById('chat-container');
+
+    function adjustAgentLayoutHeight() {
+      if (!agentLayout) return;
+      const rect = agentLayout.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // 利用可能な全高 (下に最小余白 8px)
+      const target = Math.max(320, vh - rect.top - 8);
+      agentLayout.style.height = target + 'px';
+      agentLayout.classList.add('agent-layout--fixed');
+      if (chatContainer) chatContainer.style.height = target + 'px';
+    }
+
+    // 初期化シーケンス: layout shift 対策で複数回再計算
+    function scheduleAdjustments() {
+      adjustAgentLayoutHeight();
+      setTimeout(adjustAgentLayoutHeight, 150);
+      setTimeout(adjustAgentLayoutHeight, 400);
+    }
+
+    window.addEventListener('load', scheduleAdjustments);
+    requestAnimationFrame(scheduleAdjustments);
+    window.addEventListener('resize', adjustAgentLayoutHeight);
+    window.addEventListener('orientationchange', adjustAgentLayoutHeight);
+    window.addEventListener('visibilitychange', () => {
+      if (!document.hidden) scheduleAdjustments();
+    });
+  </script>
+  <style>
+    /* Page unified grid */
+    .arch-page-grid {
+      --arch-max: 1100px;
+      width: 100%;
+      max-width: var(--arch-max);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      row-gap: clamp(3rem, 6vh, 4.5rem);
+      padding-inline: clamp(1rem, 2.5vw, 2rem);
+    }
+    @media (max-width: 720px) {
+      .arch-page-grid {
+        row-gap: 3.25rem;
+      }
+    }
+    .arch-block > h3:first-child {
+      margin-top: 0;
+    }
+    .arch-block > h3 {
+      margin-bottom: 1.25rem;
+      line-height: 1.15;
+    }
+    /* Layout tweaks */
+    .agent-layout {
+      gap: 1.5rem;
+    }
+    /* 高さ固定時の挙動: 縦に overflow を許可しつつ横スクロール抑止 */
+    .agent-layout.agent-layout--fixed {
+      overflow: hidden; /* 全体は隠して各内部でスクロール */
+      position: relative;
+    }
+    /* チャットコンテナ内でメッセージ領域を柔軟にスクロール */
+    #chat-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 0; /* flex 子の内部スクロール許可 */
+      overflow: hidden;
+    }
+    #chat-container > #chat-messages {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+    }
+    @media (max-width: 1023px) {
+      /* 縦積み時は高さ制御を少し緩める */
+      .agent-layout.agent-layout--fixed {
+        height: auto !important;
+        max-height: none !important;
+      }
+      #chat-container,
+      #chat-container > #chat-messages {
+        height: auto !important;
+        max-height: none !important;
+      }
+    }
+    /* チャット欄スクロールバー非表示 */
+    #chat-messages {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    #chat-messages::-webkit-scrollbar {
+      display: none;
+    }
+    /* サイドパネルスクロールバー非表示 */
+    .hide-scrollbar {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    /* =============== Large Screen Progressive Scaling ================= */
+    @media (min-width: 1600px) {
+      .arch-page-grid {
+        --arch-max: 1250px;
+      }
+      #chat-messages {
+        padding: 1.5rem;
+      }
+      #chat-container > .border-t,
+      #chat-container .p-4 {
+        padding: 1.5rem !important;
+      }
+      #chat-input {
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
+      }
+      .quick-question {
+        padding: 0.9rem 1rem;
+        font-size: 0.85rem;
+      }
+      .agent-layout {
+        gap: 2rem;
+      }
+    }
+    @media (min-width: 1920px) {
+      .arch-page-grid {
+        --arch-max: 1400px;
+      }
+      #chat-messages {
+        padding: 1.75rem;
+      }
+      #chat-input {
+        font-size: 1.05rem;
+      }
+      .quick-question {
+        font-size: 0.9rem;
+      }
+      .agent-layout {
+        gap: 2.25rem;
+      }
+    }
+    @media (min-width: 2300px) {
+      .arch-page-grid {
+        --arch-max: 1600px;
+      }
+      #chat-messages {
+        padding: 2rem;
+      }
+      #chat-input {
+        font-size: 1.08rem;
+      }
+      .quick-question {
+        font-size: 0.95rem;
+      }
+      .agent-layout {
+        gap: 2.5rem;
+      }
+    }
+    @media (min-width: 2600px) {
+      .arch-page-grid {
+        --arch-max: 1750px;
+      }
+      #chat-messages {
+        padding: 2.25rem;
+      }
+      #chat-input {
+        font-size: 1.12rem;
+      }
+      .quick-question {
+        font-size: 1rem;
+      }
+      .agent-layout {
+        gap: 2.75rem;
+      }
+    }
+    /* =================================================================== */
+  </style>
+  <!-- Maintenance Overlay: 開発中通知 -->
+  <div class="agent-maint-overlay" role="alert" aria-live="polite">
+    <div
+      class="agent-maint-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="agentMaintTitle"
+      aria-describedby="agentMaintDesc"
+    >
+      <div class="agent-maint-icon" aria-hidden="true">🛠️</div>
+      <h2 id="agentMaintTitle" class="agent-maint-title">AI チャットボット 開発中</h2>
+      <p id="agentMaintDesc" class="agent-maint-desc">
+        現在このエージェントは実装中です。公開準備が整い次第アクセス可能になります。<br />
+        今しばらくお待ちください。
+      </p>
+      <p class="agent-maint-hint">ページ下層の UI はプレビュー表示のみ (操作無効)</p>
+    </div>
+  </div>
+  <style>
+    .agent-maint-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem;
+      backdrop-filter: blur(10px) saturate(1.2);
+      background:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.85)) padding-box,
+        radial-gradient(circle at 78% 22%, rgba(236, 72, 153, 0.35), transparent 70%),
+        radial-gradient(circle at 18% 78%, rgba(34, 211, 238, 0.35), transparent 65%);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+      color: #e2e8f0;
+      text-align: center;
+    }
+    .agent-maint-panel {
+      max-width: 680px;
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(31, 41, 55, 0.7));
+      border-radius: 28px;
+      padding: clamp(1.75rem, 3vw, 2.75rem) clamp(1.25rem, 2.4vw, 2.5rem);
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 8px 30px -10px rgba(0, 0, 0, 0.7),
+        0 0 24px -6px rgba(34, 211, 238, 0.45),
+        0 0 34px -10px rgba(236, 72, 153, 0.4);
+    }
+    .agent-maint-panel::before,
+    .agent-maint-panel::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .agent-maint-panel::before {
+      background:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 82px),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 70px);
+      mix-blend-mode: overlay;
+      opacity: 0.55;
+      animation: maint-grid-move 50s linear infinite;
+    }
+    .agent-maint-panel::after {
+      background: linear-gradient(
+        120deg,
+        rgba(34, 211, 238, 0.18),
+        rgba(236, 72, 153, 0.18) 55%,
+        transparent
+      );
+      opacity: 0.55;
+    }
+    @keyframes maint-grid-move {
+      0% {
+        background-position:
+          0 0,
+          0 0;
+      }
+      100% {
+        background-position:
+          360px 0,
+          0 280px;
+      }
+    }
+    .agent-maint-icon {
+      font-size: clamp(2.5rem, 4vw, 3.5rem);
+      filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.6));
+    }
+    .agent-maint-title {
+      margin-top: 1rem;
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      background: linear-gradient(90deg, #22d3ee, #6366f1, #ec4899);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .agent-maint-desc {
+      margin-top: 1rem;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+    .agent-maint-hint {
+      margin-top: 1.25rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+    /* 背景 UI 無効化 */
+    body:has(.agent-maint-overlay) #agent-layout,
+    body:has(.agent-maint-overlay) #chat-input,
+    body:has(.agent-maint-overlay) #send-btn,
+    body:has(.agent-maint-overlay) .quick-question {
+      pointer-events: none !important;
+      user-select: none;
+    }
+    body:has(.agent-maint-overlay) #chat-input {
+      opacity: 0.4;
+    }
+    body:has(.agent-maint-overlay) #send-btn {
+      opacity: 0.5;
+    }
+  </style>
+</Layout>

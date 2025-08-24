@@ -1,0 +1,42 @@
+---
+interface BarDatum {
+  id: string; // data-id
+  color: string; // data-color token key
+  value: number; // raw total
+  hPct: number; // 0-100 height%
+  zero: boolean;
+  high: boolean;
+  label: string; // accessible label text (e.g. 日本語名 + 件数)
+}
+export interface Props {
+  items: BarDatum[];
+  barWidth?: string; // e.g. 70px
+  pattern?: boolean; // pattern chart variant (adds pattern-bars class)
+}
+const { items, barWidth = '70px', pattern = false } = Astro.props as Props;
+---
+
+<div
+  class={`bars${pattern ? ' pattern-bars' : ''}`}
+  data-count={items.length}
+  style={`--bar-w:${barWidth};`}
+>
+  {
+    items.map(it => (
+      <div
+        class="bar-box"
+        style={`--h:${it.hPct}%;`}
+        data-color={it.color}
+        data-id={it.id}
+        data-zero={it.zero}
+        data-high={it.high}
+        title={`${it.label}`}
+      >
+        <div class="bar-hit" aria-label={it.label}>
+          <span class="bar-fill" />
+          <span class="bar-value font-mono">{it.value}</span>
+        </div>
+      </div>
+    ))
+  }
+</div>

@@ -1,0 +1,43 @@
+header:
+  title: 'My Portfolio'
+  subtitle: '基本情報'
+  tags:
+    - label: '#Creative'
+      color: cyan
+    - label: '#Developer'
+      color: blue
+    - label: '#Technology'
+      color: neon
+profile:
+  heading: 'プロフィール'
+  items:
+    - key: name
+      value: '"i7s7-ymp"'
+      valueClass: text-white
+    - key: role
+      value: '"バックエンド・インフラエンジニア"'
+      valueClass: text-accent-pink
+    - key: location
+      value: '"東京 🇯🇵"'
+      valueClass: text-accent-cyan
+    - key: status
+      value: '"SREに関心"'
+      valueClass: text-accent-neon animate-pulse
+    - key: mood
+      value: '"energy ⚡"'
+      valueClass: text-accent-gold
+
+activities:
+  heading: '最近の活動'
+  liveLabel: LIVE
+  logs:
+    - date: 2025.8
+      color: neon
+      text: 'Hiro鎌倉のHP作成/ポートフォリオサイトを刷新'
+      ping: true
+    - date: 2025.7
+      color: cyan
+      text: 'DLPシステム開発'
+    - date: 2025.6
+      color: pink
+      text: '社員ID生成システム刷新'

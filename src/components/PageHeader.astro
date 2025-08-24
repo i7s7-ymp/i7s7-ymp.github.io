@@ -1,0 +1,404 @@
+---
+export interface Props {
+  title: string;
+  subtitle?: string;
+  icon?: string; // emoji 文字列 (例: rocket, cloud など)
+  iconBgClass?: string; // Tailwind 用クラス
+  statusLabel?: string; // 追加のステータス用小ラベル
+  iconTextClass?: string; // アイコン(文字)独自クラス
+  class?: string; // 親から追加クラス
+}
+
+const {
+  title,
+  subtitle = '',
+  icon = '🚀',
+  iconBgClass = 'bg-accent-cyan',
+  statusLabel = '',
+  iconTextClass = '',
+  class: extClass = '',
+} = Astro.props as Props;
+
+// シンプルな emoji name → 実絵文字 変換 (拡張しやすいマップ)
+const emojiMap: Record<string, string> = {
+  rocket: '🚀',
+  cloud: '☁️',
+  db: '🗄️',
+  lock: '🔐',
+  gear: '⚙️',
+  light: '💡',
+  star: '⭐',
+};
+const displayIcon = emojiMap[icon] || icon; // 直接 emoji が来た場合も表示
+---
+
+<div class={`page-header cyber mb-10 ${extClass}`.trim()}>
+  <div class="ph-inner">
+    <div class="ph-icon-shell">
+      <div class={`ph-icon-core ${iconBgClass}`} aria-hidden="true">
+        <span class={`ph-icon ${iconTextClass}`.trim()} role="img">{displayIcon}</span>
+        <span class="ph-icon-glow"></span>
+        <span class="ph-icon-ring"></span>
+      </div>
+    </div>
+    <div class="ph-text">
+      <h2 class="ph-title" data-text={title}>{title}</h2>
+      {
+        (subtitle || statusLabel) && (
+          <p class="ph-sub">
+            {subtitle}
+            {statusLabel && (
+              <span class="ph-status" aria-label="status label">
+                {statusLabel}
+              </span>
+            )}
+          </p>
+        )
+      }
+      <div class="ph-accent-bar" aria-hidden="true">
+        <span class="ab ab-l"></span>
+        <span class="ab ab-c"></span>
+        <span class="ab ab-r"></span>
+      </div>
+      <slot name="extra" />
+    </div>
+  </div>
+  <div class="ph-bg fx-scan" aria-hidden="true"></div>
+  <div class="ph-bg fx-grid" aria-hidden="true"></div>
+  <div class="ph-bg fx-glow" aria-hidden="true"></div>
+</div>
+
+<style>
+  /* === Cyberpunk Header === */
+  /* REFACTOR-STAGE2: PageHeader の装飾層 (fx-scan, fx-grid 等) を他ヘッダーでも使うなら /src/styles/tokens.css に抽出予定 */
+  .page-header.cyber {
+    position: relative;
+    padding: var(--ph-padding, 1.25rem 1.4rem 1.35rem 1.35rem);
+    border: 1px solid var(--ph-border, rgba(255, 255, 255, 0.1));
+    border-radius: var(--ph-radius, 18px);
+    background: var(
+        --ph-bg,
+        linear-gradient(135deg, rgba(17, 24, 39, 0.78), rgba(30, 41, 59, 0.55))
+      )
+      padding-box;
+    overflow: hidden;
+    backdrop-filter: blur(8px) saturate(125%);
+    box-shadow:
+      0 4px 14px -6px rgba(0, 0, 0, 0.65),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+  .page-header.cyber::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 25%, rgba(56, 189, 248, 0.18), transparent 65%),
+      radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.18), transparent 60%);
+    mix-blend-mode: overlay;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .page-header.cyber::after {
+    content: none;
+  }
+  .ph-inner {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    gap: 1.6rem;
+    z-index: 2;
+  }
+  .ph-icon-shell {
+    display: flex;
+    align-items: center;
+  }
+  .ph-icon-core {
+    position: relative;
+    width: 66px;
+    height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: var(
+      --ph-icon-bg,
+      linear-gradient(140deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04))
+    );
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.07),
+      0 3px 8px -2px rgba(0, 0, 0, 0.6),
+      0 0 14px -5px rgba(56, 189, 248, 0.45);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .ph-icon-core::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.55), transparent 65%);
+    opacity: 0.75;
+  }
+  .ph-icon-core::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    background: linear-gradient(120deg, rgba(90, 174, 196, 0.22), rgba(182, 169, 201, 0.18));
+    opacity: 0.38;
+  }
+  .ph-icon-ring {
+    position: absolute;
+    inset: 0;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: inherit;
+    box-shadow: 0 0 6px -2px rgba(255, 255, 255, 0.35) inset;
+    animation: ringPulse 11s ease-in-out infinite;
+    opacity: 0.35;
+  }
+  .ph-icon-glow {
+    position: absolute;
+    inset: -32%;
+    background: radial-gradient(circle at 50% 50%, rgba(90, 174, 196, 0.28), transparent 76%);
+    filter: blur(16px);
+    opacity: 0.28;
+    animation: iconGlow 10s ease-in-out infinite;
+  }
+  .ph-icon {
+    font-size: 1.9rem;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.4));
+  }
+  .ph-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+  .ph-title {
+    position: relative;
+    margin: 0;
+    font-size: clamp(1.55rem, 1.05rem + 1.5vw, 2.15rem);
+    font-weight: 700;
+    letter-spacing: 0.55px;
+    line-height: 1.08;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  }
+  .ph-title::after {
+    content: none;
+  }
+  .ph-sub {
+    margin: 0.5rem 0 0;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.6px;
+    color: #b7c4d7;
+    text-transform: uppercase;
+    display: inline-flex;
+    gap: 0.45rem;
+    align-items: center;
+    position: relative;
+  }
+  .ph-sub::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: var(--ph-sub-bullet, linear-gradient(135deg, #5daec4, #b690c9));
+    border-radius: 2px;
+    box-shadow:
+      0 0 3px #5daec4,
+      0 0 4px #b690c9;
+    opacity: 0.7;
+  }
+  .ph-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: 0.75rem;
+    padding: 2px 8px 2px 6px;
+    font-size: 0.6rem;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    border: 1px solid var(--ph-status-border, rgba(255, 255, 255, 0.2));
+    border-radius: 999px;
+    background: var(
+      --ph-status-bg,
+      linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05))
+    );
+    box-shadow: var(
+      --shadow-status,
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 2px 6px -2px rgba(0, 0, 0, 0.6)
+    );
+    color: #e2e8f0;
+    position: relative;
+  }
+  .ph-status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ph-status-dot, radial-gradient(circle at 35% 35%, #22d3ee, #0e7490));
+    box-shadow: 0 0 6px #22d3ee;
+  }
+  .ph-accent-bar {
+    position: relative;
+    margin-top: 0.65rem;
+    height: 5px;
+    display: flex;
+    align-items: center;
+    gap: var(--ph-accent-gap, 4px);
+  }
+  .ph-accent-bar .ab {
+    display: block;
+    height: var(--ph-accent-height, 2px);
+    background: var(
+      --ph-accent-gradient,
+      linear-gradient(90deg, rgba(90, 174, 196, 0.95), rgba(180, 169, 201, 0.95))
+    );
+    box-shadow: var(
+      --ph-accent-shadow,
+      0 0 3px -1px rgba(90, 174, 196, 0.6),
+      0 0 5px -2px rgba(180, 169, 201, 0.55)
+    );
+    opacity: 0.75;
+  }
+  .ph-accent-bar .ab-l {
+    width: var(--ph-accent-len-l, 42px);
+    animation: widthPulse 7s ease-in-out infinite;
+  }
+  .ph-accent-bar .ab-c {
+    flex: 1;
+    opacity: 0.7;
+  }
+  .ph-accent-bar .ab-r {
+    width: var(--ph-accent-len-r, 18px);
+    animation: widthPulse 9s ease-in-out infinite reverse;
+  }
+  .ph-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .fx-scan {
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.05) 0 1px,
+      transparent 1px 4px
+    );
+    mix-blend-mode: overlay;
+    opacity: 0.22;
+    animation: scan 14s linear infinite;
+  }
+  .fx-grid {
+    background:
+      linear-gradient(rgba(56, 189, 248, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(236, 72, 153, 0.1) 1px, transparent 1px);
+    background-size:
+      46px 46px,
+      46px 46px;
+    opacity: 0.12;
+    mix-blend-mode: overlay;
+    animation: gridShift 65s linear infinite;
+  }
+  .fx-glow {
+    background:
+      radial-gradient(circle at 78% 22%, rgba(182, 169, 201, 0.18), transparent 60%),
+      radial-gradient(circle at 18% 80%, rgba(90, 174, 196, 0.18), transparent 62%);
+    filter: blur(18px);
+    opacity: 0.28;
+  }
+  @keyframes spinHue {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes iconGlow {
+    0%,
+    100% {
+      opacity: 0.25;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.45;
+      transform: scale(1.04);
+    }
+  }
+  @keyframes ringPulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.35;
+    }
+    55% {
+      transform: scale(1.015);
+      opacity: 0.5;
+    }
+  }
+  @keyframes widthPulse {
+    0%,
+    100% {
+      filter: brightness(1);
+    }
+    50% {
+      filter: brightness(1.15) saturate(1.1);
+    }
+  }
+  @keyframes scan {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 0 140px;
+    }
+  }
+  @keyframes gridShift {
+    0% {
+      background-position:
+        0 0,
+        0 0;
+    }
+    100% {
+      background-position:
+        460px 0,
+        0 460px;
+    }
+  }
+  @media (max-width: 640px) {
+    .page-header.cyber {
+      padding: 1.1rem 1.1rem 1.25rem;
+    }
+    .ph-inner {
+      gap: 1.05rem;
+    }
+    .ph-icon-core {
+      width: 58px;
+      height: 58px;
+      border-radius: 15px;
+    }
+    .ph-title {
+      font-size: clamp(1.45rem, 1.1rem + 1.5vw, 1.9rem);
+    }
+    .ph-sub {
+      font-size: 0.72rem;
+    }
+    .ph-accent-bar {
+      margin-top: 0.65rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .page-header.cyber::before,
+    .page-header.cyber::after,
+    .ph-icon-ring,
+    .ph-icon-glow,
+    .fx-scan,
+    .fx-grid,
+    .ab-l,
+    .ab-r {
+      animation: none !important;
+    }
+  }
+</style>

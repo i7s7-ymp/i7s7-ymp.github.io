@@ -1,0 +1,142 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+// @ts-ignore
+import data from '../data/design.yml';
+---
+
+<Layout title="Design System - i7s7-ymp Portfolio" headerPills={['ui', 'tokens', 'build:ok']}>
+  <div class="space-y-8">
+    <PageHeader
+      title={data.header.title}
+      subtitle={data.header.subtitle}
+      icon={data.header.icon}
+      iconBgClass={data.header.iconBgClass}
+    >
+      <div slot="extra" class="flex flex-wrap gap-2 text-xs">
+        {data.header.tags.map((t: string) => <span class="badge-pill">{t}</span>)}
+      </div>
+    </PageHeader>
+
+    <!-- Core Containers -->
+    <div class="section-card p-6">
+      <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
+        <span class="text-accent-cyan">&gt;</span><span>Containers</span>
+      </h3>
+      <div class="grid gap-4 md:grid-cols-2">
+        {
+          data.containers.map((c: any) => (
+            <div class="space-y-2">
+              <h4 class="font-semibold text-accent-cyan">{c.name}</h4>
+              <p class="text-sm text-primary-200">{c.desc}</p>
+              {c.name === 'section-card' && (
+                <div class="section-card p-4">
+                  <p class="text-sm text-primary-200">{c.sample}</p>
+                </div>
+              )}
+              {c.name === 'stat-card' && (
+                <div class="stat-card">
+                  <h4>{c.stat}</h4>
+                  <span>{c.statLabel}</span>
+                </div>
+              )}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Typography -->
+    <div class="section-card p-6">
+      <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
+        <span class="text-accent-cyan">&gt;</span><span>Typography</span>
+      </h3>
+      <ul class="space-y-3 font-mono text-xs text-primary-300">
+        {
+          data.typography.tokens.map((t: any) => {
+            const entry = Object.entries(t)[0];
+            if (!entry) return null;
+            return (
+              <li>
+                <span class="text-accent-cyan">{entry[0]}</span>: {entry[1]}
+              </li>
+            );
+          })
+        }
+      </ul>
+      <div class="mt-4 space-y-2">
+        <h2 class="panel-title text-2xl">{data.typography.examples.panelTitle}</h2>
+        <h3 class="gradient-heading-sm text-lg">{data.typography.examples.gradientSmall}</h3>
+        <div class="terminal-caption">
+          <span class="text-accent-cyan">$</span><span> {data.typography.examples.terminal}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <div class="section-card p-6">
+      <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
+        <span class="text-accent-cyan">&gt;</span><span>Badges</span>
+      </h3>
+      <div class="badge-list">
+        {data.badges.list.map((b: string) => <span class="badge-pill">{b}</span>)}
+      </div>
+      <p class="mt-4 text-sm text-primary-300">{data.badges.note}</p>
+    </div>
+
+    <!-- Scroll & Overflow -->
+    <div class="section-card p-6">
+      <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
+        <span class="text-accent-cyan">&gt;</span><span>Overflow / Scroll</span>
+      </h3>
+      <p class="text-sm text-primary-200">
+        hide-scrollbar: スクロール機能は保持しつつ表示のみ非表示。
+      </p>
+      <div class="mt-3 grid gap-4 md:grid-cols-2">
+        <div>
+          <p class="mb-2 text-xs text-primary-300">通常スクロール</p>
+          <div
+            class="h-24 overflow-y-auto rounded border border-primary-600/30 p-2 text-xs text-primary-300"
+          >
+            {Array.from({ length: data.scrollDemoLines }).map((_, i) => <div>Line {i + 1}</div>)}
+          </div>
+        </div>
+        <div>
+          <p class="mb-2 text-xs text-primary-300">hide-scrollbar</p>
+          <div
+            class="hide-scrollbar h-24 overflow-y-auto rounded border border-primary-600/30 p-2 text-xs text-primary-300"
+          >
+            {Array.from({ length: data.scrollDemoLines }).map((_, i) => <div>Line {i + 1}</div>)}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Color Tokens Reference -->
+    <div class="section-card p-6">
+      <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
+        <span class="text-accent-cyan">&gt;</span><span>Accent Palette</span>
+      </h3>
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+        {
+          data.accentPalette.map((c: string) => (
+            <div class="space-y-2">
+              <div class={`h-12 w-full rounded bg-accent-${c}/60`} />
+              <p class="font-mono text-xs text-primary-300">accent-{c}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Usage Principles -->
+    <div class="section-card p-6">
+      <h3 class="gradient-heading-sm mb-4 flex items-center space-x-2 text-lg font-semibold">
+        <span class="text-accent-cyan">&gt;</span><span>Principles</span>
+      </h3>
+      <ol class="list-decimal space-y-2 pl-5 text-sm text-primary-200">
+        {data.principles.map((p: string) => <li>{p}</li>)}
+      </ol>
+    </div>
+  </div>
+</Layout>

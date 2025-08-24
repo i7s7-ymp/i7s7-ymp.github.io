@@ -1,0 +1,458 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { computeUnifiedScale } from '../lib/chart/scale';
+import CloudArchCard from '../components/CloudArchCard.astro';
+// @ts-ignore
+import data from '../data/support.yml';
+
+interface ExperienceItem {
+  title: string;
+  category?: string[]; // 複数カテゴリ
+  architecture?: string; // 単一パターン
+  description?: string;
+  uses?: number; // (仕様#3 未決定: 現状は1と同義)
+}
+// REFACTOR-STAGE2: experiences 読み込み → 汎用 data adapter 化検討 (将来 /src/lib/data/experiences.ts)
+const experiences: ExperienceItem[] = (data as any).experiences ?? [];
+interface CloudArchCard {
+  id: string;
+  title: string;
+  summary: string;
+  image?: string;
+  services?: string[];
+  year?: number;
+  provider?: string;
+}
+const cloudArchitectures: CloudArchCard[] = (data as any).cloudArchitectures ?? [];
+
+// クラウドカテゴリ棒グラフは廃止 (ユーザー要求)。関連ロジック削除。
+
+// アプリケーションアーキテクチャ カテゴリ
+// REFACTOR-STAGE2: patternCategories も targetCategories と同じ集計 DSL で統合抽象化可能
+const patternCategories = [
+  'Data-Centric',
+  'Layered',
+  'Component-Based',
+  'Service-Oriented',
+  'Distributed System',
+  'Domain-Driven',
+  'Event-Driven',
+  'Separation Of Concern',
+  'Interpreter',
+  'Concurrency',
+];
+type PatternStat = { name: string; total: number; color: string };
+const palette = [
+  'cyan',
+  'blue',
+  'green',
+  'purple',
+  'yellow',
+  'orange',
+  'teal',
+  'pink',
+  'red',
+  'cyan',
+] as const;
+// 単一パターンに統一: pattern 情報は保持しない
+// REFACTOR-STAGE2: stats 構造 (name,total,color) は CatStat と部分的に共通。Generics 抽出予定 Stage5/6。
+const patternStats: PatternStat[] = patternCategories.map((name, i) => ({
+  name,
+  total: 0,
+  color: palette[i % palette.length] as string,
+}));
+for (const exp of experiences) {
+  const arch = exp.architecture;
+  if (!arch) continue;
+  const stat = patternStats.find(p => p.name === arch);
+  if (stat) stat.total += 1; // uses 未適用（仕様#3 決定前）
+}
+
+// 単一 (アプリケーションパターン) 用スケール
+const unified = computeUnifiedScale(patternStats.map(p => p.total));
+const patternYMax = unified.yMax;
+const patternTicks = unified.ticks;
+
+// パターン日本語ラベル
+const patternLabelMap: Record<string, string> = {
+  'Data-Centric': 'データ中心',
+  Layered: 'レイヤード',
+  'Component-Based': 'コンポーネント指向',
+  'Service-Oriented': 'サービス指向',
+  'Distributed System': '分散システム',
+  'Domain-Driven': 'ドメイン駆動',
+  'Event-Driven': 'イベント駆動',
+  'Separation Of Concern': '関心分離',
+  Interpreter: 'インタプリタ',
+  Concurrency: '並行処理',
+};
+const patternLabel = (name: string) => patternLabelMap[name] || name;
+---
+
+<Layout title="アーキテクチャ - i7s7-ymp Portfolio">
+  <PageHeader
+    title={data.header.title}
+    subtitle={data.header.subtitle}
+    icon={data.header.icon}
+    iconBgClass={data.header.iconBgClass}
+  />
+  {/** クラウド棒グラフ UI/トグル削除済み **/}
+  <script>
+    // @ts-nocheck 単一プロバイダ版: バー/ラベル相互ハイライト
+    document.addEventListener('DOMContentLoaded', () => {
+      function attachChartInteractions(chartSelector) {
+        const chartEl = document.querySelector(chartSelector);
+        if (!chartEl) return;
+        const bars = Array.from(chartEl.querySelectorAll('.bar-box'));
+        const labels = Array.from(chartEl.querySelectorAll('.bar-labels .x-label'));
+        const activate = id => {
+          bars.forEach(b => b.classList.toggle('active', !!id && b.dataset.id === id));
+          labels.forEach(l => {
+            const on = !!id && l.dataset.id === id;
+            l.classList.toggle('active', on);
+            l.classList.toggle('glow', on); // 追加: 光るエフェクト
+          });
+        };
+        const clear = () => activate(null);
+        bars.forEach(b => {
+          const id = b.dataset.id || '';
+          const hit = b.querySelector('.bar-hit');
+          if (hit) hit.tabIndex = 0;
+          ['mouseenter', 'focus'].forEach(ev => b.addEventListener(ev, () => activate(id)));
+          ['mouseleave', 'blur'].forEach(ev => b.addEventListener(ev, clear));
+          b.addEventListener('click', () => activate(id));
+          b.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              activate(id);
+            }
+            if (e.key === 'Escape') clear();
+          });
+        });
+        labels.forEach(l => {
+          const id = l.dataset.id || '';
+          ['mouseenter', 'focus'].forEach(ev => l.addEventListener(ev, () => activate(id)));
+          ['mouseleave', 'blur'].forEach(ev => l.addEventListener(ev, clear));
+          l.addEventListener('click', () => activate(id));
+          l.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              activate(id);
+            } else if (e.key === 'Escape') clear();
+          });
+        });
+      }
+      // アプリケーションパターンのみ
+      attachChartInteractions('.pchart');
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          document
+            .querySelectorAll('.badge-pill.active, .badge-pill.glow, .bar-box.active')
+            .forEach(el => {
+              el.classList.remove('active', 'glow');
+            });
+        }
+      });
+    });
+  </script>
+
+  {/** Parity harness removed */}
+
+  <div class="arch-page-grid">
+    <section
+      class="patterns-section chart-section arch-block"
+      aria-labelledby="pattern-chart-title"
+      id="app-chart-section"
+    >
+      {/** REFACTOR-STAGE2 BLOCK START: 重複チャート構造 (cloud と対) */}
+      <h3 id="pattern-chart-title" class="mb-6 text-lg font-semibold text-cyan-400">
+        アプリケーションパターン
+      </h3>
+      <div class="chart-wrapper">
+        <div
+          class="pchart geek-chart"
+          role="img"
+          aria-label={`アプリケーションパターン出現数 Y軸最大 ${patternYMax}`}
+          aria-describedby="pattern-note"
+        >
+          <div class="plot" data-count={patternStats.length}>
+            <div class="grid-y" aria-hidden="true">
+              {
+                patternTicks.map(t => {
+                  const pct = (t / patternYMax) * 100;
+                  const top = 100 - pct;
+                  return (
+                    <div class="grid-row" style={`top:${top}%;`}>
+                      <span class="grid-line" />
+                      <span class="grid-label">{t}</span>
+                    </div>
+                  );
+                })
+              }
+            </div>
+            <div class="bars pattern-bars" data-count={patternStats.length} style="--bar-w:70px;">
+              {
+                patternStats.map(p => {
+                  const hPct = p.total === 0 ? 0 : (p.total / patternYMax) * 100;
+                  const id = `pat-${p.name.replace(/\s+/g, '-').toLowerCase()}`;
+                  const isHigh = hPct > 90;
+                  const isTall = hPct > 38;
+                  return (
+                    <div
+                      class="bar-box"
+                      style={`--h:${hPct}%;`}
+                      data-color={p.color}
+                      data-id={id}
+                      data-zero={p.total === 0}
+                      data-high={isHigh}
+                      data-tall={isTall}
+                    >
+                      <div class="bar-hit" aria-label={`${patternLabel(p.name)} ${p.total}件`}>
+                        <span class="bar-fill" />
+                        <span class="bar-value font-mono">{p.total}</span>
+                      </div>
+                    </div>
+                  );
+                })
+              }
+            </div>
+            <div class="axis-x" aria-hidden="true"></div>
+          </div>
+          <div class="bar-labels pattern-labels" aria-hidden="false">
+            {
+              patternStats.map(p => {
+                const id = `pat-${p.name.replace(/\s+/g, '-').toLowerCase()}`;
+                return (
+                  <div
+                    class="x-label badge-pill"
+                    data-color={p.color}
+                    data-id={id}
+                    tabindex="0"
+                    aria-label={`${patternLabel(p.name)} パターン`}
+                  >
+                    {patternLabel(p.name)}
+                  </div>
+                );
+              })
+            }
+          </div>
+        </div>
+      </div>
+      <p id="pattern-note" class="chart-note unified-note">
+        ※ カテゴリは ByteByteGo - Top 5 Software Architectural
+        Patterns(https://bytebytego.com/guides/top-5-software-architectural-patterns/) より引用
+      </p>
+      {/** Experimental duplicate pattern chart removed */}
+    </section>
+    <section
+      class="cloud-architectures-section arch-block"
+      aria-labelledby="cloud-arch-gallery-title"
+    >
+      <h3 id="cloud-arch-gallery-title" class="mb-6 text-lg font-semibold text-cyan-400">
+        クラウドアーキテクチャ
+      </h3>
+      <div class="cloud-arch-grid geek-arch-grid" role="list">
+        {
+          cloudArchitectures.map(c => (
+            <CloudArchCard
+              id={c.id}
+              title={c.title}
+              summary={c.summary}
+              image={c.image}
+              services={c.services}
+              year={c.year}
+              provider={c.provider}
+            />
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<!-- refactor markers present; provider switch legacy removed -->
+
+<style>
+  @import '../styles/chart-base.css';
+  /* Cloud Architecture Cards */
+  .cloud-architectures-section {
+  }
+  .cloud-arch-grid {
+    --min: 260px;
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(var(--min), 1fr));
+    align-items: start;
+  }
+  /* Unified page grid & vertical rhythm */
+  .arch-page-grid {
+    --arch-col-gap: clamp(1.5rem, 2vw, 2rem);
+    --arch-max: 1100px;
+    width: 100%;
+    max-width: var(--arch-max);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    row-gap: clamp(3rem, 6vh, 4.5rem); /* セクション間間隔統一 */
+    padding-inline: clamp(1rem, 2.5vw, 2rem);
+  }
+  .arch-block > h3 {
+    margin-top: 0; /* ブロック先頭で上マージン除去 */
+    margin-bottom: 1.25rem; /* 見出し下余白統一 */
+    line-height: 1.15;
+  }
+  /* パターンチャート内で見出し直後の余白を .mb-6 で指定 → 調整: utility を上書き */
+  #pattern-chart-title.mb-6 {
+    margin-bottom: 1.25rem !important;
+  }
+  #cloud-arch-gallery-title.mb-6 {
+    margin-bottom: 1.25rem !important;
+  }
+  @media (max-width: 720px) {
+    .arch-page-grid {
+      row-gap: 3.25rem;
+    }
+    .arch-block > h3 {
+      margin-bottom: 1rem;
+    }
+  }
+  /* Geek unified styling for Cloud Architecture grid/cards */
+  .geek-arch-grid {
+    position: relative;
+  }
+  .geek-arch-grid::before,
+  .geek-arch-grid::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .geek-arch-grid::before {
+    background:
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 80px),
+      repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 70px);
+    mix-blend-mode: overlay;
+    opacity: 0.65;
+    animation: arch-grid-move 48s linear infinite;
+  }
+  .geek-arch-grid::after {
+    background:
+      radial-gradient(circle at 18% 25%, rgba(34, 211, 238, 0.22), transparent 60%),
+      radial-gradient(circle at 80% 75%, rgba(236, 72, 153, 0.2), transparent 62%);
+    filter: blur(42px) saturate(1.3);
+    opacity: 0.55;
+  }
+  @keyframes arch-grid-move {
+    0% {
+      background-position:
+        0 0,
+        0 0;
+    }
+    100% {
+      background-position:
+        320px 0,
+        0 260px;
+    }
+  }
+  /* Elevate existing card into geek style */
+  .geek-arch-grid .cloud-arch-card {
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.65));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      0 8px 26px -10px rgba(0, 0, 0, 0.7),
+      0 0 22px -6px rgba(34, 211, 238, 0.45),
+      0 0 30px -8px rgba(236, 72, 153, 0.4);
+    backdrop-filter: blur(10px) saturate(1.15);
+  }
+  .geek-arch-grid .cloud-arch-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0.08),
+        transparent 35%,
+        transparent 65%,
+        rgba(255, 255, 255, 0.06)
+      ),
+      radial-gradient(circle at 85% 15%, rgba(34, 211, 238, 0.2), transparent 60%);
+    mix-blend-mode: overlay;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .geek-arch-grid .cloud-arch-card:hover::before,
+  .geek-arch-grid .cloud-arch-card:focus-within::before {
+    opacity: 0.55;
+  }
+  .geek-arch-grid .cloud-arch-card:hover,
+  .geek-arch-grid .cloud-arch-card:focus-within {
+    box-shadow:
+      0 0 0 2px rgba(255, 255, 255, 0.12),
+      0 10px 34px -14px rgba(0, 0, 0, 0.8),
+      0 0 32px -6px rgba(34, 211, 238, 0.65),
+      0 0 40px -10px rgba(236, 72, 153, 0.55);
+    border-color: rgba(56, 189, 248, 0.5);
+    transform: translateY(-4px);
+  }
+  .geek-arch-grid .cloud-arch-card .ca-media {
+    background: linear-gradient(135deg, rgba(14, 23, 38, 0.9), rgba(3, 8, 18, 0.9));
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 0 14px -4px rgba(34, 211, 238, 0.5),
+      0 0 20px -6px rgba(236, 72, 153, 0.45);
+    position: relative;
+    overflow: hidden;
+  }
+  .geek-arch-grid .cloud-arch-card .ca-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(34, 211, 238, 0.35), rgba(236, 72, 153, 0.35));
+    mix-blend-mode: overlay;
+    opacity: 0;
+    transition: 0.6s opacity;
+  }
+  .geek-arch-grid .cloud-arch-card:hover .ca-media::after,
+  .geek-arch-grid .cloud-arch-card:focus-within .ca-media::after {
+    opacity: 0.35;
+  }
+  .geek-arch-grid .cloud-arch-card .ca-svc-item {
+    background: linear-gradient(135deg, rgba(34, 211, 238, 0.22), rgba(236, 72, 153, 0.18));
+    color: #e0f2fe;
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 0 8px -2px rgba(34, 211, 238, 0.6);
+    transition:
+      0.25s background,
+      0.25s transform,
+      0.25s box-shadow;
+  }
+  .geek-arch-grid .cloud-arch-card .ca-svc-item:hover,
+  .geek-arch-grid .cloud-arch-card .ca-svc-item:focus {
+    background: linear-gradient(135deg, rgba(34, 211, 238, 0.35), rgba(236, 72, 153, 0.3));
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.22),
+      0 0 16px -4px rgba(34, 211, 238, 0.7),
+      0 0 24px -6px rgba(236, 72, 153, 0.55);
+  }
+  .geek-arch-grid .cloud-arch-card .ca-title {
+    text-shadow: 0 0 6px rgba(34, 211, 238, 0.55);
+  }
+  /* reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .geek-arch-grid::before {
+      animation: none !important;
+    }
+    .geek-arch-grid .cloud-arch-card {
+      transform: none !important;
+    }
+  }
+</style>
+
+<!-- provider switch 用スタイル削除 -->

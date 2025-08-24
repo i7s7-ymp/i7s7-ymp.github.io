@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussion
+    url: https://github.com/i7s7-ymp/i7s7-ymp.github.io/discussions
+    about: 質問や提案がある場合はDiscussionをご利用ください
+  - name: 🌐 Live Site
+    url: https://i7s7-ymp.github.io
+    about: 実際のサイトを確認する
+  - name: 📧 Contact
+    url: mailto:contact@example.com
+    about: 直接連絡を取りたい場合

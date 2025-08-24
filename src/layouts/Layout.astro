@@ -1,0 +1,517 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+  headerPills?: string[]; // ステータスピル（uptime/timeは自動付与）
+}
+
+import '../styles/tokens.css';
+
+const {
+  title,
+  description = 'Portfolio - i7s7-ymp',
+  headerPills = ['build:ok'],
+} = Astro.props as Props;
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <!-- tokens.css は frontmatter import 済み -->
+  </head>
+  <body class="min-h-screen overflow-x-hidden font-sans text-white antialiased">
+    <!-- モバイル/タブレット向け PC 推奨バナー -->
+    <div
+      id="device-advisory"
+      class="fixed inset-x-0 top-0 z-[100] hidden items-center justify-between gap-4 border-b border-accent-cyan/30 bg-dark-900/95 px-4 py-2 font-mono text-[11px] text-primary-200 shadow-lg backdrop-blur-md"
+      role="status"
+      aria-live="polite"
+    >
+      <div class="flex items-center gap-2">
+        <span class="inline-flex h-2 w-2 animate-pulse rounded-full bg-accent-cyan/80"></span>
+        <span>より快適な体験のため PC (幅 ≥ 1280px) での閲覧を推奨しています。</span>
+      </div>
+      <button
+        type="button"
+        id="device-advisory-close"
+        class="rounded border border-primary-500/40 px-2 py-0.5 text-primary-300 transition hover:border-accent-cyan/60 hover:text-white"
+        aria-label="案内を閉じる">×</button
+      >
+    </div>
+    <div class="fixed inset-0 -z-10">
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-fuchsia-800 via-indigo-900 to-slate-950 opacity-90"
+      >
+      </div>
+      <div
+        class="absolute bottom-20 right-1/3 h-48 w-48 animate-float rounded-full bg-accent-neon opacity-15 blur-3xl"
+        style="animation-delay:-2s;"
+      >
+      </div>
+    </div>
+    <div class="relative z-10 flex h-screen">
+      <aside
+        class="flex w-72 flex-col border-r border-primary-600/30 bg-dark-900/80 shadow-2xl backdrop-blur-md"
+      >
+        <div
+          class="border-b border-primary-600/30 bg-gradient-to-r from-primary-700/20 to-accent-cyan/20 p-6"
+        >
+          <div class="flex items-center space-x-3">
+            <div
+              class="flex h-12 w-12 animate-glow items-center justify-center rounded-full bg-neon-gradient shadow-lg"
+            >
+              <span class="text-xl font-bold">i7</span>
+            </div>
+            <div>
+              <h1 class="font-sans text-xl font-bold">
+                i7s7-ymp <span class="animate-pulse text-accent-cyan">◆</span>
+              </h1>
+              <p class="font-mono text-sm text-primary-400">Hiroki Yamashita</p>
+            </div>
+          </div>
+        </div>
+        <nav class="flex-1 p-6" aria-label="Main navigation">
+          <ul class="space-y-3">
+            <li>
+              <a href="/" class="nav-link group" data-page="home"
+                ><div class="flex items-center space-x-3">
+                  <div class="h-2 w-2 rounded-full bg-accent-neon group-hover:animate-pulse">
+                  </div><span class="font-medium">Home</span>
+                </div><span class="font-mono text-xs text-primary-400 opacity-60">ホーム</span></a
+              >
+            </li>
+            <li>
+              <a href="/achievements" class="nav-link group" data-page="achievements"
+                ><div class="flex items-center space-x-3">
+                  <div class="h-2 w-2 rounded-full bg-accent-gold group-hover:animate-pulse">
+                  </div><span class="font-medium">Achievements</span>
+                </div><span class="font-mono text-xs text-primary-400 opacity-60">経歴</span></a
+              >
+            </li>
+            <li>
+              <a href="/support" class="nav-link group" data-page="support"
+                ><div class="flex items-center space-x-3">
+                  <div class="h-2 w-2 rounded-full bg-accent-cyan group-hover:animate-pulse">
+                  </div><span class="font-medium">Architecture</span>
+                </div><span class="font-mono text-xs text-primary-400 opacity-60">設計</span></a
+              >
+            </li>
+            <li>
+              <a href="/social" class="nav-link group" data-page="social"
+                ><div class="flex items-center space-x-3">
+                  <div class="h-2 w-2 rounded-full bg-accent-pink group-hover:animate-pulse">
+                  </div><span class="font-medium">Social Links</span>
+                </div><span class="font-mono text-xs text-primary-400 opacity-60">SNSリンク</span
+                ></a
+              >
+            </li>
+            <li>
+              <a href="/agent" class="nav-link group" data-page="agent"
+                ><div class="flex items-center space-x-3">
+                  <div class="h-2 w-2 rounded-full bg-accent-blue group-hover:animate-pulse">
+                  </div><span class="font-medium">AI Chatbot</span>
+                </div><span class="font-mono text-xs text-primary-400 opacity-60"
+                  >チャットボット</span
+                ></a
+              >
+            </li>
+          </ul>
+        </nav>
+        <div
+          class="border-t border-primary-500/30 bg-gradient-to-r from-dark-900/50 to-primary-900/20 p-6"
+        >
+          <div class="space-y-2 font-mono text-xs">
+            <div class="flex justify-between">
+              <span class="text-primary-300">status:</span><span class="text-accent-neon"
+                >online</span
+              >
+            </div>
+            <div class="flex justify-between">
+              <span class="text-primary-300">vibe:</span><span
+                class="text-accent-pink"
+                id="current-time">--:--</span
+              >
+            </div>
+          </div>
+        </div>
+      </aside>
+      <main
+        id="main-content"
+        class="flex flex-1 flex-col overflow-hidden overflow-x-hidden"
+        tabindex="-1"
+      >
+        <header class="neo-header" aria-label="Runtime status">
+          <div class="nh-inner-only-pills">
+            <div class="nh-status font-mono" role="status">
+              {
+                headerPills.map(p => {
+                  const low = p.toLowerCase();
+                  const extra = low.includes('ok') ? 'ok' : low.includes('time') ? 'time' : '';
+                  return <span class={`pill ${extra}`}>{p}</span>;
+                })
+              }
+              <span class="pill" id="uptime">0s</span>
+            </div>
+          </div>
+        </header>
+        <div
+          class="flex-1 overflow-auto overflow-x-hidden bg-gradient-to-br from-dark-900/40 to-primary-950/40 p-8 backdrop-blur-sm"
+        >
+          <slot />
+        </div>
+      </main>
+    </div>
+    <style>
+      body {
+        background: linear-gradient(135deg, #9333ea 0%, #6b21a8 50%, #3b0764 100%);
+        background-attachment: fixed;
+      }
+      /* Device advisory visibility */
+      @media (max-width: 1023px) {
+        #device-advisory {
+          display: flex;
+        }
+      }
+      @media (min-width: 1024px) {
+        #device-advisory {
+          display: none !important;
+        }
+      }
+      html,
+      body {
+        overflow-x: hidden;
+      }
+      .nav-link {
+        @apply block w-full rounded-lg p-4 text-left transition-all duration-300 hover:scale-105 hover:border hover:border-primary-500/30 hover:bg-gradient-to-r hover:from-primary-600/30 hover:to-accent-pink/30 hover:shadow-lg hover:backdrop-blur-md;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      .nav-link.active {
+        @apply border border-primary-500/50 bg-gradient-to-r from-primary-600/40 to-accent-pink/40 shadow-xl backdrop-blur-md;
+        color: #fff;
+        box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: rgba(15, 23, 42, 0.3);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #a855f7, #ff6b9d);
+        border-radius: 4px;
+        border: 1px solid rgba(168, 85, 247, 0.3);
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #9333ea, #e91e63);
+        box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+      }
+      .header-indicator {
+        --hi-border: rgba(255, 255, 255, 0.15);
+        --hi-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 3.75rem;
+        height: 1.4rem;
+        padding: 0 0.4rem;
+        border: 1px solid var(--hi-border);
+        border-radius: 0.85rem;
+        background: var(--hi-bg);
+        box-shadow:
+          0 4px 12px -2px rgba(0, 0, 0, 0.45),
+          0 0 0 1px rgba(168, 85, 247, 0.18) inset;
+        overflow: hidden;
+        user-select: none;
+      }
+      /* ==== Continuous One-Direction Wave ============================= */
+      .wave-svg {
+        width: 3.2rem;
+        height: 0.95rem;
+        fill: none;
+        overflow: visible;
+      }
+      .wave-track {
+        animation: wave-slide 4s linear infinite;
+      }
+      .wave {
+        stroke-linecap: round;
+        vector-effect: non-scaling-stroke;
+      }
+      .stroke-layer {
+        stroke-width: 2;
+        filter: drop-shadow(0 0 4px #22d3ee) drop-shadow(0 0 10px rgba(34, 211, 238, 0.35));
+      }
+      .glow-layer {
+        stroke-width: 5;
+        opacity: 0.12;
+        filter: blur(2px) drop-shadow(0 0 6px #a855f7);
+      }
+      @keyframes wave-slide {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-120px);
+        }
+      }
+      /* Subtle sheen */
+      .header-indicator {
+        position: relative;
+      }
+      .header-indicator::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          120deg,
+          transparent 0 40%,
+          rgba(255, 255, 255, 0.18) 55%,
+          transparent 70%
+        );
+        mix-blend-mode: screen;
+        animation: sheen-move 5.2s linear infinite;
+        opacity: 0.55;
+        pointer-events: none;
+      }
+      @keyframes sheen-move {
+        0% {
+          transform: translateX(-40%);
+        }
+        100% {
+          transform: translateX(40%);
+        }
+      }
+      /* Safety: prevent hover scale from creating horizontal overflow on ultra-wide */
+      .section-card {
+        max-width: 100%;
+      }
+      .section-card:hover {
+        overflow: hidden;
+      }
+      #main-content {
+        overflow-x: hidden;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .wave-group,
+        .wave-path,
+        .wave-svg,
+        .header-indicator::after {
+          animation: none !important;
+          filter: none !important;
+        }
+      }
+      /* =============================================================== */
+      /* ================= MINIMAL 90s CYBER HEADER ===================== */
+      .neo-header {
+        position: relative;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.55));
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 8px -4px rgba(0, 0, 0, 0.6);
+      }
+      .neo-header::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #22d3ee, #6366f1, #ec4899, #22d3ee);
+        background-size: 180% 100%;
+        animation: nhBar 18s linear infinite;
+        opacity: 0.55;
+      }
+      .nh-inner-only-pills {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0.5rem 1.2rem;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+      .nh-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .pill {
+        font-size: 0.6rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        padding: 0.35rem 0.55rem;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 6px;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+        color: #e2e8f0;
+        position: relative;
+      }
+      .pill.ok {
+        color: #10e7a6;
+        text-shadow: 0 0 6px rgba(16, 231, 166, 0.6);
+      }
+      .pill.time {
+        color: #ec4899;
+        text-shadow: 0 0 6px rgba(236, 72, 153, 0.5);
+      }
+      .pill::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+        opacity: 0;
+        transition: 0.6s;
+      }
+      .pill:hover::before {
+        opacity: 1;
+      }
+      @keyframes nhBar {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 180% 0;
+        }
+      }
+      @media (max-width: 780px) {
+        .nh-status {
+          width: 100%;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .neo-header::after {
+          animation: none !important;
+        }
+      }
+      /* Large screen scaling */
+      @media (min-width: 1600px) {
+        html {
+          font-size: 17px;
+        }
+        .nh-inner-only-pills {
+          max-width: 1550px;
+        }
+        .section-card {
+          padding: 2rem;
+        }
+      }
+      @media (min-width: 1920px) {
+        html {
+          font-size: 18px;
+        }
+        .nh-inner-only-pills {
+          max-width: 1750px;
+        }
+        .section-card {
+          padding: 2.25rem;
+        }
+      }
+      @media (min-width: 2300px) {
+        html {
+          font-size: 19px;
+        }
+        .nh-inner-only-pills {
+          max-width: 1950px;
+        }
+        .section-card {
+          padding: 2.5rem;
+        }
+      }
+      @media (min-width: 2600px) {
+        html {
+          font-size: 20px;
+        }
+        .nh-inner-only-pills {
+          max-width: 2100px;
+        }
+        .section-card {
+          padding: 2.75rem;
+        }
+      }
+      /* =============================================================== */
+      /* =============================================================== */
+      @media (prefers-reduced-motion: reduce) {
+        .wave-path {
+          animation: none !important;
+        }
+      }
+    </style>
+    <script>
+      const startTime = Date.now();
+      function updateTime() {
+        const now = new Date();
+        const t = now.toLocaleTimeString('ja-JP', {
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+        const el = document.getElementById('current-time');
+        if (el) el.textContent = t;
+      }
+      function updateUptime() {
+        const elapsed = Date.now() - startTime;
+        const m = Math.floor(elapsed / 60000);
+        const s = Math.floor((elapsed % 60000) / 1000);
+        const el = document.getElementById('uptime');
+        if (el) el.textContent = m > 0 ? `${m}m active` : `${s}s active`;
+      }
+      function updateActiveNav() {
+        const p = window.location.pathname;
+        document.querySelectorAll('.nav-link').forEach(a => {
+          a.classList.remove('active');
+          if (a.getAttribute('href') === p) a.classList.add('active');
+        });
+      }
+      function createParticles() {
+        const container = document.querySelector('.fixed.inset-0');
+        if (!container) return;
+        for (let i = 0; i < 4; i++) {
+          setTimeout(() => {
+            const d = document.createElement('div');
+            d.className = 'absolute w-1 h-1 bg-accent-cyan rounded-full opacity-60 animate-ping';
+            d.style.left = Math.random() * 100 + '%';
+            d.style.top = Math.random() * 100 + '%';
+            d.style.animationDelay = Math.random() * 2 + 's';
+            container.appendChild(d);
+            setTimeout(() => d.remove(), 4000);
+          }, i * 900);
+        }
+      }
+      function setupDeviceAdvisory() {
+        const banner = document.getElementById('device-advisory');
+        const closeBtn = document.getElementById('device-advisory-close');
+        if (!banner) return;
+        const mqDesktop = window.matchMedia('(min-width: 1024px)');
+        function refreshVisibility() {
+          if (!banner) return;
+          if (mqDesktop.matches || localStorage.getItem('hideDeviceAdvisory') === '1') {
+            banner.style.display = 'none';
+          } else {
+            banner.style.display = 'flex';
+          }
+        }
+        refreshVisibility();
+        mqDesktop.addEventListener('change', refreshVisibility);
+        closeBtn?.addEventListener('click', () => {
+          localStorage.setItem('hideDeviceAdvisory', '1');
+          refreshVisibility();
+        });
+      }
+      document.addEventListener('DOMContentLoaded', () => {
+        updateTime();
+        updateUptime();
+        updateActiveNav();
+        setupDeviceAdvisory();
+        setInterval(updateTime, 1000);
+        setInterval(updateUptime, 1000);
+        setInterval(createParticles, 8000);
+        createParticles();
+      });
+      document.addEventListener('astro:page-load', updateActiveNav);
+    </script>
+  </body>
+</html>

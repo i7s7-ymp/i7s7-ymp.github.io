@@ -1,0 +1,83 @@
+name: 📚 Documentation
+description: ドキュメントの改善や追加
+title: '[DOCS] '
+labels: ['documentation', 'triage']
+assignees:
+  - i7s7-ymp
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ドキュメント改善
+        README、コメント、その他のドキュメントの改善を提案してください。
+
+  - type: dropdown
+    id: doc_type
+    attributes:
+      label: ドキュメントの種類
+      description: 改善対象のドキュメント
+      options:
+        - README.md
+        - API Documentation
+        - Code Comments
+        - Setup Guide
+        - Deployment Guide
+        - Contributing Guide
+        - その他
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_issue
+    attributes:
+      label: 現在の問題
+      description: 既存のドキュメントの問題点
+      placeholder: |
+        - 情報が古い
+        - 説明が不十分
+        - 手順が不明確
+        - 例が不足している
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_changes
+    attributes:
+      label: 提案する変更
+      description: どのような改善を行うか
+      placeholder: |
+        - 追加すべき情報
+        - 修正すべき内容
+        - 新しいセクション
+        - 例やスクリーンショット
+    validations:
+      required: true
+
+  - type: textarea
+    id: target_audience
+    attributes:
+      label: 対象読者
+      description: このドキュメントの主な読者
+      placeholder: |
+        - 新規開発者
+        - コントリビューター
+        - エンドユーザー
+        - メンテナー
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: 追加情報
+      description: 関連するリンクや参考資料
+      placeholder: '関連するissue、PR、外部リンクなど'
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: チェックリスト
+      options:
+        - label: 既存のドキュメントを確認しました
+          required: true
+        - label: 提案する変更が有用であることを確認しました
+          required: true

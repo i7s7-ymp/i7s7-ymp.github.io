@@ -1,23 +1,29 @@
 
-# Hugo extended 最新版をインストール（アーキテクチャ自動判別）
-HUGO_VERSION=$(curl -s https://api.github.com/repos/gohugoio/hugo/releases/latest | grep 'tag_name' | cut -d '"' -f4 | sed 's/^v//')
-ARCH=$(uname -m)
-if [ "$ARCH" = "x86_64" ]; then
-  HUGO_TAR=hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz
-elif [ "$ARCH" = "aarch64" ]; then
-  HUGO_TAR=hugo_extended_${HUGO_VERSION}_linux-arm64.tar.gz
-else
-  echo "Unsupported architecture: $ARCH" >&2
-  exit 1
-fi
-curl -LO https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/${HUGO_TAR}
-tar -xzf $HUGO_TAR hugo
-sudo mv hugo /usr/local/bin/
-sudo chmod +x /usr/local/bin/hugo
-rm -f $HUGO_TAR
+#!/bin/bash
 
-# setup hugo modules
-hugo mod get -u
-hugo mod tidy
-hugo mod npm pack
+# Node.jsの最新LTS版がインストールされていることを確認
+echo "Node.js version: $(node --version)"
+echo "npm version: $(npm --version)"
+
+# npmを最新版にアップデート
+echo "Updating npm to latest version..."
+npm install -g npm@latest
+
+# アップデート後のnpmバージョンを確認
+echo "Updated npm version: $(npm --version)"
+
+# プロジェクトの依存関係をインストール
+echo "Installing project dependencies..."
 npm install
+
+# Astroプロジェクトの初期化チェック
+if [ -f "astro.config.mjs" ] || [ -f "astro.config.js" ] || [ -f "astro.config.ts" ]; then
+    echo "Astro project detected!"
+    echo "Available scripts:"
+    npm run --silent | grep -E "dev|build|preview"
+else
+    echo "Warning: This doesn't appear to be an Astro project"
+fi
+
+echo "Development environment setup complete!"
+echo "Run 'npm run dev' to start the development server"

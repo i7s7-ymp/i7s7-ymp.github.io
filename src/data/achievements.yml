@@ -1,0 +1,116 @@
+header:
+  title: '実績 & 経験'
+  subtitle: 'マイルストーンと技術的達成'
+
+# DATA SCHEMA
+# timeline[]: role, company, period(YYYY or range), color(token), points[], badges[], url(optional external detail)
+# certifications[]: code, title, level, color
+
+timeline:
+  - role: 'ポートフォリオサイトを刷新'
+    company: '.'
+    period: '2025'
+    color: gold
+    url: 'https://i7s7-ymp.github.io/'
+    points:
+      - '経歴を整理し、見やすいデザインに一新'
+      - 'astroフレームワークで実装'
+  - role: 'レストラン Hiro鎌倉のHP作成'
+    company: '.'
+    period: '2025'
+    color: gold
+    url: 'https://hiro-kamakura.com/'
+    points:
+      - 'レストランの雰囲気に合わせたデザインを作成'
+      - 'ウェブサイトのSEOと広告運用を担当'
+    badges: [Astro, Google Cloud]
+  - role: 'DLPシステム開発'
+    company: 'Nifty Co.'
+    period: '2025'
+    color: gold
+    points:
+      - 'セキュリティNW間のファイル移動機能を実装'
+      - 'ファイルアクセス権限の設計・実装を担当'
+    badges: [Python, Google Cloud]
+  - role: '社員ID生成システム刷新'
+    company: 'Nifty Co.'
+    period: '2025'
+    color: pink
+    points:
+      - '承認イベントからIDを自動生成するシステムを再構築'
+      - '拡張性を考慮したアプリケーション設計を担当'
+    badges: [Go, AWS]
+  - role: 'NiftyTechDay2025 への登壇'
+    company: 'Nifty Co.'
+    period: '2025'
+    color: cyan
+    url: 'https://techday.nifty.co.jp/2025/'
+    points:
+      - 'LTでメタバース業務有用性評価プロジェクトの成果を発表'
+      - '参加者アンケートで社内最高の評価を獲得'
+    badges: [.]
+  - role: 'NiftyTechBook#2 の執筆'
+    company: 'Nifty Co.'
+    period: '2024'
+    color: cyan
+    url: 'https://techbookfest.org/product/ndL7Trj25niEKEHtgjVqsN?productVariantID=4hqBZW3kNCY9dv7Dei2yNB'
+    points:
+      - 'メタバースの業務有用性評価プロジェクトを執筆'
+      - '実験の条件と解析方法を詳細に記載'
+      - '技術書典18で200部頒布し、採用活動に貢献'
+    badges: [.]
+  - role: 'メタバースの業務有用性評価プロジェクト'
+    company: 'Nifty Co.'
+    period: '2024 - 2025'
+    color: cyan
+    points:
+      - '脳波・会話データからメタバースの業務活用を検証'
+      - '企画からメンバー調整まで一貫して統括'
+    badges: [Python, Google Cloud, MQ3]
+  - role: 'スケジュールデータのパイプラインシステム開発'
+    company: 'Nifty Co.'
+    period: '2024'
+    color: gold
+    points:
+      - 'DesknetsとGoogleカレンダー間の双方向同期システム'
+      - 'キューイングアーキテクチャでスケジュール不整合を防止'
+    badges: [Go, AWS]
+  - role: '社員情報のパイプラインシステム開発'
+    company: 'Nifty Co.'
+    period: '2023'
+    color: gold
+    points:
+      - '個人情報を含むデータパイプラインの設計と実装'
+      - 'イベント駆動アーキテクチャ'
+    badges: [Python, AWS]
+  - role: 'システムアドミニストレーター'
+    company: 'Nifty Co.'
+    period: '2022 - 2025'
+    color: gold
+    points:
+      - '社員向け認証基盤の開発'
+      - 'クラウドプロキシサービス管理者'
+      - 'SaaSアプリケーション調達'
+    badges: [Go, Python, AWS, Microsoft, Zscaler, SSO]
+  - role: '@nifty IDとのIDフェデレーションプロジェクト'
+    company: 'Nifty Co.'
+    period: '2020'
+    color: gold
+    points:
+      - 'ニフティ会員基盤とポイントサイト会員基盤のID統合'
+      - 'ログイン時のブロック機能を開発'
+    badges: [ROR, PostgreSQL]
+  - role: 'ポイントサイト デベロッパー'
+    company: 'Nifty Co.'
+    period: '2019 - 2022'
+    color: gold
+    url: 'https://lifemedia.jp/'
+    points:
+      - '既存プロダクトのバグ改修と保守'
+      - 'TDD / コードレビュー文化の導入学習'
+    badges: [ROR, PostgreSQL, AWS]
+certifications:
+  - code: AWS
+    title: AWS認定 ソリューションアーキテクト
+    level: Associate / 2020
+    color: orange

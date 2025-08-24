@@ -1,0 +1,49 @@
+header:
+  title: AIチャットボット
+  subtitle: i7s7-ympについての問い合わせを受付
+  statusLabel: オンライン
+  icon: 🤖
+  iconBgClass: bg-gradient-to-r from-accent-blue to-accent-cyan
+model:
+  name: gemini-2.5-flash
+  trainingScope: 経歴データ・GitHub・学習資料
+avatar:
+  initials: i7
+  roles:
+    - Full Stack Developer
+    - Creative Technologist
+quickQuestions:
+  - 経歴について教えて
+  - 得意な技術スタックは？
+  - 最近のプロジェクトは？
+  - 趣味や興味のあることは？
+profileData:
+  career:
+    title: エンジニアとしてのキャリア
+    content: >-
+      Webエンジニアとして5年以上の経験があります。フロントエンドからバックエンド、インフラまで幅広く携わっています。特にReact、Vue.js、Node.js、Pythonを得意としており、最近はAI/ML分野にも注力しています。
+  skills:
+    title: 技術スキル
+    content: |-
+      【Frontend】React, Vue.js, TypeScript, Tailwind CSS
+      【Backend】Node.js, Python, Go, PostgreSQL
+      【Infrastructure】Docker, Kubernetes, AWS, GCP
+      【AI/ML】TensorFlow, PyTorch, OpenAI API
+      【Others】Git, CI/CD, Agile development
+  projects:
+    title: 最近のプロジェクト
+    content: >-
+      最近は、このポートフォリオサイト（Astro + TypeScript + Tailwind）の開発や、AIを活用したコードレビューボット、自動タスクスケジューラーなどを手がけています。すべてのプロジェクトでユーザー体験を重視した設計を心がけています。
+  interests:
+    title: 趣味・興味
+    content: >-
+      新しい技術の探求が大好きです。特にWeb3、AR/VR、AIの可能性に興味があります。プライベートでは音楽制作、ゲーム開発、写真撮影も楽しんでいます。クリエイティブな活動と技術を組み合わせることに情熱を注いでいます。
+responses:
+  hello: こんにちは！i7s7-ympです。Webエンジニア兼クリエイターとして活動しています。技術的なことから趣味のことまで、何でもお気軽に聞いてくださいね！✨
+  thanks: どういたしまして！他にも何か知りたいことがあれば、いつでもお聞きください😊
+  fallback:
+    - 面白い質問ですね！もう少し詳しく教えていただけますか？
+    - その分野について詳しく話せます。具体的にはどの部分が気になりますか？
+    - 技術的なことなら何でもお答えできます！
+    - プログラミングやクリエイティブな作業について話すのが大好きです！
+    - どんなプロジェクトや技術に興味をお持ちですか？

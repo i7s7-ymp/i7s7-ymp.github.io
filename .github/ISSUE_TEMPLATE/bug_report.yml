@@ -1,0 +1,118 @@
+name: 🐛 Bug Report
+description: バグや問題を報告する
+title: '[BUG] '
+labels: ['bug', 'triage']
+assignees:
+  - i7s7-ymp
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## バグレポート
+        バグや問題を報告してください。可能な限り詳細な情報を提供してください。
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 問題の説明
+      description: 何が起こっているかを明確に説明してください
+      placeholder: '例: ナビゲーションメニューがモバイルで正しく表示されない'
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 再現手順
+      description: バグを再現するための手順
+      placeholder: |
+        1. サイトにアクセス
+        2. モバイルビューに切り替え
+        3. ハンバーガーメニューをクリック
+        4. メニューが表示されない
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待される動作
+      description: 何が起こることを期待していたか
+      placeholder: '例: モバイルでナビゲーションメニューが正しく表示される'
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 実際の動作
+      description: 実際に何が起こったか
+      placeholder: '例: メニューが表示されず、レイアウトが崩れる'
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: ブラウザ
+      description: 問題が発生したブラウザ
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - その他
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: デバイス
+      description: 問題が発生したデバイス
+      options:
+        - Desktop
+        - Mobile
+        - Tablet
+        - その他
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 環境情報
+      description: OS、ブラウザバージョンなどの詳細
+      placeholder: |
+        - OS: macOS 14.0
+        - ブラウザ: Chrome 119.0
+        - 画面解像度: 1920x1080
+        - その他の関連情報
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: スクリーンショット/動画
+      description: 問題を示すスクリーンショットや動画のURL
+      placeholder: '画像をドラッグ&ドロップするか、URLを貼り付けてください'
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 追加情報
+      description: その他の関連情報や文脈
+      placeholder: 'コンソールエラー、ネットワークエラー、関連するissueなど'
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: チェックリスト
+      description: 報告前に確認してください
+      options:
+        - label: 既存のissueで同じ問題が報告されていないか確認しました
+          required: true
+        - label: 最新版での問題であることを確認しました
+          required: true
+        - label: 再現可能な手順を提供しました
+          required: true

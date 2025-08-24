@@ -1,0 +1,137 @@
+name: ✨ Feature Request
+description: 新機能やサイト改善の提案
+title: '[FEATURE] '
+labels: ['enhancement', 'triage']
+assignees:
+  - i7s7-ymp
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 機能要求
+        新しい機能やサイトの改善案を提案してください。
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: 機能の概要
+      description: 提案する機能を簡潔に説明してください
+      placeholder: '例: ダークモード/ライトモードの切り替え機能'
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: 動機・背景
+      description: なぜこの機能が必要なのか、どのような問題を解決するのか
+      placeholder: |
+        - 現在の問題点
+        - ユーザビリティの向上
+        - アクセシビリティの改善
+        - パフォーマンスの向上
+    validations:
+      required: true
+
+  - type: textarea
+    id: detailed_description
+    attributes:
+      label: 詳細説明
+      description: 機能の詳細な仕様や動作を説明してください
+      placeholder: |
+        - UIの変更内容
+        - 新しいページやコンポーネント
+        - データの流れ
+        - 技術的な実装方法
+    validations:
+      required: true
+
+  - type: textarea
+    id: user_story
+    attributes:
+      label: ユーザーストーリー
+      description: ユーザー視点での機能の使用方法
+      placeholder: |
+        ユーザーとして、
+        [何をしたい]ので、
+        [この機能が欲しい]
+
+        例:
+        ポートフォリオサイトの訪問者として、
+        目に優しい表示で閲覧したいので、
+        ダークモード機能が欲しい
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 優先度
+      description: この機能の優先度
+      options:
+        - 低 (Nice to have)
+        - 中 (Should have)
+        - 高 (Must have)
+        - 緊急 (Critical)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: カテゴリ
+      description: 機能のカテゴリ
+      options:
+        - UI/UX改善
+        - 新しいページ/セクション
+        - パフォーマンス
+        - アクセシビリティ
+        - SEO
+        - 開発者体験
+        - その他
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: 受け入れ基準
+      description: 機能が完成したと判断する基準
+      placeholder: |
+        - [ ] ヘッダーにテーマ切り替えボタンが表示される
+        - [ ] ボタンクリックでダーク/ライトモードが切り替わる
+        - [ ] 設定がローカルストレージに保存される
+        - [ ] 全ページで一貫してテーマが適用される
+        - [ ] レスポンシブデザインに対応している
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: モックアップ/参考資料
+      description: UI案やワイヤーフレーム、参考サイトなど
+      placeholder: '画像やリンクを貼り付けてください'
+
+  - type: textarea
+    id: technical_notes
+    attributes:
+      label: 技術的な考慮事項
+      description: 実装時の技術的な注意点や制約
+      placeholder: |
+        - 使用する技術/ライブラリ
+        - パフォーマンスへの影響
+        - ブラウザサポート
+        - 既存機能への影響
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: チェックリスト
+      description: 提案前に確認してください
+      options:
+        - label: 既存のissueで同じ機能が提案されていないか確認しました
+          required: true
+        - label: 機能の必要性と価値を明確にしました
+          required: true
+        - label: 実装可能な範囲での提案です
+          required: true

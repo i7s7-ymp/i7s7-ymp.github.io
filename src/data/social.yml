@@ -1,0 +1,42 @@
+header:
+  title: 'Social Links'
+  subtitle: '各プラットフォームへのリンク'
+links:
+  - name: GitHub
+    url: https://github.com/i7s7-ymp
+    username: '@i7s7-ymp'
+    desc: OSSプロジェクトとポートフォリオコードを公開
+    stats: ['20+ repos', '100+ commits', Active]
+    color: gray
+    icon: github
+  - name: Wantedly
+    # NOTE: ユーザーIDは仮です。WantedlyプロフィールのIDに合わせて修正してください。
+    url: https://www.wantedly.com/id/hiroki_yamashita_wtd
+    username: 'i7s7_ymp'
+    desc: キャリア / プロジェクトの紹介 (Wantedly)
+    stats: [Career, Projects]
+    color: wantedly
+    icon: wantedly
+  - name: LinkedIn
+    url: https://www.linkedin.com/in/hiroki-yamashita-579520330
+    username: 'i7s7-ymp'
+    desc: ビジネスネットワーク
+    stats: [Professional, Networking]
+    color: blue-600
+    icon: linkedin
+  - name: Zenn
+    # NOTE: 推定プロフィールURL。必要ならユーザー名に合わせて編集してください。
+    url: https://zenn.dev/ymp
+    username: 'i7s7-ymp'
+    desc: 技術記事投稿と知識共有 (Zenn)
+    stats: [Tech articles, Tutorials]
+    color: cyan
+    icon: zenn
+  - name: Discord
+    # TODO: 必要なら有効な招待リンクかユーザー名に変更してください
+    url: https://discord.com/users/805757324119638037
+    username: 'i7s7_ymp'
+    desc: コミュニティチャット
+    stats: [Chat, Community]
+    color: indigo
+    icon: discord

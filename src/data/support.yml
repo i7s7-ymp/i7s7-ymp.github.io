@@ -1,0 +1,54 @@
+header:
+  title: アーキテクチャ経験
+  subtitle: クラウド & アプリケーション設計
+  icon: rocket
+  iconBgClass: bg-purple-600
+
+experiences:
+  - title: レストラン Hiro鎌倉のHP作成
+    architecture: none
+    description: 静的サイト／アセット配信
+  - title: DLPシステム開発
+    architecture: Layered
+    description: API + データ層の基本レイヤード構成
+  - title: DLPシステム開発
+    architecture: Event-Driven
+    description: API + データ層の基本レイヤード構成
+  - title: 社員ID生成システム
+    architecture: Layered
+    description: API + データ層の基本レイヤード構成
+  - title: 社員ID生成システム
+    architecture: Event-Driven
+    description: API + データ層の基本レイヤード構成
+  - title: スケジュールデータのパイプラインシステム開発
+    architecture: Layered
+    description: API + データ層の基本レイヤード構成
+  - title: スケジュールデータのパイプラインシステム開発
+    architecture: Event-Driven
+    description: API + データ層の基本レイヤード構成
+  - title: ニフティポイントクラブ
+    architecture: Separation Of Concern
+    description: RoR
+
+cloudArchitectures:
+  - id: serverless-event-driven
+    title: サーバーレスイベント駆動
+    summary:
+    image: /diagrams/dummy.svg
+    services: [API Gateway, Cloud Run, Firestore, PubSub, Cloud Logging]
+    year: 2025
+    provider: GCP
+  - id: serverless-event-driven
+    title: サーバーレスイベント駆動
+    summary:
+    image: /diagrams/dummy.svg
+    services: [Lambda, DynamoDB, SQS, CloudWatch]
+    year: 2024
+    provider: AWS
+  - id: serverless-data-pipeline
+    title: サーバーレスデータパイプライン
+    summary:
+    image: /diagrams/dummy.svg
+    services: [Lambda, S3, EventBridge, CloudWatch]
+    year: 2023
+    provider: AWS

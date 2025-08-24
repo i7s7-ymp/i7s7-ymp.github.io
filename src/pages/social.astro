@@ -1,0 +1,138 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+// @ts-ignore
+import data from '../data/social.yml';
+
+const gradMap: Record<string, string> = {
+  gray: 'from-gray-700 to-gray-900',
+  indigo: 'from-indigo-500 to-indigo-700',
+  cyan: 'from-cyan-400 to-sky-500',
+  'blue-600': 'from-blue-500 to-blue-700',
+  wantedly: 'from-sky-400 to-cyan-600',
+  // Discord公式カラー(#5865F2)に近い紫グラデ
+  discord: 'from-indigo-500 to-indigo-600',
+  default: 'from-slate-600 to-slate-800',
+};
+const glowMap: Record<string, string> = {
+  gray: 'bg-gradient-to-r from-gray-400/20 via-gray-200/10 to-transparent',
+  indigo: 'bg-gradient-to-r from-indigo-400/40 via-indigo-300/10 to-transparent',
+  cyan: 'bg-gradient-to-r from-cyan-400/50 via-cyan-300/10 to-transparent',
+  'blue-600': 'bg-gradient-to-r from-blue-500/50 via-blue-300/10 to-transparent',
+  wantedly: 'bg-gradient-to-r from-sky-400/50 via-cyan-300/10 to-transparent',
+  discord: 'bg-gradient-to-r from-indigo-400/40 via-indigo-300/10 to-transparent',
+  default: 'bg-gradient-to-r from-emerald-400/40 via-emerald-300/10 to-transparent',
+};
+
+// ローカル保存した公式ロゴ (public/logos)
+const logoUrlMap = {
+  github: '/logos/github.svg',
+  // 公式配布が PNG のため拡張子を修正
+  linkedin: '/logos/linkedin.png',
+  zenn: '/logos/zenn.svg',
+  discord: '/logos/discord.svg',
+  wantedly: '/logos/wantedly.svg',
+  default: '/logos/github.svg',
+};
+---
+
+<Layout title="Social - i7s7-ymp Portfolio" headerPills={['build:ok']}>
+  <PageHeader
+    title={data.header.title}
+    subtitle={data.header.subtitle}
+    icon="🌐"
+    iconBgClass="bg-gradient-to-r from-accent-cyan to-accent-pink"
+  >
+    {
+      Array.isArray(data.header.tags) && data.header.tags.length > 0 && (
+        <div slot="extra" class="flex flex-wrap gap-2 text-xs">
+          {data.header.tags.map((t: string) => (
+            <span class="badge-pill">{t}</span>
+          ))}
+        </div>
+      )
+    }
+  </PageHeader>
+  <div class="arch-page-grid">
+    <section class="arch-block" aria-labelledby="social-links-title">
+      <h3 id="social-links-title" class="sr-only">Social Links</h3>
+      <div class="grid gap-6 md:grid-cols-2">
+        {
+          data.links.map((l: any) => {
+            const icon = l.icon || 'default';
+            const grad = gradMap[icon] || gradMap[l.color] || gradMap.default;
+            const glow = glowMap[icon] || glowMap[l.color] || glowMap.default;
+            const logoSrc = (logoUrlMap as any)[icon] || logoUrlMap.default;
+            // 背景を白にしたいロゴ (SVG自体を編集せず背景コンテナを白にする)
+            const isWhiteBg = icon === 'zenn' || icon === 'linkedin' || icon === 'wantedly';
+            const containerBase =
+              'flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl p-2 shadow-lg transition-all duration-300 group-hover:rotate-3 group-hover:scale-110';
+            const containerClass = isWhiteBg
+              ? `${containerBase} bg-white dark:bg-white ring-1 ring-black/5`
+              : `${containerBase} bg-gradient-to-br ${grad}`;
+            return (
+              <a href={l.url} target="_blank" rel="noopener noreferrer" class="section-card group">
+                <div class="mb-3 flex items-center space-x-3">
+                  <div class="relative">
+                    <div class={containerClass}>
+                      <img
+                        src={logoSrc}
+                        alt={`${l.name} ロゴ`}
+                        loading="lazy"
+                        decoding="async"
+                        width="56"
+                        height="56"
+                        class="h-14 w-14 object-contain"
+                      />
+                    </div>
+                    <div
+                      class={`pointer-events-none absolute -inset-1 rounded-2xl opacity-0 blur-md transition-opacity group-hover:opacity-70 ${glow}`}
+                    />
+                    <div class="pointer-events-none absolute inset-0 rounded-xl ring-2 ring-white/10 transition group-hover:ring-white/25" />
+                  </div>
+                  <div>
+                    <h4 class="font-semibold leading-tight text-primary-100">{l.name}</h4>
+                    <p class="font-mono text-xs text-primary-400">{l.username}</p>
+                  </div>
+                </div>
+                <p class="text-sm text-primary-200">{l.desc}</p>
+                {l.stats?.length && (
+                  <div class="mt-3 flex flex-wrap gap-3 font-mono text-[11px] text-primary-300">
+                    {l.stats.map((s: any) => (
+                      <span class="rounded bg-primary-600/20 px-2 py-1">{s}</span>
+                    ))}
+                  </div>
+                )}
+              </a>
+            );
+          })
+        }
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .arch-page-grid {
+    --arch-max: 1100px;
+    width: 100%;
+    max-width: var(--arch-max);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    row-gap: clamp(3rem, 6vh, 4.5rem);
+    padding-inline: clamp(1rem, 2.5vw, 2rem);
+  }
+  @media (max-width: 720px) {
+    .arch-page-grid {
+      row-gap: 3.25rem;
+    }
+  }
+  .arch-block > h3:first-child {
+    margin-top: 0;
+  }
+  .arch-block > h3 {
+    margin-bottom: 1.25rem;
+    line-height: 1.15;
+  }
+</style>

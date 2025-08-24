@@ -1,0 +1,959 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+// YAMLデータ読み込み (dynamic import to bypass TS module resolution error)
+// @ts-ignore
+const homeMod = await import('../data/home.yml');
+// @ts-ignore
+const home = homeMod && homeMod.default ? homeMod.default : homeMod;
+
+// ============ GitHub Public Profile Fetch ============
+// 公開 GitHub ユーザー情報を API から取得しプロフィール欄を動的生成
+// 非認証 60req/h 制限あり。失敗時は YAML の静的項目にフォールバック。
+let ghUser: any = null;
+try {
+  const res = await fetch('https://api.github.com/users/i7s7-ymp', {
+    headers: { 'User-Agent': 'i7s7-ymp-astro-site' },
+  });
+  if (res.ok) ghUser = await res.json();
+} catch (e) {
+  // ignore network errors
+}
+
+interface ProfileItem {
+  key: string;
+  value: string;
+  valueClass: string; // 必須化して undefined を排除
+}
+let dynamicProfileItems: ProfileItem[];
+if (ghUser) {
+  const createdYear = ghUser.created_at ? new Date(ghUser.created_at).getFullYear() : undefined;
+  // 固有色マッピング（値ごと差別化）
+  const colorByKey = {
+    Name: 'text-accent-gold',
+    Company: 'text-accent-neon', // ネオン
+    Location: 'text-accent-cyan', // シアン
+    Hireable: ghUser.hireable ? 'text-accent-coral' : 'text-primary-400', // コーラル (可変)
+    Since: 'text-accent-pink', // ピンク
+  } as const;
+  const tmp: (ProfileItem | null)[] = [
+    { key: 'Name', value: String(ghUser.name || ghUser.login), valueClass: colorByKey.Name },
+    ghUser.company
+      ? { key: 'Company', value: String(ghUser.company), valueClass: colorByKey.Company }
+      : null,
+    ghUser.location
+      ? { key: 'Location', value: String(ghUser.location), valueClass: colorByKey.Location }
+      : null,
+    ghUser.hireable === true || ghUser.hireable === false
+      ? { key: 'Hireable', value: ghUser.hireable ? 'Yes' : 'No', valueClass: colorByKey.Hireable }
+      : null,
+    createdYear ? { key: 'Since', value: String(createdYear), valueClass: colorByKey.Since } : null,
+  ];
+  dynamicProfileItems = tmp.filter(x => x !== null) as ProfileItem[];
+} else {
+  // fallback: 番号順で色をローテーション
+  const cycle = [
+    'text-accent-gold',
+    'text-accent-neon',
+    'text-accent-pink',
+    'text-accent-cyan',
+    'text-accent-blue',
+    'text-accent-coral',
+    'text-primary-200',
+  ];
+  const exclude = new Set(['Bio', 'Twitter', 'Email']);
+  dynamicProfileItems = (home.profile.items || [])
+    .filter((i: any) => !exclude.has(i.key))
+    .map((i: any, idx: number) => ({
+      key: i.key,
+      value: i.value,
+      valueClass: cycle[idx % cycle.length],
+    }));
+}
+---
+
+<Layout title="Home - i7s7-ymp Portfolio" headerPills={['build:ok']}>
+  <div class="cyber-home space-y-10 overflow-x-hidden">
+    <!-- 統一ヘッダー -->
+    <PageHeader
+      title={home.header.title}
+      subtitle={home.header.subtitle}
+      icon="i7"
+      iconTextClass="text-2xl font-bold text-white tracking-wider drop-shadow-[0_0_6px_#22d3ee]"
+      iconBgClass="bg-[radial-gradient(circle_at_30%_30%,#22d3ee_0%,#0f172a_70%)]"
+      class="cyber-sign"
+    />
+    <!-- プロフィール情報 -->
+    <div class="grid max-w-full grid-cols-1 gap-6 overflow-x-hidden lg:grid-cols-2">
+      <!-- About -->
+      <div class="section-card cyber-card overflow-hidden p-6">
+        <div class="absolute -right-10 -top-10 h-20 w-20 rounded-full bg-accent-gold/20 blur-2xl">
+        </div>
+        <div class="relative z-10">
+          <div class="mb-4">
+            <div class="mb-3 flex items-center space-x-3">
+              <div class="h-3 w-3 animate-pulse rounded-full bg-accent-neon"></div>
+              <h3 class="text-xl font-bold text-white">{home.profile.heading}</h3>
+            </div>
+            <div class="flex justify-end">
+              <a
+                href="https://github.com/i7s7-ymp"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group block rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/60"
+              >
+                <img
+                  src={ghUser?.avatar_url
+                    ? `${ghUser.avatar_url}&s=80`
+                    : 'https://github.com/i7s7-ymp.png?size=80'}
+                  alt="GitHub Avatar"
+                  width="56"
+                  height="56"
+                  loading="lazy"
+                  class="h-14 w-14 rounded-full object-cover ring-2 ring-accent-neon/40 transition group-hover:ring-accent-cyan/60"
+                />
+              </a>
+            </div>
+          </div>
+          <div
+            id="ghProfileItems"
+            data-source={ghUser ? 'build' : 'fallback'}
+            class="space-y-3 font-mono text-sm"
+            aria-live="polite"
+          >
+            {
+              dynamicProfileItems.map(item => (
+                <div class="flex justify-between">
+                  <span class="text-primary-300">{item.key}:</span>
+                  <span class={item.valueClass}>{item.value}</span>
+                </div>
+              ))
+            }
+          </div>
+          <p
+            class="mt-3 flex items-center gap-2 font-mono text-[10px] tracking-wide text-primary-400/70"
+          >
+            <span class="inline-flex h-2 w-2 rounded-full bg-accent-neon/70" id="ghProfileLiveDot"
+            ></span>
+            <span id="ghProfileSourceLabel"
+              >{ghUser ? 'GitHub API (build time cache)' : 'fallback'}</span
+            >
+          </p>
+          <!-- プロフィールカード注釈削除（ユーザー要望） -->
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div class="section-card cyber-card overflow-hidden p-6">
+        <div class="absolute -left-10 -top-10 h-20 w-20 rounded-full bg-accent-coral/20 blur-2xl">
+        </div>
+        <div class="relative z-10">
+          <div class="mb-4 flex items-center space-x-3">
+            <div class="h-3 w-3 animate-pulse rounded-full bg-accent-cyan"></div>
+            <h3 class="text-xl font-bold text-white">スタッツ</h3>
+          </div>
+          <div class="github-stats-wrapper">
+            <!-- GitHub Readme Stats: https://github.com/anuraghazra/github-readme-stats -->
+            <figure class="github-stats-grid" aria-label="GitHub Stats">
+              <div class="github-stats-shell">
+                <picture>
+                  <img
+                    class="github-stats-card"
+                    src={`https://github-readme-stats.vercel.app/api?username=i7s7-ymp&show_icons=true&count_private=true&hide_rank=false&hide_border=true&custom_title=GitHub%20Activity&title_color=22d3ee&text_color=cad3e6&icon_color=22d3ee&ring_color=ec4899&bg_color=30,0f172a,12263b,0f172a&border_radius=12&cache_seconds=7200`}
+                    alt="GitHubプロフィール統計 (Commits / Stars / PRs など)"
+                    loading="lazy"
+                    decoding="async"
+                    width="480"
+                    height="195"
+                  />
+                </picture>
+              </div>
+              <figcaption class="stats-note mt-2 text-[10px] text-primary-300/80">
+                https://github.com/anuraghazra/github-readme-stat
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- アクティビティログ -->
+    <div class="section-card cyber-card relative max-w-full overflow-hidden p-6">
+      <div
+        class="absolute bottom-0 right-0 h-32 w-32 translate-x-10 translate-y-10 rounded-full bg-accent-pink/10 blur-3xl"
+      >
+      </div>
+      <div class="relative z-10">
+        <div class="mb-6 flex items-center space-x-3">
+          <div class="h-3 w-3 animate-pulse rounded-full bg-accent-coral"></div>
+          <h3 class="text-xl font-bold text-white">{home.activities.heading}</h3>
+          <div class="rounded-full bg-accent-neon/20 px-3 py-1 font-mono text-xs text-accent-neon">
+            {home.activities.liveLabel}
+          </div>
+        </div>
+        <div class="space-y-3 font-mono text-sm">
+          {
+            home.activities.logs.map((log: any) => (
+              <div class="activity-row flex items-center space-x-4 rounded-lg border border-primary-500/20 bg-primary-600/10 p-3 transition-colors">
+                <div
+                  class={`h-2 w-2 ${log.ping ? 'animate-ping' : ''} rounded-full bg-accent-${log.color}`}
+                />
+                <span class="text-accent-gold">{log.date}</span>
+                <span class="text-white">{log.text}</span>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Chatbot への誘導 CTA -->
+    <a
+      href="/agent"
+      class="agent-cta group block focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/70"
+    >
+      <div class="agent-cta-inner">
+        <div class="agent-cta-bg" aria-hidden="true"></div>
+        <div class="agent-cta-glow" aria-hidden="true"></div>
+        <div
+          class="relative z-10 flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between"
+        >
+          <div>
+            <h3 class="text-lg font-semibold tracking-wide text-white md:text-xl">
+              <span
+                class="mr-2 inline-block rounded-sm bg-accent-neon/20 px-2 py-0.5 font-mono text-[11px] text-accent-neon"
+                >AI</span
+              >
+              AI チャットボット プロフィールを見る
+            </h3>
+            <p class="mt-1 max-w-xl text-sm text-primary-200">
+              経歴やスキルについて学習したAIチャットボットをデプロイしています。採用ご担当者様はこちらをご覧ください。
+            </p>
+          </div>
+          <span class="agent-cta-button font-mono text-xs"
+            >View Agent<span class="ml-2">→</span></span
+          >
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <script is:inline>
+    // クライアント側でもう一度最新の GitHub 公開プロフィールを取得し、ビルド時キャッシュを上書き
+    (async () => {
+      const el = document.getElementById('ghProfileItems');
+      if (!el) return;
+      try {
+        const r = await fetch('https://api.github.com/users/i7s7-ymp', {
+          headers: { 'User-Agent': 'i7s7-ymp-astro-site' },
+        });
+        if (!r.ok) return;
+        const u = await r.json();
+        const items = [];
+        const push = (k, v, cls) => {
+          if (v) items.push({ k, v: String(v), cls });
+        };
+        const colorByKey = {
+          Name: 'text-accent-gold',
+          Company: 'text-accent-neon',
+          Location: 'text-accent-cyan',
+          Hireable: u.hireable ? 'text-accent-coral' : 'text-primary-400',
+          Since: 'text-accent-pink',
+        };
+        push('Name', u.name || u.login, colorByKey.Name);
+        push('Company', u.company, colorByKey.Company);
+        push('Location', u.location, colorByKey.Location);
+        if (typeof u.hireable === 'boolean')
+          push('Hireable', u.hireable ? 'Yes' : 'No', colorByKey.Hireable);
+        if (u.created_at) push('Since', new Date(u.created_at).getFullYear(), colorByKey.Since);
+        // escape HTML (single definition)
+        const esc = s => {
+          const entries = [
+            ['&', '&amp;'],
+            ['<', '&lt;'],
+            ['>', '&gt;'],
+            ['"', '&quot;'],
+            ["'", '&#39;'],
+          ];
+          const map = Object.fromEntries(entries);
+          return s.replace(/[&<>"']/g, c => map[c]);
+        };
+        el.innerHTML = items
+          .map(
+            it =>
+              `<div class="flex justify-between"><span class="text-primary-300">${esc(it.k)}:</span><span class="${esc(it.cls)}">${esc(it.v)}</span></div>`
+          )
+          .join('');
+        el.dataset.source = 'live';
+        const label = document.getElementById('ghProfileSourceLabel');
+        if (label) label.textContent = 'GitHub API (live)';
+        const dot = document.getElementById('ghProfileLiveDot');
+        if (dot) {
+          dot.classList.add('animate-pulse');
+          dot.classList.remove('bg-accent-neon/70');
+          dot.classList.add('bg-accent-cyan');
+        }
+      } catch {
+        /* ignore */
+      }
+    })();
+  </script>
+
+  <style>
+    /* 既存スキルアニメ維持 */
+    .skill-bar {
+      animation: skill-fill 2s ease-out forwards;
+      transform-origin: left;
+    }
+    @keyframes skill-fill {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    /* ================= CYBER THEME ================= */
+    .cyber-home {
+      position: relative;
+    }
+    .cyber-home::before,
+    .cyber-home::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .cyber-home::before {
+      background:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0 2px, transparent 2px 90px),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.015) 0 2px, transparent 2px 70px),
+        linear-gradient(135deg, rgba(34, 211, 238, 0.035), rgba(139, 92, 246, 0.03));
+      mix-blend-mode: overlay;
+      animation: cyber-grid-shift 45s linear infinite;
+    }
+    .cyber-home::after {
+      background:
+        radial-gradient(circle at 70% 30%, rgba(236, 72, 153, 0.12), transparent 60%),
+        radial-gradient(circle at 20% 70%, rgba(16, 185, 129, 0.15), transparent 55%);
+      filter: blur(40px);
+    }
+
+    @keyframes cyber-grid-shift {
+      0% {
+        background-position:
+          0 0,
+          0 0,
+          0 0;
+      }
+      100% {
+        background-position:
+          400px 0,
+          0 300px,
+          0 0;
+      }
+    }
+
+    .cyber-card {
+      position: relative;
+      backdrop-filter: blur(8px);
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.6)) padding-box;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+        0 6px 22px -12px rgba(0, 0, 0, 0.55),
+        0 0 10px -2px rgba(34, 211, 238, 0.18),
+        0 0 24px -6px rgba(236, 72, 153, 0.14);
+      overflow: hidden;
+    }
+    .cyber-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        rgba(34, 211, 238, 0.1),
+        rgba(236, 72, 153, 0.09) 40%,
+        transparent 70%
+      );
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+    .cyber-card:hover::before {
+      opacity: 0.85;
+    }
+    .cyber-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 38%;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(34, 211, 238, 0.55), transparent);
+      filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.55));
+      animation: scan-line 9s linear infinite;
+    }
+    @keyframes scan-line {
+      0% {
+        transform: translateX(-50%);
+      }
+      100% {
+        transform: translateX(250%);
+      }
+    }
+
+    .activity-row {
+      position: relative;
+      overflow: hidden;
+    }
+    .activity-row::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, #22d3ee, #ec4899);
+      opacity: 0.45;
+    }
+    .activity-row::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, #fff, transparent);
+      transform: translateY(-100%);
+      animation: activity-spark 6s ease-in-out infinite;
+    }
+    @keyframes activity-spark {
+      0%,
+      10% {
+        transform: translateY(-100%);
+      }
+      50% {
+        transform: translateY(100%);
+      }
+      100% {
+        transform: translateY(100%);
+      }
+    }
+
+    .energy-bar-wrap {
+      position: relative;
+    }
+    .energy-bar {
+      position: relative;
+      overflow: visible;
+    }
+    .energy-bar::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.45) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      width: 34%;
+      animation: energy-flow 4.2s linear infinite;
+      mix-blend-mode: overlay;
+    }
+    @keyframes energy-flow {
+      0% {
+        transform: translateX(-60%);
+      }
+      100% {
+        transform: translateX(260%);
+      }
+    }
+
+    .cyber-banner {
+      background: linear-gradient(140deg, rgba(15, 23, 42, 0.7), rgba(30, 41, 59, 0.7)) padding-box;
+    }
+    .cyber-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.04) 0 1px,
+        transparent 1px 3px
+      );
+      mix-blend-mode: overlay;
+      opacity: 0.28;
+      pointer-events: none;
+      animation: scan-fade 11s linear infinite;
+    }
+    @keyframes scan-fade {
+      0%,
+      100% {
+        opacity: 0.15;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    /* ===== AI Chatbot CTA ===== */
+    .agent-cta {
+      position: relative;
+      display: block;
+      text-decoration: none;
+    }
+    .agent-cta-inner {
+      position: relative;
+      padding: 2rem 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.6)) padding-box;
+      box-shadow:
+        0 4px 18px -6px rgba(0, 0, 0, 0.65),
+        0 0 18px -6px rgba(34, 211, 238, 0.25),
+        0 0 26px -8px rgba(236, 72, 153, 0.25);
+      transition: 0.6s;
+      backdrop-filter: blur(8px);
+    }
+    .agent-cta-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 85% 25%, rgba(236, 72, 153, 0.25), transparent 65%),
+        radial-gradient(circle at 12% 80%, rgba(34, 211, 238, 0.25), transparent 55%);
+      mix-blend-mode: overlay;
+      filter: blur(28px);
+      opacity: 0.65;
+      transition: 1s;
+    }
+    .agent-cta-glow {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        rgba(34, 211, 238, 0.18),
+        rgba(236, 72, 153, 0.12) 55%,
+        transparent
+      );
+      opacity: 0;
+      transition: 0.8s;
+    }
+    .agent-cta:hover .agent-cta-inner,
+    .agent-cta:focus-visible .agent-cta-inner {
+      border-color: rgba(255, 255, 255, 0.18);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+        0 6px 28px -10px rgba(0, 0, 0, 0.7),
+        0 0 24px -6px rgba(34, 211, 238, 0.45),
+        0 0 34px -10px rgba(236, 72, 153, 0.4);
+      transform: translateY(-2px);
+    }
+    .agent-cta:hover .agent-cta-glow,
+    .agent-cta:focus-visible .agent-cta-glow {
+      opacity: 1;
+    }
+    .agent-cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.75rem 1.2rem;
+      background: linear-gradient(90deg, #22d3ee, #6366f1, #ec4899, #22d3ee);
+      background-size: 220% 100%;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 10px;
+      color: #fff;
+      letter-spacing: 0.08em;
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+        0 4px 14px -6px rgba(0, 0, 0, 0.65);
+      transition: 0.6s;
+    }
+    .agent-cta-button::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        transparent 0 40%,
+        rgba(255, 255, 255, 0.4) 50%,
+        transparent 60%
+      );
+      mix-blend-mode: overlay;
+      animation: ctaSheen 9s linear infinite;
+      opacity: 0.6;
+    }
+    .agent-cta:hover .agent-cta-button {
+      animation: gradShift 10s linear infinite;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+        0 4px 20px -8px rgba(0, 0, 0, 0.7),
+        0 0 22px -4px rgba(34, 211, 238, 0.5),
+        0 0 30px -8px rgba(236, 72, 153, 0.45);
+    }
+    @keyframes gradShift {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 220% 0;
+      }
+    }
+    @keyframes ctaSheen {
+      0% {
+        transform: translateX(-30%);
+      }
+      100% {
+        transform: translateX(30%);
+      }
+    }
+
+    /* Motion reduction */
+    @media (prefers-reduced-motion: reduce) {
+      .cyber-home::before,
+      .cyber-card::after,
+      .energy-bar::after,
+      .activity-row::after {
+        animation: none !important;
+      }
+    }
+
+    /* ====== ELECTRIC SIGN HEADER (PageHeader override) ====== */
+    .cyber-sign {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.65))
+        padding-box !important;
+    }
+    .cyber-sign::before,
+    .cyber-sign::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    /* LEDドットマトリクス */
+    .cyber-sign::before {
+      background:
+        repeating-radial-gradient(
+          circle at 2px 2px,
+          rgba(34, 211, 238, 0.08) 0 1px,
+          transparent 1px 8px
+        ),
+        linear-gradient(
+          120deg,
+          rgba(34, 211, 238, 0.12),
+          rgba(236, 72, 153, 0.1) 50%,
+          transparent 85%
+        );
+      mix-blend-mode: overlay;
+      opacity: 0.85;
+      filter: blur(0.3px);
+      animation: sign-pulse 9s ease-in-out infinite;
+    }
+    /* 走査ライン */
+    .cyber-sign::after {
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.25) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      mix-blend-mode: screen;
+      height: 40%;
+      top: -40%;
+      animation: sign-scan 7s linear infinite;
+    }
+    /* 枠コーナー装飾 */
+    .cyber-sign .flex.items-center:before,
+    .cyber-sign .flex.items-center:after {
+      content: '';
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      border: 2px solid rgba(34, 211, 238, 0.4);
+      opacity: 0.4;
+      filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.4));
+    }
+    .cyber-sign .flex.items-center:before {
+      top: -22px;
+      left: -22px;
+      border-right: none;
+      border-bottom: none;
+      border-radius: 14px 0 0 0;
+    }
+    .cyber-sign .flex.items-center:after {
+      bottom: -22px;
+      right: -22px;
+      border-left: none;
+      border-top: none;
+      border-radius: 0 0 14px 0;
+    }
+    /* タイトル文字 フリッカー + ネオングロー */
+    .cyber-sign h1 {
+      position: relative;
+      text-shadow:
+        0 0 6px #22d3ee,
+        0 0 14px rgba(34, 211, 238, 0.55),
+        0 0 28px rgba(236, 72, 153, 0.35);
+      animation: flicker 6.8s linear infinite;
+    }
+    .cyber-sign h1::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      mix-blend-mode: overlay;
+      color: #ec4899;
+      opacity: 0.22;
+      filter: blur(3px);
+      animation: flickerHue 5.4s linear infinite;
+    }
+    /* サブタイトル スクロールマルキー (溢れ時) */
+    .cyber-sign p {
+      position: relative;
+    }
+    .cyber-sign p.long {
+      overflow: hidden;
+      mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
+    }
+    .cyber-sign p.long span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 18s linear infinite;
+    }
+    /* 追加の下部電光ライン */
+    .cyber-sign .sign-bottom-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #22d3ee, #6366f1, #ec4899, #22d3ee);
+      background-size: 300% 100%;
+      animation: bar-shift 12s linear infinite;
+      filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.6));
+    }
+    .cyber-sign .sign-bottom-bar::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.4) 0 2px,
+        transparent 2px 6px
+      );
+      mix-blend-mode: overlay;
+      opacity: 0.18;
+    }
+
+    @keyframes sign-scan {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(240%);
+      }
+    }
+    @keyframes sign-pulse {
+      0%,
+      100% {
+        opacity: 0.85;
+      }
+      50% {
+        opacity: 0.65;
+      }
+    }
+    @keyframes flicker {
+      0%,
+      9%,
+      11%,
+      100% {
+        opacity: 1;
+      }
+      10% {
+        opacity: 0.78;
+      }
+      20% {
+        opacity: 0.9;
+      }
+      21% {
+        opacity: 1;
+      }
+      40% {
+        opacity: 0.92;
+      }
+      41% {
+        opacity: 1;
+      }
+      60% {
+        opacity: 0.84;
+      }
+      61% {
+        opacity: 1;
+      }
+      72% {
+        opacity: 0.95;
+      }
+      73% {
+        opacity: 1;
+      }
+    }
+    @keyframes flickerHue {
+      0% {
+        filter: blur(3px) hue-rotate(0deg);
+      }
+      50% {
+        filter: blur(3px) hue-rotate(40deg);
+      }
+      100% {
+        filter: blur(3px) hue-rotate(0deg);
+      }
+    }
+    @keyframes marquee {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+    @keyframes bar-shift {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 300% 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cyber-sign::after,
+      .cyber-sign h1,
+      .cyber-sign h1::after,
+      .cyber-sign p.long span,
+      .cyber-sign .sign-bottom-bar {
+        animation: none !important;
+      }
+    }
+
+    /* ===== GitHub Stats Cards ===== */
+    .github-stats-wrapper {
+      position: relative;
+    }
+    .github-stats-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .github-stats-shell {
+      position: relative;
+      padding: 10px 12px 14px;
+      border-radius: 18px;
+      background:
+        linear-gradient(
+            145deg,
+            rgba(34, 211, 238, 0.12),
+            rgba(236, 72, 153, 0.1) 55%,
+            rgba(34, 211, 238, 0.05)
+          )
+          padding-box,
+        linear-gradient(120deg, rgba(34, 211, 238, 0.55), rgba(236, 72, 153, 0.55)) border-box;
+      border: 1px solid transparent;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+        0 6px 20px -10px rgba(0, 0, 0, 0.6),
+        0 0 14px -4px rgba(34, 211, 238, 0.4),
+        0 0 26px -6px rgba(236, 72, 153, 0.35);
+      overflow: hidden;
+    }
+    .github-stats-shell::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.18), transparent 65%),
+        radial-gradient(circle at 15% 85%, rgba(34, 211, 238, 0.2), transparent 60%);
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      opacity: 0.9;
+    }
+    .github-stats-shell::after {
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: -20%;
+      width: 60%;
+      height: 220%;
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0));
+      transform: rotate(18deg);
+      opacity: 0.18;
+      animation: stats-sheen 12s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes stats-sheen {
+      0% {
+        transform: translateX(-10%) rotate(18deg);
+        opacity: 0;
+      }
+      8% {
+        opacity: 0.4;
+      }
+      50% {
+        transform: translateX(140%) rotate(18deg);
+        opacity: 0.25;
+      }
+      100% {
+        transform: translateX(140%) rotate(18deg);
+        opacity: 0;
+      }
+    }
+    .github-stats-card {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.06),
+        0 4px 14px -6px rgba(0, 0, 0, 0.65);
+      filter: saturate(1.05) brightness(1.02);
+      transition:
+        0.55s transform,
+        0.55s filter,
+        0.55s box-shadow;
+    }
+    .github-stats-shell:hover .github-stats-card,
+    .github-stats-shell:focus-within .github-stats-card {
+      transform: scale(1.03);
+      filter: saturate(1.12) brightness(1.05);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 4px 18px -8px rgba(0, 0, 0, 0.65),
+        0 0 14px -4px rgba(34, 211, 238, 0.45),
+        0 0 20px -6px rgba(236, 72, 153, 0.45);
+    }
+    .github-stats-shell:hover::after,
+    .github-stats-shell:focus-within::after {
+      animation-duration: 6s;
+      opacity: 0.35;
+    }
+    .github-stats-grid figcaption.stats-note {
+      grid-column: 1 / -1;
+      letter-spacing: 0.5px;
+    }
+    @media (max-width: 640px) {
+      .github-stats-card {
+        border-radius: 10px;
+      }
+      .github-stats-shell {
+        padding: 8px 10px 12px;
+        border-radius: 16px;
+      }
+    }
+  </style>
+  <!-- No additional script needed for static CTA -->
+</Layout>
