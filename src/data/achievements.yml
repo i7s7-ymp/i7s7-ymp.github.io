@@ -24,7 +24,7 @@ timeline:
       - 'レストランの雰囲気に合わせたデザインを作成'
       - 'ウェブサイトのSEOと広告運用を担当'
     badges: [Astro, Google Cloud]
-  - role: 'DLPシステム開発'
+  - role: 'DLPワークフロー開発'
     company: 'Nifty Co.'
     period: '2025'
     color: gold
