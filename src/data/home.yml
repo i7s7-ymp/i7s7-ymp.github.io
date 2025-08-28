@@ -1,13 +1,7 @@
 header:
-  title: 'My Portfolio'
-  subtitle: '基本情報'
-  tags:
-    - label: '#Creative'
-      color: cyan
-    - label: '#Developer'
-      color: blue
-    - label: '#Technology'
-      color: neon
+  title: '基本情報'
+  subtitle: 'プロフィール / スタッツ / 最近の活動'
+
 profile:
   heading: 'プロフィール'
   items:

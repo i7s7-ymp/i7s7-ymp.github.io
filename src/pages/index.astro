@@ -1,80 +1,39 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
-// YAMLデータ読み込み (dynamic import to bypass TS module resolution error)
-// @ts-ignore
-const homeMod = await import('../data/home.yml');
-// @ts-ignore
-const home = homeMod && homeMod.default ? homeMod.default : homeMod;
 
-// ============ GitHub Public Profile Fetch ============
-// 公開 GitHub ユーザー情報を API から取得しプロフィール欄を動的生成
-// 非認証 60req/h 制限あり。失敗時は YAML の静的項目にフォールバック。
-let ghUser: any = null;
-try {
-  const res = await fetch('https://api.github.com/users/i7s7-ymp', {
-    headers: { 'User-Agent': 'i7s7-ymp-astro-site' },
-  });
-  if (res.ok) ghUser = await res.json();
-} catch (e) {
-  // ignore network errors
-}
+// YAML だけを初期表示ソースに使用
+const homeMod = await import('../data/home.yml');
+const home = homeMod && homeMod.default ? homeMod.default : homeMod;
 
 interface ProfileItem {
   key: string;
   value: string;
-  valueClass: string; // 必須化して undefined を排除
+  valueClass: string;
 }
-let dynamicProfileItems: ProfileItem[];
-if (ghUser) {
-  const createdYear = ghUser.created_at ? new Date(ghUser.created_at).getFullYear() : undefined;
-  // 固有色マッピング（値ごと差別化）
-  const colorByKey = {
-    Name: 'text-accent-gold',
-    Company: 'text-accent-neon', // ネオン
-    Location: 'text-accent-cyan', // シアン
-    Hireable: ghUser.hireable ? 'text-accent-coral' : 'text-primary-400', // コーラル (可変)
-    Since: 'text-accent-pink', // ピンク
-  } as const;
-  const tmp: (ProfileItem | null)[] = [
-    { key: 'Name', value: String(ghUser.name || ghUser.login), valueClass: colorByKey.Name },
-    ghUser.company
-      ? { key: 'Company', value: String(ghUser.company), valueClass: colorByKey.Company }
-      : null,
-    ghUser.location
-      ? { key: 'Location', value: String(ghUser.location), valueClass: colorByKey.Location }
-      : null,
-    ghUser.hireable === true || ghUser.hireable === false
-      ? { key: 'Hireable', value: ghUser.hireable ? 'Yes' : 'No', valueClass: colorByKey.Hireable }
-      : null,
-    createdYear ? { key: 'Since', value: String(createdYear), valueClass: colorByKey.Since } : null,
-  ];
-  dynamicProfileItems = tmp.filter(x => x !== null) as ProfileItem[];
-} else {
-  // fallback: 番号順で色をローテーション
-  const cycle = [
-    'text-accent-gold',
-    'text-accent-neon',
-    'text-accent-pink',
-    'text-accent-cyan',
-    'text-accent-blue',
-    'text-accent-coral',
-    'text-primary-200',
-  ];
-  const exclude = new Set(['Bio', 'Twitter', 'Email']);
-  dynamicProfileItems = (home.profile.items || [])
-    .filter((i: any) => !exclude.has(i.key))
-    .map((i: any, idx: number) => ({
-      key: i.key,
-      value: i.value,
-      valueClass: cycle[idx % cycle.length],
-    }));
-}
+
+const cycle = [
+  'text-accent-gold',
+  'text-accent-neon',
+  'text-accent-pink',
+  'text-accent-cyan',
+  'text-accent-blue',
+  'text-accent-coral',
+  'text-primary-200',
+];
+const exclude = new Set(['Bio', 'Email']);
+const dynamicProfileItems: ProfileItem[] = (home.profile.items || [])
+  .filter((i: any) => !exclude.has(i.key))
+  .map((i: any, idx: number) => ({
+    key: i.key,
+    value: i.value,
+    valueClass: i.valueClass || cycle[idx % cycle.length],
+  }));
 ---
 
 <Layout title="Home - i7s7-ymp Portfolio" headerPills={['build:ok']}>
   <div class="cyber-home space-y-10 overflow-x-hidden">
-    <!-- 統一ヘッダー -->
+    <!--共通ヘッダー -->
     <PageHeader
       title={home.header.title}
       subtitle={home.header.subtitle}
@@ -103,9 +62,7 @@ if (ghUser) {
                 class="group block rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/60"
               >
                 <img
-                  src={ghUser?.avatar_url
-                    ? `${ghUser.avatar_url}&s=80`
-                    : 'https://github.com/i7s7-ymp.png?size=80'}
+                  src="https://github.com/i7s7-ymp.png?size=80"
                   alt="GitHub Avatar"
                   width="56"
                   height="56"
@@ -117,7 +74,7 @@ if (ghUser) {
           </div>
           <div
             id="ghProfileItems"
-            data-source={ghUser ? 'build' : 'fallback'}
+            data-source="fallback"
             class="space-y-3 font-mono text-sm"
             aria-live="polite"
           >
@@ -135,11 +92,8 @@ if (ghUser) {
           >
             <span class="inline-flex h-2 w-2 rounded-full bg-accent-neon/70" id="ghProfileLiveDot"
             ></span>
-            <span id="ghProfileSourceLabel"
-              >{ghUser ? 'GitHub API (build time cache)' : 'fallback'}</span
-            >
+            <span id="ghProfileSourceLabel">fallback</span>
           </p>
-          <!-- プロフィールカード注釈削除（ユーザー要望） -->
         </div>
       </div>
 
@@ -169,7 +123,8 @@ if (ghUser) {
                 </picture>
               </div>
               <figcaption class="stats-note mt-2 text-[10px] text-primary-300/80">
-                https://github.com/anuraghazra/github-readme-stat
+                Created: https://github.com/anuraghazra/github-readme-stats<br />
+                *only public repositories are counted
               </figcaption>
             </figure>
           </div>
@@ -207,14 +162,14 @@ if (ghUser) {
       </div>
     </div>
 
-    <!-- AI Chatbot への誘導 CTA -->
+    <!-- AI Chatbot への誘導 -->
     <a
-      href="/agent"
-      class="agent-cta group block focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/70"
+      href="/chatbot"
+      class="chatbot-cta group block focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/70"
     >
-      <div class="agent-cta-inner">
-        <div class="agent-cta-bg" aria-hidden="true"></div>
-        <div class="agent-cta-glow" aria-hidden="true"></div>
+      <div class="chatbot-cta-inner">
+        <div class="chatbot-cta-bg" aria-hidden="true"></div>
+        <div class="chatbot-cta-glow" aria-hidden="true"></div>
         <div
           class="relative z-10 flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between"
         >
@@ -224,15 +179,13 @@ if (ghUser) {
                 class="mr-2 inline-block rounded-sm bg-accent-neon/20 px-2 py-0.5 font-mono text-[11px] text-accent-neon"
                 >AI</span
               >
-              AI チャットボット プロフィールを見る
+              AI チャットボット でプロフィールを確認する
             </h3>
             <p class="mt-1 max-w-xl text-sm text-primary-200">
-              経歴やスキルについて学習したAIチャットボットをデプロイしています。採用ご担当者様はこちらをご覧ください。
+              経歴やスキルについて学習したAIチャットボットをデプロイしています。採用ご担当者様はこちらをご利用ください。
             </p>
           </div>
-          <span class="agent-cta-button font-mono text-xs"
-            >View Agent<span class="ml-2">→</span></span
-          >
+          <span class="chatbot-cta-button font-mono text-xs">View<span class="ml-2">→</span></span>
         </div>
       </div>
     </a>
@@ -255,9 +208,9 @@ if (ghUser) {
         };
         const colorByKey = {
           Name: 'text-accent-gold',
-          Company: 'text-accent-neon',
+          Company: 'text-accent-coral',
           Location: 'text-accent-cyan',
-          Hireable: u.hireable ? 'text-accent-coral' : 'text-primary-400',
+          Hireable: 'text-accent-neon',
           Since: 'text-accent-pink',
         };
         push('Name', u.name || u.login, colorByKey.Name);
@@ -318,27 +271,7 @@ if (ghUser) {
     .cyber-home {
       position: relative;
     }
-    .cyber-home::before,
-    .cyber-home::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-    .cyber-home::before {
-      background:
-        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0 2px, transparent 2px 90px),
-        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.015) 0 2px, transparent 2px 70px),
-        linear-gradient(135deg, rgba(34, 211, 238, 0.035), rgba(139, 92, 246, 0.03));
-      mix-blend-mode: overlay;
-      animation: cyber-grid-shift 45s linear infinite;
-    }
-    .cyber-home::after {
-      background:
-        radial-gradient(circle at 70% 30%, rgba(236, 72, 153, 0.12), transparent 60%),
-        radial-gradient(circle at 20% 70%, rgba(16, 185, 129, 0.15), transparent 55%);
-      filter: blur(40px);
-    }
+    /* ホーム固有のスモーク/グリッド背景を無効化 */
 
     @keyframes cyber-grid-shift {
       0% {
@@ -499,12 +432,12 @@ if (ghUser) {
     }
 
     /* ===== AI Chatbot CTA ===== */
-    .agent-cta {
+    .chatbot-cta {
       position: relative;
       display: block;
       text-decoration: none;
     }
-    .agent-cta-inner {
+    .chatbot-cta-inner {
       position: relative;
       padding: 2rem 2rem;
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -518,7 +451,7 @@ if (ghUser) {
       transition: 0.6s;
       backdrop-filter: blur(8px);
     }
-    .agent-cta-bg {
+    .chatbot-cta-bg {
       position: absolute;
       inset: 0;
       background:
@@ -529,7 +462,7 @@ if (ghUser) {
       opacity: 0.65;
       transition: 1s;
     }
-    .agent-cta-glow {
+    .chatbot-cta-glow {
       position: absolute;
       inset: 0;
       background: linear-gradient(
@@ -541,8 +474,8 @@ if (ghUser) {
       opacity: 0;
       transition: 0.8s;
     }
-    .agent-cta:hover .agent-cta-inner,
-    .agent-cta:focus-visible .agent-cta-inner {
+    .chatbot-cta:hover .chatbot-cta-inner,
+    .chatbot-cta:focus-visible .chatbot-cta-inner {
       border-color: rgba(255, 255, 255, 0.18);
       box-shadow:
         0 0 0 1px rgba(255, 255, 255, 0.08) inset,
@@ -551,11 +484,11 @@ if (ghUser) {
         0 0 34px -10px rgba(236, 72, 153, 0.4);
       transform: translateY(-2px);
     }
-    .agent-cta:hover .agent-cta-glow,
-    .agent-cta:focus-visible .agent-cta-glow {
+    .chatbot-cta:hover .chatbot-cta-glow,
+    .chatbot-cta:focus-visible .chatbot-cta-glow {
       opacity: 1;
     }
-    .agent-cta-button {
+    .chatbot-cta-button {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
@@ -573,7 +506,7 @@ if (ghUser) {
         0 4px 14px -6px rgba(0, 0, 0, 0.65);
       transition: 0.6s;
     }
-    .agent-cta-button::after {
+    .chatbot-cta-button::after {
       content: '';
       position: absolute;
       inset: 0;
@@ -587,7 +520,7 @@ if (ghUser) {
       animation: ctaSheen 9s linear infinite;
       opacity: 0.6;
     }
-    .agent-cta:hover .agent-cta-button {
+    .chatbot-cta:hover .chatbot-cta-button {
       animation: gradShift 10s linear infinite;
       box-shadow:
         0 0 0 1px rgba(255, 255, 255, 0.08) inset,

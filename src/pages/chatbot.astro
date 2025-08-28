@@ -2,21 +2,22 @@
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 // @ts-ignore
-import data from '../data/agent.yml';
-const agentData = data;
+import data from '../data/chatbot.yml';
+const chatbotData = data;
 ---
 
+{/* 元: chatbot.astro -> chatbot.astro */}
 <Layout title="AI Chatbot - i7s7-ymp Portfolio" headerPills={['build:ok']}>
   <PageHeader
-    title={agentData.header.title}
-    subtitle={agentData.header.subtitle}
-    icon={agentData.header.icon}
-    iconBgClass={agentData.header.iconBgClass}
+    title={chatbotData.header.title}
+    subtitle={chatbotData.header.subtitle}
+    icon={chatbotData.header.icon}
+    iconBgClass={chatbotData.header.iconBgClass}
   />
   <div class="arch-page-grid">
-    <section class="arch-block" aria-labelledby="agent-chat-heading">
-      <h3 id="agent-chat-heading" class="sr-only">Agent Chat</h3>
-      <div id="agent-layout" class="agent-layout flex flex-col lg:flex-row lg:space-x-6">
+    <section class="arch-block" aria-labelledby="chatbot-chat-heading">
+      <h3 id="chatbot-chat-heading" class="sr-only">ChatBot</h3>
+      <div id="chatbot-layout" class="chatbot-layout flex flex-col lg:flex-row lg:space-x-6">
         <div
           id="chat-container"
           class="flex min-h-0 flex-1 flex-col rounded-2xl border border-primary-600/30 bg-dark-900/80 shadow-2xl backdrop-blur-md"
@@ -30,14 +31,17 @@ const agentData = data;
               <div
                 class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-primary-500 to-accent-pink"
               >
-                <span class="text-sm">🎯</span>
+                <span class="text-sm">{chatbotData.header.icon || '🤖'}</span>
               </div>
               <div class="flex-1">
                 <div class="rounded-2xl bg-primary-600/20 p-3 backdrop-blur-sm">
-                  <p class="text-white">こんにちは！AI チャットへようこそ。</p>
+                  <p class="text-white">
+                    こんにちは！私は「山下 大輝」について学習したAIチャットボットです。
+                  </p>
                   <p class="mt-1 text-primary-200">
                     右サイドのクイック質問、または下の入力欄から送信できます。
                   </p>
+                  <p class="mt-1 text-primary-200">* 個人情報に関しては回答できません。</p>
                 </div>
                 <p class="mt-1 text-xs text-primary-400">now</p>
               </div>
@@ -75,12 +79,14 @@ const agentData = data;
                 <div
                   class="flex h-full w-full animate-glow items-center justify-center rounded-full bg-gradient-to-r from-primary-500 via-accent-pink to-accent-cyan shadow-lg"
                 >
-                  <span class="text-4xl" aria-hidden="true">{agentData.header.icon || '🤖'}</span>
+                  <span class="text-4xl" aria-hidden="true">{chatbotData.header.icon || '🤖'}</span>
                 </div>
               </div>
-              <h3 class="text-xl font-bold text-white">{agentData.model?.name || 'Agent Model'}</h3>
+              <h3 class="text-xl font-bold text-white">
+                {chatbotData.model?.name || 'Chatbot Model'}
+              </h3>
               <p class="mt-2 text-xs tracking-wide text-primary-300">
-                学習範囲: {agentData.model?.trainingScope || '経歴データ'}
+                学習範囲: {chatbotData.model?.trainingScope || '経歴データ'}
               </p>
               <p class="mt-1 text-[10px] leading-relaxed text-primary-400/70">
                 ※ 学習範囲は今後段階的に拡張・更新されていきます。
@@ -89,13 +95,13 @@ const agentData = data;
             </div>
           </div>
           <div
-            class={`rounded-2xl border border-primary-500/30 bg-dark-900/80 p-4 shadow-2xl backdrop-blur-md hide-scrollbar ${agentData.quickQuestions.length > 5 ? 'flex-1 overflow-y-auto' : 'overflow-visible'} ${agentData.quickQuestions.length <= 3 ? 'py-4' : ''}`}
-            style={agentData.quickQuestions.length <= 3 ? 'max-height:none' : 'max-height:100%;'}
+            class={`rounded-2xl border border-primary-500/30 bg-dark-900/80 p-4 shadow-2xl backdrop-blur-md hide-scrollbar ${chatbotData.quickQuestions.length > 5 ? 'flex-1 overflow-y-auto' : 'overflow-visible'} ${chatbotData.quickQuestions.length <= 3 ? 'py-4' : ''}`}
+            style={chatbotData.quickQuestions.length <= 3 ? 'max-height:none' : 'max-height:100%;'}
           >
             <h4 class="mb-3 font-semibold text-white">💡 よくある質問</h4>
             <div class="space-y-2">
               {
-                agentData.quickQuestions.map((q: any) => (
+                chatbotData.quickQuestions.map((q: any) => (
                   <button class="quick-question w-full rounded-lg bg-primary-600/20 p-3 text-left text-sm text-primary-200 transition-colors hover:bg-primary-600/30">
                     {q}
                   </button>
@@ -111,25 +117,25 @@ const agentData = data;
   <!-- Layout & Chat Scripts -->
   <script is:inline>
     // ===== Layout sizing =====
-    function adjustAgentLayoutHeight() {
-      const agentLayout = document.getElementById('agent-layout');
+    function adjustChatbotLayoutHeight() {
+      const chatbotLayout = document.getElementById('chatbot-layout');
       const chatContainer = document.getElementById('chat-container');
-      if (!agentLayout) return;
-      const rect = agentLayout.getBoundingClientRect();
+      if (!chatbotLayout) return;
+      const rect = chatbotLayout.getBoundingClientRect();
       const target = Math.max(320, window.innerHeight - rect.top - 8);
-      agentLayout.style.height = target + 'px';
-      agentLayout.classList.add('agent-layout--fixed');
+      chatbotLayout.style.height = target + 'px';
+      chatbotLayout.classList.add('chatbot-layout--fixed');
       if (chatContainer) chatContainer.style.height = target + 'px';
     }
     function scheduleAdjustments() {
-      adjustAgentLayoutHeight();
-      setTimeout(adjustAgentLayoutHeight, 150);
-      setTimeout(adjustAgentLayoutHeight, 400);
+      adjustChatbotLayoutHeight();
+      setTimeout(adjustChatbotLayoutHeight, 150);
+      setTimeout(adjustChatbotLayoutHeight, 400);
     }
     window.addEventListener('load', scheduleAdjustments);
     requestAnimationFrame(scheduleAdjustments);
-    window.addEventListener('resize', adjustAgentLayoutHeight);
-    window.addEventListener('orientationchange', adjustAgentLayoutHeight);
+    window.addEventListener('resize', adjustChatbotLayoutHeight);
+    window.addEventListener('orientationchange', adjustChatbotLayoutHeight);
     window.addEventListener('visibilitychange', () => {
       if (!document.hidden) scheduleAdjustments();
     });
@@ -207,7 +213,7 @@ const agentData = data;
                 })(root);
             const strings = flat.filter(s => typeof s === 'string');
             if (strings.length) {
-              return strings.join('').replace(/\\n/g, '\n');
+              return strings.join('').replace(/\n/g, '\n');
             }
           } catch {}
         }
@@ -289,10 +295,10 @@ const agentData = data;
             return Array.isArray(a) ? a.reduce((o, v) => o.concat(fl(v)), []) : [a];
           })(parsed);
           const strings = flat.filter(s => typeof s === 'string');
-          if (strings.length) return strings.join('').replace(/\\n/g, '\n');
+          if (strings.length) return strings.join('').replace(/\n/g, '\n');
         } catch {}
       }
-      return r.replace(/\\n/g, '\n');
+      return r.replace(/\n/g, '\n');
     }
     // ========= Send queue / processing =========
     const sendQueue = [];
@@ -381,10 +387,10 @@ const agentData = data;
         row-gap: 3.25rem;
       }
     }
-    .agent-layout {
+    .chatbot-layout {
       gap: 1.5rem;
     }
-    .agent-layout.agent-layout--fixed {
+    .chatbot-layout.chatbot-layout--fixed {
       overflow: hidden;
       position: relative;
     }
@@ -414,7 +420,7 @@ const agentData = data;
       display: none;
     }
     @media (max-width: 1023px) {
-      .agent-layout.agent-layout--fixed {
+      .chatbot-layout.chatbot-layout--fixed {
         height: auto !important;
         max-height: none !important;
       }
