@@ -1,6 +1,6 @@
 header:
-  title: '実績 & 経験'
-  subtitle: 'マイルストーンと資格'
+  title: '実績'
+  subtitle: '職務経歴 / 資格'
 
 # DATA SCHEMA
 # timeline[]: role, company, period(YYYY or range), color(token), points[], badges[], url(optional external detail)
