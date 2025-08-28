@@ -271,27 +271,7 @@ const dynamicProfileItems: ProfileItem[] = (home.profile.items || [])
     .cyber-home {
       position: relative;
     }
-    .cyber-home::before,
-    .cyber-home::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-    .cyber-home::before {
-      background:
-        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0 2px, transparent 2px 90px),
-        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.015) 0 2px, transparent 2px 70px),
-        linear-gradient(135deg, rgba(34, 211, 238, 0.035), rgba(139, 92, 246, 0.03));
-      mix-blend-mode: overlay;
-      animation: cyber-grid-shift 45s linear infinite;
-    }
-    .cyber-home::after {
-      background:
-        radial-gradient(circle at 70% 30%, rgba(236, 72, 153, 0.12), transparent 60%),
-        radial-gradient(circle at 20% 70%, rgba(16, 185, 129, 0.15), transparent 55%);
-      filter: blur(40px);
-    }
+    /* ホーム固有のスモーク/グリッド背景を無効化 */
 
     @keyframes cyber-grid-shift {
       0% {
