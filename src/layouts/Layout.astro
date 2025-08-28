@@ -158,7 +158,7 @@ const {
           </div>
         </header>
         <div
-          class="flex-1 overflow-auto overflow-x-hidden bg-gradient-to-br from-dark-900/40 to-primary-950/40 p-8 backdrop-blur-sm"
+          class="mesh-anim flex-1 overflow-auto overflow-x-hidden bg-gradient-to-br from-dark-900/40 to-primary-950/40 p-8 backdrop-blur-sm"
         >
           <slot />
         </div>
@@ -384,6 +384,89 @@ const {
       }
       @media (prefers-reduced-motion: reduce) {
         .neo-header::after {
+          animation: none !important;
+        }
+      }
+      /* =============================================================== */
+      /* ===================== GLOBAL MESH BACKGROUND ================== */
+      /* メインスクロール領域に共通の動くメッシュグラデーション背景を付与 */
+      .mesh-anim {
+        position: relative;
+        isolation: isolate;
+      }
+      .mesh-anim::before,
+      .mesh-anim::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: -1;
+      }
+      /* 深い層: ゆっくり動く大きめメッシュ */
+      .mesh-anim::before {
+        background:
+          radial-gradient(circle at 12% 25%, rgba(236, 72, 153, 0.16), transparent 60%),
+          radial-gradient(circle at 82% 65%, rgba(34, 211, 238, 0.18), transparent 65%),
+          radial-gradient(circle at 30% 75%, rgba(168, 85, 247, 0.16), transparent 65%),
+          radial-gradient(circle at 75% 20%, rgba(14, 165, 233, 0.15), transparent 60%);
+        filter: blur(40px) saturate(120%);
+        animation: mesh-shift 46s linear infinite;
+        background-size: 140% 140%;
+      }
+      /* 浅い層: 細いライン + ノイズヴェール */
+      .mesh-anim::after {
+        background:
+          repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0 2px, transparent 2px 120px),
+          repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.018) 0 2px, transparent 2px 90px),
+          linear-gradient(135deg, rgba(34, 211, 238, 0.05), rgba(236, 72, 153, 0.04));
+        mix-blend-mode: overlay;
+        animation: mesh-lines 60s linear infinite;
+        background-size:
+          200% 200%,
+          160% 160%,
+          100% 100%;
+        opacity: 0.9;
+      }
+      @keyframes mesh-shift {
+        0% {
+          background-position:
+            0% 0%,
+            100% 100%,
+            50% 100%,
+            100% 0%;
+        }
+        50% {
+          background-position:
+            60% 40%,
+            40% 60%,
+            30% 70%,
+            70% 30%;
+        }
+        100% {
+          background-position:
+            0% 0%,
+            100% 100%,
+            50% 100%,
+            100% 0%;
+        }
+      }
+      @keyframes mesh-lines {
+        0% {
+          background-position:
+            0 0,
+            0 0,
+            0 0;
+        }
+        100% {
+          background-position:
+            800px 0,
+            0 600px,
+            0 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .mesh-anim::before,
+        .mesh-anim::after {
           animation: none !important;
         }
       }
