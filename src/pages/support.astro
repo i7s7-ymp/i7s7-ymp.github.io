@@ -191,7 +191,7 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
                 })
               }
             </div>
-            <div class="bars pattern-bars" data-count={patternStats.length} style="--bar-w:70px;">
+            <div class="bars pattern-bars" data-count={patternStats.length} style="--bar-w:66.5px;">
               {
                 patternStats.map(p => {
                   const hPct = p.total === 0 ? 0 : (p.total / patternYMax) * 100;
