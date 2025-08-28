@@ -7,11 +7,6 @@ header:
 model:
   name: ChatYMP
   trainingScope: 経歴データ
-avatar:
-  initials: i7
-  roles:
-    - Full Stack Developer
-    - Creative Technologist
 quickQuestions:
   - 得意な技術スタックは？
   - 最近のプロジェクトは？
