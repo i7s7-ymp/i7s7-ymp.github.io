@@ -41,7 +41,7 @@ const {
         aria-label="案内を閉じる">×</button
       >
     </div>
-    <div class="fixed inset-0 -z-10">
+    <div class="fixed inset-0 -z-20">
       <div
         class="absolute inset-0 bg-gradient-to-br from-fuchsia-800 via-indigo-900 to-slate-950 opacity-90"
       >
@@ -52,6 +52,7 @@ const {
       >
       </div>
     </div>
+    <!-- mesh-global-layer removed; mesh handled by main scroll container pseudo elements -->
     <div class="relative z-10 flex h-screen">
       <aside
         class="flex w-72 flex-col border-r border-primary-600/30 bg-dark-900/80 shadow-2xl backdrop-blur-md"
@@ -158,7 +159,7 @@ const {
           </div>
         </header>
         <div
-          class="mesh-anim flex-1 overflow-auto overflow-x-hidden bg-gradient-to-br from-dark-900/40 to-primary-950/40 p-8 backdrop-blur-sm"
+          class="main-scroll flex-1 overflow-auto overflow-x-hidden bg-gradient-to-br from-dark-900/40 to-primary-950/40 p-8 backdrop-blur-sm"
         >
           <slot />
         </div>
@@ -388,85 +389,91 @@ const {
         }
       }
       /* =============================================================== */
-      /* ===================== GLOBAL MESH BACKGROUND ================== */
-      /* メインスクロール領域に共通の動くメッシュグラデーション背景を付与 */
-      .mesh-anim {
+      /* ===================== GLOBAL MESH BACKGROUND (layered fixed bg) ================== */
+      .main-scroll {
         position: relative;
-        isolation: isolate;
-      }
-      .mesh-anim::before,
-      .mesh-anim::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        z-index: -1;
-      }
-      /* 深い層: ゆっくり動く大きめメッシュ */
-      .mesh-anim::before {
-        background:
-          radial-gradient(circle at 12% 25%, rgba(236, 72, 153, 0.16), transparent 60%),
-          radial-gradient(circle at 82% 65%, rgba(34, 211, 238, 0.18), transparent 65%),
-          radial-gradient(circle at 30% 75%, rgba(168, 85, 247, 0.16), transparent 65%),
-          radial-gradient(circle at 75% 20%, rgba(14, 165, 233, 0.15), transparent 60%);
-        filter: blur(40px) saturate(120%);
-        animation: mesh-shift 46s linear infinite;
-        background-size: 140% 140%;
-      }
-      /* 浅い層: 細いライン + ノイズヴェール */
-      .mesh-anim::after {
-        background:
+        z-index: 0;
+        /* 既存 gradient の上に重ねる多層メッシュ (background-blend-mode で融合) */
+        background-image:
+          radial-gradient(circle at 15% 25%, rgba(236, 72, 153, 0.18), transparent 60%),
+          radial-gradient(circle at 85% 72%, rgba(34, 211, 238, 0.2), transparent 65%),
+          radial-gradient(circle at 38% 82%, rgba(168, 85, 247, 0.18), transparent 65%),
+          radial-gradient(circle at 72% 18%, rgba(14, 165, 233, 0.16), transparent 60%),
           repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0 2px, transparent 2px 120px),
-          repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.018) 0 2px, transparent 2px 90px),
-          linear-gradient(135deg, rgba(34, 211, 238, 0.05), rgba(236, 72, 153, 0.04));
-        mix-blend-mode: overlay;
-        animation: mesh-lines 60s linear infinite;
+          repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.018) 0 2px, transparent 2px 90px);
         background-size:
-          200% 200%,
-          160% 160%,
-          100% 100%;
-        opacity: 0.9;
+          150% 150%,
+          /* mesh blob 1 */ 160% 160%,
+          /* mesh blob 2 */ 170% 170%,
+          /* mesh blob 3 */ 155% 155%,
+          /* mesh blob 4 */ 200% 100%,
+          /* vertical lines */ 100% 200%; /* horizontal lines */
+        background-attachment: fixed, fixed, fixed, fixed, fixed, fixed; /* スクロールしても固定 */
+        animation:
+          mesh-shift-blobs 48s linear infinite,
+          mesh-lines-move 60s linear infinite;
+        background-blend-mode: screen, screen, screen, screen, overlay, overlay;
       }
-      @keyframes mesh-shift {
+      @keyframes mesh-shift-blobs {
         0% {
           background-position:
             0% 0%,
             100% 100%,
             50% 100%,
-            100% 0%;
+            100% 0%,
+            0 0,
+            0 0;
         }
-        50% {
+        33% {
           background-position:
             60% 40%,
             40% 60%,
             30% 70%,
-            70% 30%;
+            70% 30%,
+            400px 0,
+            0 300px;
+        }
+        66% {
+          background-position:
+            30% 70%,
+            70% 30%,
+            60% 40%,
+            40% 60%,
+            200px 0,
+            0 150px;
         }
         100% {
           background-position:
             0% 0%,
             100% 100%,
             50% 100%,
-            100% 0%;
+            100% 0%,
+            0 0,
+            0 0;
         }
       }
-      @keyframes mesh-lines {
+      @keyframes mesh-lines-move {
         0% {
           background-position:
+            0 0,
+            0 0,
+            0 0,
             0 0,
             0 0,
             0 0;
         }
         100% {
           background-position:
+            0 0,
+            0 0,
+            0 0,
+            0 0,
             800px 0,
-            0 600px,
-            0 0;
+            0 600px;
         }
       }
       @media (prefers-reduced-motion: reduce) {
-        .mesh-anim::before,
-        .mesh-anim::after {
+        .main-scroll {
           animation: none !important;
         }
       }
