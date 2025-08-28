@@ -17,7 +17,7 @@
     "test:visual": "npx playwright test -c tests/visual/playwright.config.ts tests/visual/support.spec.ts"
   },
   "dependencies": {
-    "astro": "^5.12.8"
+    "astro": "^5.13.4"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
