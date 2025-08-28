@@ -5,96 +5,113 @@
 [![Astro](https://img.shields.io/badge/Astro-5.12-orange.svg)](https://astro.build/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-blue.svg)](https://tailwindcss.com/)
 
-YOASOBI風ポップでシティ系デザインのポートフォリオサイト。紫とネオンカラーを基調とした現代的なWebサイトです。
+ポップ × ダークシティ調の控えめネオンを組み合わせた **静的ポートフォリオサイト**。グラデーション背景はパフォーマンス優先で CSS レイヤ & 最小限アニメのみ。
 
 🌐 **Live Site**: [https://i7s7-ymp.github.io](https://i7s7-ymp.github.io)
 
-## ✨ Features
+## � Docs
 
-- 🎨 **ポップデザイン** - YOASOBI風の鮮やかなカラーパレット
-- 🌆 **シティ風UI** - 紫とネオンのグラデーション背景
-- ✨ **アニメーション** - グロー効果とフローティング要素
-- 📱 **レスポンシブデザイン** - すべてのデバイスで最適表示
-- ⚡ **高速パフォーマンス** - Astroの静的サイト生成
-- 🔮 **インタラクティブUI** - ホバー効果とアニメーション
-- 🧊 **現代的スタイリング** - グラデーション & ガラスモーフィズム
-- 🔧 **開発者フレンドリー** - TypeScript + ESLint + Prettier
+| Topic             | Doc                     |
+| ----------------- | ----------------------- |
+| Architecture      | `docs/architecture.md`  |
+| Design System     | `docs/design-system.md` |
+| Testing & Quality | `docs/testing.md`       |
+| Runbook / Ops     | `docs/runbook.md`       |
+| Contributing      | `docs/contributing.md`  |
 
-## 🏗️ Tech Stack
+## � Quick Start
 
-- **Framework**: [Astro](https://astro.build/) - 静的サイトジェネレーター
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) - ユーティリティファーストCSS
-- **Language**: [TypeScript](https://www.typescriptlang.org/) - 型安全なJavaScript
-- **Font**: [JetBrains Mono](https://www.jetbrains.com/mono/) + [Inter](https://rsms.me/inter/) - モダンフォント
-- **Deployment**: [GitHub Pages](https://pages.github.com/) - 自動デプロイ
-- **CI/CD**: [GitHub Actions](https://github.com/features/actions) - 継続的インテグレーション
-
-## 🚀 Quick Start
-
-### 前提条件
-
-- Node.js 18+
-- npm or yarn
-- Git
-
-### セットアップ
+前提: Node.js 18+, npm, Git
 
 ```bash
-# リポジトリのクローン
 git clone https://github.com/i7s7-ymp/i7s7-ymp.github.io.git
 cd i7s7-ymp.github.io
-
-# 依存関係のインストール
 npm install
-
-# 開発サーバーの起動
 npm run dev
 ```
 
-サイトは [http://localhost:3000](http://localhost:3000) で確認できます。
+http://localhost:3000 を開く。
 
-## 📁 Project Structure
+## 🏗 Overview
 
-```text
-/
-├── .devcontainer/          # Dev Container設定
-├── .github/
-│   └── workflows/          # GitHub Actions CI/CD
-├── .vscode/               # VS Code設定
-├── public/                # 静的アセット
-├── src/
-│   ├── components/        # 再利用可能コンポーネント
-│   ├── layouts/           # レイアウトコンポーネント
-│   │   └── Layout.astro   # メインレイアウト
-│   ├── pages/             # ページファイル
-│   │   ├── index.astro    # Home
-│   │   ├── support.astro  # Architecture & Support
-│   │   ├── achievements.astro # Achievements
-│   │   ├── social.astro   # Social Media
-│   │   └── chatbot.astro    # AI Chatbot
-│   └── styles/            # スタイルファイル
-├── astro.config.mjs       # Astro設定
-├── tailwind.config.mjs    # Tailwind CSS設定
-├── tsconfig.json          # TypeScript設定
-├── eslint.config.js       # ESLint設定
-├── .prettierrc            # Prettier設定
-└── package.json
-```
+- Astro static export / GitHub Pages deploy
+- Content = YAML (versioned, reviewable)
+- Tailwind + tokens.css (design tokens集中)
+- 背景: 2 CSS アニメレイヤ (低彩度 / prefers-reduced-motion 対応)
+- Dark only / 最小クライアント JS ポリシー
 
-## 🛠️ Development Commands
+詳細は docs/ を参照。ライセンス: [MIT](LICENSE)
 
-| Command                | Description                                |
-| ---------------------- | ------------------------------------------ |
-| `npm install`          | 依存関係をインストール                     |
-| `npm run dev`          | 開発サーバーを起動 (http://localhost:3000) |
-| `npm run build`        | 本番用ビルドを作成                         |
-| `npm run preview`      | ビルド結果をローカルでプレビュー           |
-| `npm run type-check`   | TypeScript型チェック                       |
-| `npm run lint`         | ESLintによるコード解析                     |
-| `npm run lint:fix`     | ESLintエラーの自動修正                     |
-| `npm run format`       | Prettierによるコードフォーマット           |
-| `npm run format:check` | フォーマット状態の確認                     |
-| `npm run check`        | 全体的なコード品質チェック                 |
+## 🚀 Branch & Release Workflow
+
+| 種別           | 命名例                | 備考                 |
+| -------------- | --------------------- | -------------------- |
+| 機能           | `feat/short-desc`     | UI/データ追加        |
+| 修正           | `fix/issue-###`       | Issue 番号紐付け推奨 |
+| デザイン微調整 | `chore/style-bg-tune` | アニメ/トークン調整  |
+| ドキュメント   | `docs/readme-runbook` | README / ガイド更新  |
+
+main へマージで GitHub Actions が自動ビルド & Pages 反映。
+
+## � Performance / Accessibility / Quality Gates
+
+| 指標            | 目標 (参考値)        | 備考                             |
+| --------------- | -------------------- | -------------------------------- |
+| LCP             | < 2.5s (初回視認)    | 画像圧縮 / クリティカル CSS 最小 |
+| CLS             | < 0.05               | 動的挿入時は固定サイズ確保       |
+| Lighthouse Acc. | 90+                  | aria 属性・コントラスト維持      |
+| JS Bundle       | ~最小 (Astro 部分的) | 不要クライアント JS 回避         |
+
+運用ルール: 新規コンポーネントは SSR (no client hydration) がデフォルト。必要なときのみ `client:*` 指定。
+
+## 🧾 Runbook (代表シナリオ)
+
+| タスク                 | 手順概要                                                              |
+| ---------------------- | --------------------------------------------------------------------- |
+| 新しい実績カード追加   | `achievements.yml` 末尾へ追加 → Home/Achievements ページ表示確認      |
+| ソーシャルリンク順変更 | `social.yml` 並び替え → dev 確認                                      |
+| 背景色微調整           | `Layout.astro` の `.main-scroll` 基底グラデのみ編集 → スクショ添付 PR |
+| 画像追加               | `public/` へ配置 (SVG 推奨) → ページ参照                              |
+| 図差し替え             | 最適化 SVG で上書き → PR に Before/After                              |
+| README 更新            | 該当セクション編集 → `docs/` への二重記載避ける                       |
+
+## 🐞 Troubleshooting
+
+| 症状                 | 原因候補                           | 解決策                                                       |
+| -------------------- | ---------------------------------- | ------------------------------------------------------------ |
+| `npm run dev` 失敗   | 破損した npm キャッシュ / 依存破損 | `rm -rf node_modules package-lock.json && npm install`       |
+| YAML import error    | 型宣言未含有                       | `src/types/yaml.d.ts` / `tsconfig.json` の include を確認    |
+| 予期せぬ FOUC        | 背景アニメ計算コスト               | アニメ duration 延長 or opacity 減                           |
+| 文字コントラスト低下 | 背景輝度上げすぎ                   | radial alpha / sweep opacity を下げる                        |
+| Visual test 差分多発 | キャプチャ基準古い                 | 差分確認後 `npx playwright test --update-snapshots` (許容時) |
+
+## 🗑️ Removed / Deprecated
+
+| 要素                   | 状態                    | 理由                                   |
+| ---------------------- | ----------------------- | -------------------------------------- |
+| Uptime ピル            | 削除                    | 実用価値低 / ヘッダ密度削減            |
+| Geek モードトグル      | 削除 (スタイル残骸一部) | 切替頻度低 / UI シンプル化             |
+| 自動図生成パイプライン | 廃止                    | 決定性/保守性の課題 (上記ポリシー参照) |
+
+将来クリーンアップ: 未使用 `theme-geek` スタイルを段階的削除予定 (残しているのは再導入検証容易化のため)。
+
+## 🔐 Security / Dependency Updates
+
+Dependabot (未設定) 代替として月次で: `npm outdated` → minor/patch 更新 → ビルド / ビジュアルテスト → PR。
+
+## 🧭 PR Checklist (変更方針)
+
+1. 不要なクライアント JS を追加していないか
+2. トークンを使わず直値を足していないか
+3. 背景アニメ輝度/彩度が可読性を損なっていないか
+4. YAML スキーマ破壊 (既存キー削除) を行っていないか
+5. `npm run check` が success か
+6. (UI変更) スクショ / visual diff を PR に添付したか
+7. ドキュメント必要なら README 更新含めたか
+
+---
+
+運用に関する不足点・自動化希望があれば Issue で提案してください。
 
 ## 🔧 Configuration
 
@@ -289,135 +306,6 @@ npm run check
 - ESLintルールに従う
 - Prettierでフォーマット
 - コミット前に`npm run check`を実行
-
-## � Issue & Pull Request Templates
-
-このプロジェクトでは、一貫性のある報告とレビューのためにテンプレートを使用しています。
-
-### 📝 Issue Templates
-
-#### 🐛 Bug Report
-
-バグや問題を報告する際に使用してください。
-
-**含まれる項目:**
-
-- 問題の詳細説明
-- 再現手順
-- 期待される動作 vs 実際の動作
-- ブラウザ・デバイス情報
-- 環境詳細
-- スクリーンショット
-
-**使用方法:**
-
-1. [Issues](https://github.com/i7s7-ymp/i7s7-ymp.github.io/issues)ページにアクセス
-2. "New issue"をクリック
-3. "🐛 Bug Report"を選択
-4. テンプレートに従って入力
-
-#### ✨ Feature Request
-
-新機能や改善提案の際に使用してください。
-
-**含まれる項目:**
-
-- 機能の概要と動機
-- 詳細説明とユーザーストーリー
-- 優先度とカテゴリ
-- 受け入れ基準
-- モックアップ・技術考慮事項
-
-#### 📚 Documentation
-
-ドキュメント改善の提案に使用してください。
-
-**含まれる項目:**
-
-- ドキュメントの種類
-- 現在の問題点
-- 提案する変更
-- 対象読者
-
-### 📋 Pull Request Templates
-
-#### 標準PR Template
-
-すべての通常の変更に使用してください。
-
-**含まれる項目:**
-
-- 変更概要と関連Issue
-- 詳細な変更内容
-- テスト項目とブラウザ確認
-- スクリーンショット
-- 破壊的変更の有無
-- レビューポイント
-
-**使用方法:**
-
-1. ブランチから Pull Request を作成
-2. テンプレートが自動で適用されます
-3. 各項目を埋めてください
-
-#### 🚨 Hotfix Template
-
-緊急修正の際に使用してください。
-
-**含まれる項目:**
-
-- 緊急修正の概要
-- 問題詳細と影響範囲
-- 修正内容とリスク評価
-- 最小限のチェックリスト
-
-**使用方法:**
-
-1. Hotfix用のブランチから PR を作成
-2. URLに `?template=hotfix.md` を追加
-3. または手動でテンプレートを選択
-
-### 🔗 テンプレート設定ファイル
-
-```text
-.github/
-├── ISSUE_TEMPLATE/
-│   ├── bug_report.yml      # バグレポート
-│   ├── feature_request.yml # 機能要求
-│   ├── documentation.yml   # ドキュメント
-│   └── config.yml          # 設定・リンク
-└── PULL_REQUEST_TEMPLATE/
-    ├── pull_request_template.md  # 標準PR
-    └── hotfix.md                 # 緊急修正PR
-```
-
-### 💡 テンプレート使用のメリット
-
-- **一貫性**: 必要な情報が漏れなく収集
-- **効率性**: 標準化されたフォーマットで迅速なレビュー
-- **品質管理**: チェックリストによる品質保証
-- **自動分類**: ラベルによる適切な分類
-- **トレーサビリティ**: Issue とPR の明確な関連付け
-
-### 📝 コントリビューションフロー
-
-1. **Issue作成**: 適切なテンプレートでIssueを作成
-2. **ブランチ作成**: `feature/`, `bugfix/`, `hotfix/` のプレフィックス使用
-3. **開発**: ローカルでの開発と品質チェック
-4. **PR作成**: テンプレートを使用してPR作成
-5. **レビュー**: テンプレート項目に基づくレビュー
-6. **マージ**: 品質基準を満たした後にマージ
-
-## 📝 License
-
-このプロジェクトは[MIT License](LICENSE)の下で公開されています。
-
-## 🔗 Links
-
-- **Portfolio**: [https://i7s7-ymp.github.io](https://i7s7-ymp.github.io)
-- **GitHub**: [https://github.com/i7s7-ymp](https://github.com/i7s7-ymp)
-- **Astro Docs**: [https://docs.astro.build](https://docs.astro.build)
-- **Tailwind CSS**: [https://tailwindcss.com](https://tailwindcss.com)
 
 ---
 
