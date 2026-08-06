@@ -1,0 +1,25 @@
+.arch-page-grid {
+  --arch-max: 1100px;
+  width: 100%;
+  max-width: var(--arch-max);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  row-gap: clamp(3rem, 6vh, 4.5rem);
+  padding-inline: clamp(1rem, 2.5vw, 2rem);
+}
+
+@media (max-width: 720px) {
+  .arch-page-grid {
+    row-gap: 3.25rem;
+  }
+}
+
+.arch-block > h3:first-child {
+  margin-top: 0;
+}
+
+.arch-block > h3 {
+  margin-bottom: 1.25rem;
+  line-height: 1.15;
+}

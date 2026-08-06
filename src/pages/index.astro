@@ -1,10 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
+import homeData from '../data/home.yml';
+import type { HomeData, HomeProfileItem } from '../types/content';
 
-// YAML だけを初期表示ソースに使用
-const homeMod = await import('../data/home.yml');
-const home = homeMod && homeMod.default ? homeMod.default : homeMod;
+const home = homeData as HomeData;
 
 interface ProfileItem {
   key: string;
@@ -23,11 +23,11 @@ const cycle = [
 ];
 const exclude = new Set(['Bio', 'Email']);
 const dynamicProfileItems: ProfileItem[] = (home.profile.items || [])
-  .filter((i: any) => !exclude.has(i.key))
-  .map((i: any, idx: number) => ({
-    key: i.key,
-    value: i.value,
-    valueClass: i.valueClass || cycle[idx % cycle.length],
+  .filter((item: HomeProfileItem) => !exclude.has(item.key))
+  .map((item: HomeProfileItem, idx: number) => ({
+    key: item.key,
+    value: item.value,
+    valueClass: item.valueClass || cycle[idx % cycle.length],
   }));
 ---
 
@@ -113,7 +113,7 @@ const dynamicProfileItems: ProfileItem[] = (home.profile.items || [])
                 <picture>
                   <img
                     class="github-stats-card"
-                    src={`https://github-readme-stats.vercel.app/api?username=i7s7-ymp&show_icons=true&count_private=true&hide_rank=false&hide_border=true&custom_title=GitHub%20Activity&title_color=22d3ee&text_color=cad3e6&icon_color=22d3ee&ring_color=ec4899&bg_color=30,0f172a,12263b,0f172a&border_radius=12&cache_seconds=7200`}
+                    src={`https://github-stats-extended.vercel.app/api?username=i7s7-ymp&show_icons=true&count_private=true&hide_rank=false&hide_border=true&custom_title=GitHub%20Activity&title_color=22d3ee&text_color=cad3e6&icon_color=22d3ee&ring_color=ec4899&bg_color=30,0f172a,12263b,0f172a&border_radius=12&cache_seconds=7200`}
                     alt="GitHubプロフィール統計 (Commits / Stars / PRs など)"
                     loading="lazy"
                     decoding="async"
@@ -147,7 +147,7 @@ const dynamicProfileItems: ProfileItem[] = (home.profile.items || [])
         </div>
         <div class="space-y-3 font-mono text-sm">
           {
-            home.activities.logs.map((log: any) => (
+            home.activities.logs.map(log => (
               <div class="activity-row flex items-center space-x-4 rounded-lg border border-primary-500/20 bg-primary-600/10 p-3 transition-colors">
                 <div
                   class={`h-2 w-2 ${log.ping ? 'animate-ping' : ''} rounded-full bg-accent-${log.color}`}
@@ -190,65 +190,10 @@ const dynamicProfileItems: ProfileItem[] = (home.profile.items || [])
     </a>
   </div>
 
-  <script is:inline>
-    // クライアント側でもう一度最新の GitHub 公開プロフィールを取得し、ビルド時キャッシュを上書き
-    (async () => {
-      const el = document.getElementById('ghProfileItems');
-      if (!el) return;
-      try {
-        const r = await fetch('https://api.github.com/users/i7s7-ymp', {
-          headers: { 'User-Agent': 'i7s7-ymp-astro-site' },
-        });
-        if (!r.ok) return;
-        const u = await r.json();
-        const items = [];
-        const push = (k, v, cls) => {
-          if (v) items.push({ k, v: String(v), cls });
-        };
-        const colorByKey = {
-          Name: 'text-accent-gold',
-          Company: 'text-accent-coral',
-          Location: 'text-accent-cyan',
-          Hireable: 'text-accent-neon',
-          Since: 'text-accent-pink',
-        };
-        push('Name', u.name || u.login, colorByKey.Name);
-        push('Company', u.company, colorByKey.Company);
-        push('Location', u.location, colorByKey.Location);
-        if (typeof u.hireable === 'boolean')
-          push('Hireable', u.hireable ? 'Yes' : 'No', colorByKey.Hireable);
-        if (u.created_at) push('Since', new Date(u.created_at).getFullYear(), colorByKey.Since);
-        // escape HTML (single definition)
-        const esc = s => {
-          const entries = [
-            ['&', '&amp;'],
-            ['<', '&lt;'],
-            ['>', '&gt;'],
-            ['"', '&quot;'],
-            ["'", '&#39;'],
-          ];
-          const map = Object.fromEntries(entries);
-          return s.replace(/[&<>"']/g, c => map[c]);
-        };
-        el.innerHTML = items
-          .map(
-            it =>
-              `<div class="flex justify-between"><span class="text-primary-300">${esc(it.k)}:</span><span class="${esc(it.cls)}">${esc(it.v)}</span></div>`
-          )
-          .join('');
-        el.dataset.source = 'live';
-        const label = document.getElementById('ghProfileSourceLabel');
-        if (label) label.textContent = 'GitHub API (live)';
-        const dot = document.getElementById('ghProfileLiveDot');
-        if (dot) {
-          dot.classList.add('animate-pulse');
-          dot.classList.remove('bg-accent-neon/70');
-          dot.classList.add('bg-accent-cyan');
-        }
-      } catch {
-        /* ignore */
-      }
-    })();
+  <script>
+    import { initHomeProfile } from '../scripts/client/homeProfile';
+
+    initHomeProfile();
   </script>
 
   <style>

@@ -158,7 +158,7 @@ npm run build
 ### 静的解析
 
 ```bash
-# TypeScript型チェック
+# TypeScript型チェック (astro sync + tsc)
 npm run type-check
 
 # ESLint (JavaScript/TypeScript)
@@ -202,11 +202,6 @@ npm run check
 - `badge-pill`: タグ/ラベル表示ピル
 - `subtle-divider`: グラデーション区切り線
 - `hide-scrollbar`: スクロールは保持しつつスクロールバー非表示
-
-### コンポーネント (src/components)
-
-- `SectionCard.astro`: セマンティックタグ指定可能なラッパー
-- `StatCard.astro`: 数値 + ラベル表示用
 
 ### カラートークン (Tailwind 拡張 `accent-*`)
 

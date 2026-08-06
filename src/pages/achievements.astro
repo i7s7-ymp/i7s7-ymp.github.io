@@ -1,12 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
-// @ts-ignore
-import data from '../data/achievements.yml';
+import '../styles/page-grid.css';
+import achievementsData from '../data/achievements.yml';
+import type { AchievementsData, AchievementTimelineItem } from '../types/content';
+
+const data = achievementsData as AchievementsData;
 
 // 年単位にグルーピング（period の最初の4桁を年とみなす）
-const timelineByYear: Record<string, any[]> = data.timeline.reduce(
-  (acc: Record<string, any[]>, item: any) => {
+const timelineByYear: Record<string, AchievementTimelineItem[]> = data.timeline.reduce(
+  (acc: Record<string, AchievementTimelineItem[]>, item: AchievementTimelineItem) => {
     const m = (item.period || '').match(/\d{4}/);
     const year = m ? m[0] : 'その他';
     (acc[year] = acc[year] || []).push(item);
@@ -96,7 +99,7 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
                   </header>
                   {items.length === 0 && <p class="text-[12px] text-primary-500/60">記録なし</p>}
                   <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {items.map((item: any, idx: number) => {
+                    {items.map((item: AchievementTimelineItem, idx: number) => {
                       const content = (
                         <>
                           <h5 class="mb-1 line-clamp-2 text-[13px] font-semibold leading-snug text-primary-50">
@@ -182,7 +185,7 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
       </h3>
       <ul class="grid grid-cols-1 gap-3 md:grid-cols-2" aria-label="資格・認定一覧">
         {
-          data.certifications.map((c: any) => (
+          data.certifications.map(c => (
             <li class="flex items-center gap-3 rounded-lg border border-primary-500/20 bg-dark-900/50 p-3">
               <div
                 class={`flex h-11 w-11 items-center justify-center rounded-md bg-${c.color}-400/15 ring-1 ring-${c.color}-400/30`}
@@ -201,140 +204,15 @@ const displayYears: string[] = ['2025', '2024', '2023', '2022', '2021', '2020', 
   </div>
 </Layout>
 
-<script is:inline>
-  /* eslint-disable no-console */
-  // util (inline 化して import 依存排除)
-  function computeAndLockPanelHeights(panels) {
-    if (!panels.length) return;
-    const states = panels.map(p => p.classList.contains('hidden'));
-    panels.forEach(p => p.classList.remove('hidden'));
-    let max = 0;
-    panels.forEach(p => {
-      const h = p.scrollHeight;
-      if (h > max) max = h;
-    });
-    panels.forEach((p, i) => {
-      if (states[i]) p.classList.add('hidden');
-      p.style.minHeight = max + 'px';
-    });
-  }
-  function attachResponsiveRecalc(panels, delay = 180) {
-    let t;
-    window.addEventListener('resize', () => {
-      if (t) clearTimeout(t);
-      t = setTimeout(() => computeAndLockPanelHeights(panels), delay);
-    });
-  }
+<script>
+  import { initAchievementsTimeline } from '../scripts/client/achievementsTimeline';
 
-  (function initTimeline() {
-    let attempt = 0;
-    function tryInit() {
-      attempt++;
-      const markers = [...document.querySelectorAll('.year-node')];
-      const panels = [...document.querySelectorAll('[data-year-panel]')];
-      if (!markers.length || !panels.length) {
-        if (attempt < 10) {
-          console.log('[timeline] retry init attempt', attempt);
-          return setTimeout(tryInit, 50 * attempt);
-        }
-        console.warn('[timeline] init failed: no markers/panels');
-        return;
-      }
-      console.log('[timeline] init ok markers', markers.length, 'panels', panels.length);
-      function selectYear(year) {
-        if (!year) return;
-        let activeEl = null;
-        markers.forEach(m => {
-          const active = m.getAttribute('data-year') === year;
-          m.classList.toggle('is-active', active);
-          m.setAttribute('aria-pressed', active ? 'true' : 'false');
-          if (active) activeEl = m;
-        });
-        panels.forEach(p => {
-          const active = p.getAttribute('data-year-panel') === year;
-          p.classList.toggle('hidden', !active);
-          p.setAttribute('aria-hidden', active ? 'false' : 'true');
-          if (active) p.style.removeProperty('display');
-          else p.style.display = 'none';
-        });
-        if (activeEl) {
-          activeEl.classList.remove('activating');
-          void activeEl.offsetWidth;
-          activeEl.classList.add('activating');
-          activeEl.addEventListener('animationend', () => activeEl.classList.remove('activating'), {
-            once: true,
-          });
-        }
-        requestAnimationFrame(() => computeAndLockPanelHeights(panels));
-        console.log('[timeline] selectYear', year);
-      }
-      // expose for debugging
-      window.__selectYear = selectYear;
-      markers.forEach(m => {
-        m.addEventListener('click', () => selectYear(m.getAttribute('data-year')));
-        m.addEventListener('keydown', e => {
-          const i = markers.indexOf(m);
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            selectYear(m.getAttribute('data-year'));
-          } else if (e.key === 'ArrowRight') {
-            e.preventDefault();
-            markers[(i + 1) % markers.length].focus();
-          } else if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            markers[(i - 1 + markers.length) % markers.length].focus();
-          } else if (e.key === 'Home') {
-            e.preventDefault();
-            markers[0].focus();
-          } else if (e.key === 'End') {
-            e.preventDefault();
-            markers[markers.length - 1].focus();
-          }
-        });
-      });
-      computeAndLockPanelHeights(panels);
-      attachResponsiveRecalc(panels, 160);
-      window.addEventListener('orientationchange', () => computeAndLockPanelHeights(panels));
-      selectYear('2025');
-      console.log('[timeline] ready');
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', tryInit);
-    } else {
-      tryInit();
-    }
-    document.addEventListener('astro:page-load', tryInit);
-  })();
-  /* eslint-enable no-console */
+  initAchievementsTimeline();
 </script>
 
 <style>
-  /* Page vertical grid (unified with support page) */
-  .arch-page-grid {
-    --arch-max: 1100px;
-    width: 100%;
-    max-width: var(--arch-max);
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    row-gap: clamp(3rem, 6vh, 4.5rem);
-    padding-inline: clamp(1rem, 2.5vw, 2rem);
-  }
   .arch-block {
     /* future per-block overrides */
-  }
-  @media (max-width: 720px) {
-    .arch-page-grid {
-      row-gap: 3.25rem;
-    }
-  }
-  /* Normalize h3 spacing (match Architecture page) */
-  .arch-block > h3:first-child {
-    margin-top: 0;
-  }
-  .arch-block > h3 {
-    margin-bottom: 1.25rem;
-    line-height: 1.15;
   }
   /* line clamp helper */
   .line-clamp {

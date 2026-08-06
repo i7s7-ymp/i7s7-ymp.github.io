@@ -1,8 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
-// @ts-ignore
-import data from '../data/design.yml';
+import designData from '../data/design.yml';
+import type { DesignContainer, DesignData } from '../types/content';
+
+const data = designData as DesignData;
+type DesignTokenMap = Record<string, string>;
 ---
 
 <Layout title="Design System - i7s7-ymp Portfolio" headerPills={['ui', 'tokens', 'build:ok']}>
@@ -25,7 +28,7 @@ import data from '../data/design.yml';
       </h3>
       <div class="grid gap-4 md:grid-cols-2">
         {
-          data.containers.map((c: any) => (
+          data.containers.map((c: DesignContainer) => (
             <div class="space-y-2">
               <h4 class="font-semibold text-accent-cyan">{c.name}</h4>
               <p class="text-sm text-primary-200">{c.desc}</p>
@@ -53,7 +56,7 @@ import data from '../data/design.yml';
       </h3>
       <ul class="space-y-3 font-mono text-xs text-primary-300">
         {
-          data.typography.tokens.map((t: any) => {
+          data.typography.tokens.map((t: DesignTokenMap) => {
             const entry = Object.entries(t)[0];
             if (!entry) return null;
             return (

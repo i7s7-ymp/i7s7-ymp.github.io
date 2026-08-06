@@ -1,9 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
-// @ts-ignore
-import data from '../data/chatbot.yml';
-const chatbotData = data;
+import '../styles/page-grid.css';
+import chatbotYaml from '../data/chatbot.yml';
+import type { ChatbotData } from '../types/content';
+
+const chatbotData = chatbotYaml as ChatbotData;
 ---
 
 {/* 元: chatbot.astro -> chatbot.astro */}
@@ -100,7 +102,7 @@ const chatbotData = data;
             <h4 class="mb-3 font-semibold text-white">💡 よくある質問</h4>
             <div class="space-y-2">
               {
-                chatbotData.quickQuestions.map((q: any) => (
+                chatbotData.quickQuestions.map((q: string) => (
                   <button class="quick-question w-full rounded-lg bg-primary-600/20 p-3 text-left text-sm text-primary-200 transition-colors hover:bg-primary-600/30">
                     {q}
                   </button>
@@ -113,279 +115,13 @@ const chatbotData = data;
     </section>
   </div>
 
-  <!-- Layout & Chat Scripts -->
-  <script is:inline>
-    // ===== Layout sizing =====
-    function adjustChatbotLayoutHeight() {
-      const chatbotLayout = document.getElementById('chatbot-layout');
-      const chatContainer = document.getElementById('chat-container');
-      if (!chatbotLayout) return;
-      const rect = chatbotLayout.getBoundingClientRect();
-      const target = Math.max(320, window.innerHeight - rect.top - 8);
-      chatbotLayout.style.height = target + 'px';
-      chatbotLayout.classList.add('chatbot-layout--fixed');
-      if (chatContainer) chatContainer.style.height = target + 'px';
-    }
-    function scheduleAdjustments() {
-      adjustChatbotLayoutHeight();
-      setTimeout(adjustChatbotLayoutHeight, 150);
-      setTimeout(adjustChatbotLayoutHeight, 400);
-    }
-    window.addEventListener('load', scheduleAdjustments);
-    requestAnimationFrame(scheduleAdjustments);
-    window.addEventListener('resize', adjustChatbotLayoutHeight);
-    window.addEventListener('orientationchange', adjustChatbotLayoutHeight);
-    window.addEventListener('visibilitychange', () => {
-      if (!document.hidden) scheduleAdjustments();
-    });
+  <script>
+    import { initChatbotRuntime } from '../scripts/client/chatbotRuntime';
 
-    // ===== Chat / Gradio integration =====
-    const GRADIO_SPACE_URL =
-      'https://genai-app-chatymp-1-1756129226295-304438944339.us-central1.run.app/';
-    let gradioClientPromise = null;
-    const conversationHistory = [];
-    async function loadGradio() {
-      if (!gradioClientPromise) {
-        gradioClientPromise = (async () => {
-          try {
-            const mod = await import('https://esm.sh/@gradio/client');
-            return await mod.Client.connect(GRADIO_SPACE_URL);
-          } catch {
-            // 接続失敗はユーザー向けに静かに扱う
-            return null;
-          }
-        })();
-      }
-      return gradioClientPromise;
-    }
-    async function sendToModel(userMessage) {
-      const client = await loadGradio();
-      if (!client) return 'モデルへ接続できませんでした (一時的な問題)。';
-      // ==== Schema introspection (cache) ====
-      if (!window.__gradioSchema) {
-        try {
-          window.__gradioSchema = await client.view_api?.();
-        } catch {}
-      }
-      const schema = window.__gradioSchema;
-      const endpoint = '/chat';
-      let inputNames = [];
-      if (
-        schema &&
-        schema.endpoints &&
-        schema.endpoints[endpoint] &&
-        Array.isArray(schema.endpoints[endpoint].parameters)
-      ) {
-        inputNames = schema.endpoints[endpoint].parameters.map(p => p.name).filter(Boolean);
-      }
-      const base = userMessage;
-      const historySnapshot = [...conversationHistory];
-      // ChatInterface(type="messages", multimodal=True) では JS クライアントから
-      // [MultimodalData(dict), history(list)] の配列形式が期待される。
-      // MultimodalData は {text: "..."} などの辞書。plain string は ValidationError。
-      const messageObjects = [
-        { text: base },
-        { text: base, mime_type: 'text/plain' },
-        { message: base }, // 念のため
-        { prompt: base },
-      ];
-      if (inputNames.length === 1) {
-        // もしスキーマ上単一入力名が与えられている場合、ラップ辞書をそのキーに入れる形式も試行
-        const n = inputNames[0];
-        messageObjects.push({ [n]: { text: base } });
-      }
-      const historyArray = historySnapshot.map(m => ({ role: m.role, content: m.content }));
-      const attempts = [
-        ...messageObjects.map(m => [m, historyArray]),
-        // 念のためヒストリ無し (Gradio が内部で空配列補完する場合)
-        ...messageObjects.map(m => [m, []]),
-      ];
-      function pickVal(result) {
-        const root = result && (result.data ?? result);
-        // 配列(多重) -> 文字列配列抽出 & 連結
-        if (Array.isArray(root)) {
-          try {
-            const flat = root.flat
-              ? root.flat(Infinity)
-              : (function fl(a) {
-                  return a.reduce((o, v) => o.concat(Array.isArray(v) ? fl(v) : v), []);
-                })(root);
-            const strings = flat.filter(s => typeof s === 'string');
-            if (strings.length) {
-              return strings.join('').replace(/\n/g, '\n');
-            }
-          } catch {}
-        }
-        const arr = Array.isArray(root) ? root : [root];
-        for (const item of arr) {
-          if (item == null) continue;
-          if (typeof item === 'string' && item.trim()) return item;
-          if (typeof item === 'object') {
-            for (const k of ['text', 'answer', 'output', 'response', 'generated_text', 'content']) {
-              if (typeof item[k] === 'string' && item[k].trim()) return item[k];
-            }
-          }
-        }
-        try {
-          return JSON.stringify(root);
-        } catch {
-          return String(root);
-        }
-      }
-      for (const payload of attempts) {
-        try {
-          const result = await Promise.race([
-            client.predict(endpoint, payload),
-            new Promise((_, rej) => setTimeout(() => rej(new Error('timeout:18s')), 18000)),
-          ]);
-          return pickVal(result);
-        } catch {}
-      }
-      return '推論エラーが発生しました。';
-    }
-    function now() {
-      return new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
-    }
-    const chatMessages = document.getElementById('chat-messages');
-    const chatInput = document.getElementById('chat-input');
-    const sendBtn = document.getElementById('send-btn');
-    function appendNode(node) {
-      if (!chatMessages) return;
-      chatMessages.appendChild(node);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-    function escapeText(s) {
-      return s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
-    }
-    // ========= Message bubble helpers =========
-    function createWrapper() {
-      const wrap = document.createElement('div');
-      wrap.className = 'flex items-start space-x-3';
-      return wrap;
-    }
-    function renderUserBubble(text) {
-      const wrap = createWrapper();
-      wrap.innerHTML = `<div class='flex-1 flex justify-end'><div><div class='rounded-2xl bg-gradient-to-r from-primary-500 to-accent-pink p-3 backdrop-blur-sm'><p class='text-white'></p></div><p class='text-xs text-primary-400 mt-1 text-right'>${now()}</p></div></div><div class='flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-accent-cyan to-accent-neon'><span class='text-sm'>👤</span></div>`;
-      const p = wrap.querySelector('p.text-white');
-      if (p) p.textContent = text;
-      return wrap;
-    }
-    function renderAssistantPending(id) {
-      const wrap = createWrapper();
-      wrap.innerHTML = `<div id='${id}' class='flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-primary-500 to-accent-pink'><span class='text-sm'>🎯</span></div><div class='flex-1'><div class='rounded-2xl bg-primary-600/20 p-3 backdrop-blur-sm'><p class='text-primary-300 animate-pulse'>生成中...</p></div><p class='text-xs text-primary-400 mt-1'>${now()}</p></div>`;
-      return wrap;
-    }
-    function replaceAssistantBubble(id, content) {
-      const node = document.getElementById(id);
-      if (!node) return;
-      const parent = node.parentElement;
-      if (!parent) return;
-      parent.innerHTML = `<div class='flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-primary-500 to-accent-pink'><span class='text-sm'>🎯</span></div><div class='flex-1'><div class='rounded-2xl bg-primary-600/20 p-3 backdrop-blur-sm'><p class='text-white whitespace-pre-line'></p></div><p class='text-xs text-primary-400 mt-1'>${now()}</p></div>`;
-      const p = parent.querySelector('p.text-white');
-      if (p) p.textContent = content;
-    }
-    function normalizeOutput(r) {
-      if (typeof r !== 'string') return String(r ?? '');
-      const t = r.trim();
-      if (t.startsWith('[')) {
-        try {
-          const parsed = JSON.parse(t);
-          const flat = (function fl(a) {
-            return Array.isArray(a) ? a.reduce((o, v) => o.concat(fl(v)), []) : [a];
-          })(parsed);
-          const strings = flat.filter(s => typeof s === 'string');
-          if (strings.length) return strings.join('').replace(/\n/g, '\n');
-        } catch {}
-      }
-      return r.replace(/\n/g, '\n');
-    }
-    // ========= Send queue / processing =========
-    const sendQueue = [];
-    let processing = false;
-    function setUiBusy(busy) {
-      if (sendBtn) sendBtn.disabled = busy;
-      if (chatInput) chatInput.disabled = busy;
-    }
-    async function processQueue() {
-      if (processing) return;
-      processing = true;
-      setUiBusy(true);
-      while (sendQueue.length) {
-        const text = sendQueue.shift();
-        await handleSendCore(text);
-      }
-      setUiBusy(false);
-      processing = false;
-    }
-    function enqueueSend(text) {
-      sendQueue.push(text);
-      processQueue();
-    }
-    async function handleSendCore(raw) {
-      const text = raw;
-      conversationHistory.push({ role: 'user', content: text });
-      appendNode(renderUserBubble(escapeText(text)));
-      const typingId = 'typing-' + crypto.randomUUID();
-      appendNode(renderAssistantPending(typingId));
-      let response = '';
-      try {
-        response = await sendToModel(text);
-      } catch {
-        response = 'エラーが発生しました。';
-      }
-      const normalized = normalizeOutput(response);
-      replaceAssistantBubble(typingId, normalized);
-      conversationHistory.push({ role: 'assistant', content: normalized });
-    }
-    function isBlankInput(v) {
-      return !v || !v.replace(/[\s\u3000]/g, '');
-    }
-    async function handleSend() {
-      if (!chatInput) return;
-      const value = chatInput.value;
-      if (isBlankInput(value)) return;
-      const toSend = value.trim();
-      chatInput.value = '';
-      enqueueSend(toSend);
-    }
-    if (sendBtn) sendBtn.addEventListener('click', handleSend);
-    if (chatInput)
-      chatInput.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-          if (e.shiftKey) {
-            // allow newline
-            return;
-          }
-          e.preventDefault();
-          handleSend();
-        }
-      });
-    document.querySelectorAll('.quick-question').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (chatInput) {
-          chatInput.value = btn.textContent || '';
-          handleSend();
-        }
-      });
-    });
+    initChatbotRuntime();
   </script>
 
   <style>
-    .arch-page-grid {
-      --arch-max: 1100px;
-      width: 100%;
-      max-width: var(--arch-max);
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      row-gap: clamp(3rem, 6vh, 4.5rem);
-      padding-inline: clamp(1rem, 2.5vw, 2rem);
-    }
-    @media (max-width: 720px) {
-      .arch-page-grid {
-        row-gap: 3.25rem;
-      }
-    }
     .chatbot-layout {
       gap: 1.5rem;
     }

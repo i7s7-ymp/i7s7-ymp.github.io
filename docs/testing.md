@@ -2,12 +2,12 @@
 
 ## Layers
 
-| Layer  | Tool                      | Status          |
-| ------ | ------------------------- | --------------- |
-| Types  | `astro check`             | Enforced in CI  |
-| Lint   | ESLint + Prettier         | Enforced in CI  |
-| Visual | Playwright (support page) | Manual / pre-PR |
-| Build  | `astro build`             | CI deploy gate  |
+| Layer  | Tool                         | Status          |
+| ------ | ---------------------------- | --------------- |
+| Types  | `astro sync && tsc --noEmit` | Enforced in CI  |
+| Lint   | ESLint + Prettier            | Enforced in CI  |
+| Visual | Playwright (support page)    | Manual / pre-PR |
+| Build  | `astro build`                | CI deploy gate  |
 
 ## Commands
 

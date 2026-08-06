@@ -3,28 +3,17 @@ import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import { computeUnifiedScale } from '../lib/chart/scale';
 import CloudArchCard from '../components/CloudArchCard.astro';
-// @ts-ignore
-import data from '../data/support.yml';
+import '../styles/page-grid.css';
+import supportData from '../data/support.yml';
+import type {
+  SupportCloudArchitecture,
+  SupportData,
+  SupportExperienceItem,
+} from '../types/content';
 
-interface ExperienceItem {
-  title: string;
-  category?: string[]; // 複数カテゴリ
-  architecture?: string; // 単一パターン
-  description?: string;
-  uses?: number; // (仕様#3 未決定: 現状は1と同義)
-}
-// REFACTOR-STAGE2: experiences 読み込み → 汎用 data adapter 化検討 (将来 /src/lib/data/experiences.ts)
-const experiences: ExperienceItem[] = (data as any).experiences ?? [];
-interface CloudArchCard {
-  id: string;
-  title: string;
-  summary: string;
-  image?: string;
-  services?: string[];
-  year?: number;
-  provider?: string;
-}
-const cloudArchitectures: CloudArchCard[] = (data as any).cloudArchitectures ?? [];
+const data = supportData as SupportData;
+const experiences: SupportExperienceItem[] = data.experiences ?? [];
+const cloudArchitectures: SupportCloudArchitecture[] = data.cloudArchitectures ?? [];
 
 // クラウドカテゴリ棒グラフは廃止 (ユーザー要求)。関連ロジック削除。
 
@@ -99,62 +88,9 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
   />
   {/** クラウド棒グラフ UI/トグル削除済み **/}
   <script>
-    // @ts-nocheck 単一プロバイダ版: バー/ラベル相互ハイライト
-    document.addEventListener('DOMContentLoaded', () => {
-      function attachChartInteractions(chartSelector) {
-        const chartEl = document.querySelector(chartSelector);
-        if (!chartEl) return;
-        const bars = Array.from(chartEl.querySelectorAll('.bar-box'));
-        const labels = Array.from(chartEl.querySelectorAll('.bar-labels .x-label'));
-        const activate = id => {
-          bars.forEach(b => b.classList.toggle('active', !!id && b.dataset.id === id));
-          labels.forEach(l => {
-            const on = !!id && l.dataset.id === id;
-            l.classList.toggle('active', on);
-            l.classList.toggle('glow', on); // 追加: 光るエフェクト
-          });
-        };
-        const clear = () => activate(null);
-        bars.forEach(b => {
-          const id = b.dataset.id || '';
-          const hit = b.querySelector('.bar-hit');
-          if (hit) hit.tabIndex = 0;
-          ['mouseenter', 'focus'].forEach(ev => b.addEventListener(ev, () => activate(id)));
-          ['mouseleave', 'blur'].forEach(ev => b.addEventListener(ev, clear));
-          b.addEventListener('click', () => activate(id));
-          b.addEventListener('keydown', e => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              activate(id);
-            }
-            if (e.key === 'Escape') clear();
-          });
-        });
-        labels.forEach(l => {
-          const id = l.dataset.id || '';
-          ['mouseenter', 'focus'].forEach(ev => l.addEventListener(ev, () => activate(id)));
-          ['mouseleave', 'blur'].forEach(ev => l.addEventListener(ev, clear));
-          l.addEventListener('click', () => activate(id));
-          l.addEventListener('keydown', e => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              activate(id);
-            } else if (e.key === 'Escape') clear();
-          });
-        });
-      }
-      // アプリケーションパターンのみ
-      attachChartInteractions('.pchart');
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') {
-          document
-            .querySelectorAll('.badge-pill.active, .badge-pill.glow, .bar-box.active')
-            .forEach(el => {
-              el.classList.remove('active', 'glow');
-            });
-        }
-      });
-    });
+    import { initSupportChartInteractions } from '../scripts/client/supportChartInteractions';
+
+    initSupportChartInteractions();
   </script>
 
   {/** Parity harness removed */}
@@ -285,23 +221,6 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
     grid-template-columns: repeat(auto-fit, minmax(var(--min), 1fr));
     align-items: start;
   }
-  /* Unified page grid & vertical rhythm */
-  .arch-page-grid {
-    --arch-col-gap: clamp(1.5rem, 2vw, 2rem);
-    --arch-max: 1100px;
-    width: 100%;
-    max-width: var(--arch-max);
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    row-gap: clamp(3rem, 6vh, 4.5rem); /* セクション間間隔統一 */
-    padding-inline: clamp(1rem, 2.5vw, 2rem);
-  }
-  .arch-block > h3 {
-    margin-top: 0; /* ブロック先頭で上マージン除去 */
-    margin-bottom: 1.25rem; /* 見出し下余白統一 */
-    line-height: 1.15;
-  }
   /* パターンチャート内で見出し直後の余白を .mb-6 で指定 → 調整: utility を上書き */
   #pattern-chart-title.mb-6 {
     margin-bottom: 1.25rem !important;
@@ -310,9 +229,6 @@ const patternLabel = (name: string) => patternLabelMap[name] || name;
     margin-bottom: 1.25rem !important;
   }
   @media (max-width: 720px) {
-    .arch-page-grid {
-      row-gap: 3.25rem;
-    }
     .arch-block > h3 {
       margin-bottom: 1rem;
     }

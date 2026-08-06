@@ -11,10 +11,7 @@
     "scripts/**/*.mjs",
     "scripts/**/*.ts"
   ],
-  "exclude": [
-    "dist",
-    "node_modules"
-  ],
+  "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "strict": true,
     "noUnusedLocals": true,

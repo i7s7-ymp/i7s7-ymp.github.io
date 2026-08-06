@@ -3,12 +3,11 @@
 
 declare module '*.yml' {
 	// 型を細かく付けたい場合は適宜 interface を差し替える
-	const value: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+	const value: unknown;
 	export default value;
 }
 
 declare module '*.yaml' {
-	const value: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+	const value: unknown;
 	export default value;
 }
-

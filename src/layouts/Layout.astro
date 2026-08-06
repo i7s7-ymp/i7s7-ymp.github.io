@@ -409,11 +409,7 @@ const {
           radial-gradient(circle at 38% 82%, rgba(168, 85, 247, 0.18), transparent 65%),
           radial-gradient(circle at 72% 18%, rgba(14, 165, 233, 0.17), transparent 60%),
           /* grid lines */
-            repeating-linear-gradient(
-              90deg,
-              rgba(255, 255, 255, 0.035) 0 2px,
-              transparent 2px 120px
-            ),
+          repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 120px),
           repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0 2px, transparent 2px 90px);
         background-size:
           100% 100%,
@@ -471,14 +467,14 @@ const {
           ),
           radial-gradient(circle at 44% 78%, rgba(168, 85, 247, 0.5) 0%, rgba(168, 85, 247, 0) 46%),
           /* horizontal scan band */
-            linear-gradient(
+          linear-gradient(
               180deg,
               rgba(255, 255, 255, 0) 0%,
               rgba(255, 255, 255, 0.08) 50%,
               rgba(255, 255, 255, 0) 100%
             ),
           /* hex-ish lattice using three angled line grids */
-            repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 42px),
+          repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 42px),
           repeating-linear-gradient(60deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 48px),
           repeating-linear-gradient(120deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 48px);
         filter: blur(10px) saturate(135%) contrast(105%);
@@ -667,66 +663,9 @@ const {
       }
     </style>
     <script>
-      function updateTime() {
-        const now = new Date();
-        const t = now.toLocaleTimeString('ja-JP', {
-          hour12: false,
-          hour: '2-digit',
-          minute: '2-digit',
-        });
-        const el = document.getElementById('current-time');
-        if (el) el.textContent = t;
-      }
-      function updateActiveNav() {
-        const p = window.location.pathname;
-        document.querySelectorAll('.nav-link').forEach(a => {
-          a.classList.remove('active');
-          if (a.getAttribute('href') === p) a.classList.add('active');
-        });
-      }
-      function createParticles() {
-        const container = document.querySelector('.fixed.inset-0');
-        if (!container) return;
-        for (let i = 0; i < 4; i++) {
-          setTimeout(() => {
-            const d = document.createElement('div');
-            d.className = 'absolute w-1 h-1 bg-accent-cyan rounded-full opacity-60 animate-ping';
-            d.style.left = Math.random() * 100 + '%';
-            d.style.top = Math.random() * 100 + '%';
-            d.style.animationDelay = Math.random() * 2 + 's';
-            container.appendChild(d);
-            setTimeout(() => d.remove(), 4000);
-          }, i * 900);
-        }
-      }
-      function setupDeviceAdvisory() {
-        const banner = document.getElementById('device-advisory');
-        const closeBtn = document.getElementById('device-advisory-close');
-        if (!banner) return;
-        const mqDesktop = window.matchMedia('(min-width: 1024px)');
-        function refreshVisibility() {
-          if (!banner) return;
-          if (mqDesktop.matches || localStorage.getItem('hideDeviceAdvisory') === '1') {
-            banner.style.display = 'none';
-          } else {
-            banner.style.display = 'flex';
-          }
-        }
-        refreshVisibility();
-        mqDesktop.addEventListener('change', refreshVisibility);
-        closeBtn?.addEventListener('click', () => {
-          localStorage.setItem('hideDeviceAdvisory', '1');
-          refreshVisibility();
-        });
-      }
-      document.addEventListener('DOMContentLoaded', () => {
-        updateTime();
-        updateActiveNav();
-        createParticles();
-        setupDeviceAdvisory();
-        setInterval(updateTime, 1000 * 30);
-      });
-      document.addEventListener('astro:page-load', updateActiveNav);
+      import { initLayoutRuntime } from '../scripts/client/layoutRuntime';
+
+      initLayoutRuntime();
     </script>
   </body>
 </html>
