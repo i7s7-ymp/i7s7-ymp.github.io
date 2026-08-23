@@ -1,307 +1,332 @@
-# i7s7-ymp Portfolio
+# Portfolio v2
 
 [![Deploy Status](https://github.com/i7s7-ymp/i7s7-ymp.github.io/workflows/Deploy%20Astro%20site%20to%20GitHub%20Pages/badge.svg)](https://github.com/i7s7-ymp/i7s7-ymp.github.io/actions)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
-[![Astro](https://img.shields.io/badge/Astro-5.12-orange.svg)](https://astro.build/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-blue.svg)](https://tailwindcss.com/)
+[![Astro](https://img.shields.io/badge/Astro-5.17-orange.svg)](https://astro.build/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
 
-ポップ × ダークシティ調の控えめネオンを組み合わせた **静的ポートフォリオサイト**。グラデーション背景はパフォーマンス優先で CSS レイヤ & 最小限アニメのみ。
+主要経歴、コアスキル、個人活動・作品を、情報の理解しやすさと物語性の両方で伝える個人ポートフォリオです。
 
-🌐 **Live Site**: [https://i7s7-ymp.github.io](https://i7s7-ymp.github.io)
+`portfolio_v2`では、現在の静的サイトを段階的に刷新します。舞台は2126年の夏の夜。現在の生活と技術が自然に延長された、可愛く、綺麗で、少しギークな近未来を描きます。
 
-## � Docs
+- Production: [https://i7s7-ymp.github.io](https://i7s7-ymp.github.io)
+- Integration branch: `portfolio_v2`
+- Status: design specification / implementation preparation
 
-| Topic             | Doc                     |
-| ----------------- | ----------------------- |
-| Architecture      | `docs/architecture.md`  |
-| Design System     | `docs/design-system.md` |
-| Testing & Quality | `docs/testing.md`       |
-| Runbook / Ops     | `docs/runbook.md`       |
-| Contributing      | `docs/contributing.md`  |
+## Goals
 
-## � Quick Start
+V2の最優先事項は、デザインそのものではなく、訪問者が短時間で次の内容を理解できることです。
 
-前提: Node.js 18+, npm, Git
+1. どのような経歴を持つ人物か
+2. 何を得意とし、何を根拠にそう言えるか
+3. どのような個人活動・作品を作っているか
+4. 技術とデザインにどのような姿勢で向き合っているか
+
+世界観や3D演出は、情報を隠す装飾ではなく、これらを記憶に残すための補助として扱います。
+
+## Experience principles
+
+- **Content first**: 経歴・スキル・作品を常に主役にする
+- **Grounded future**: 現実の技術、生活、服装の延長として2126年を表現する
+- **Cute, clean, geeky**: 可愛さ、清潔感、技術的な精密さを両立する
+- **Progressive enhancement**: 静止画だけでも情報と操作が成立する
+- **HTML first**: 見出し、本文、CTA、ナビゲーションを画像や動画へ焼き込まない
+- **Motion with purpose**: 演出は一度再生したら停止し、閲覧と端末性能を妨げない
+- **Evidence over labels**: スキル名だけでなく、成果・事例・判断材料を併記する
+
+## Information architecture
+
+| Route      | Purpose                                    | Primary content                   |
+| ---------- | ------------------------------------------ | --------------------------------- |
+| `/`        | 世界観と人物像を提示し、主要情報へ導く     | Hero、要約、主要導線              |
+| `/work`    | 個人活動・作品を魅力と根拠の両面から伝える | Selected work、case study         |
+| `/about`   | 経歴と人物像を理解してもらう               | Experience、profile、values       |
+| `/skills`  | 4つのコアスキルと説得材料を整理する        | Core skills、sub-skills、evidence |
+| `/contact` | 連絡手段を迷わず選べるようにする           | Contact、social links             |
+
+プロフィール回答AIは独立ページではなく、全ページから開けるポップアップとして実装する予定です。AIはコンテンツを代替せず、既に掲載されている情報へ案内する補助役とします。
+
+## TOP hero
+
+### Scene
+
+夏の夜のコンビニ前を、固定カメラで捉えたワンシーンです。背景、看板、人物、UIは同じ画角を共有します。
+
+1. 少年が画面右から自転車で登場する
+2. 少年が空を見上げ、古典的な方位確認を行う
+3. 少年が切り返し、カメラへ近づきながら右下へ退出する
+4. 03で左側にポートフォリオ情報を表示する
+5. コンビニからNIGHT CARRERがゴミ捨てに出てくる
+6. 最終状態でアニメーションを停止する
+
+ヘッダーとナビゲーションは常時HTMLで表示します。左側のプロジェクト情報は03以降に表示し、04でも維持します。
+
+### Characters
+
+#### MAIN RIDER
+
+未来技術を理解した上で、修理可能で構造を把握できる古典技術を好むテック少年です。
+
+- 機械式腕時計
+- 通常の結ぶ靴紐
+- ボタン式の右裾ストラップ
+- 修理可能な縫製と最小限のデバイス
+- クラシックな機械構造を残した自転車
+
+#### NIGHT CARRER
+
+少年と同年代。流行に影響されやすい文系タイプですが、仕事には真面目に取り組みます。
+
+- 低彩度のカーキ、チャコール、エクリュ
+- 整った仕事着と実用的なロングエプロン
+- 背面スリット
+- 交換可能なゴム製ノータイ靴紐
+- 技術を意識せず、普及品として自然に利用する
+
+## Rendering strategy
+
+Heroはフルリアルタイム3Dにも、全面プリレンダー動画にも寄せません。固定カメラを活かしたハイブリッド構成を採用します。
+
+```text
+HTML / CSS
+  Navigation, portfolio copy, CTA
+
+Foreground alpha layer
+  Curb, door frame, billboard base
+
+Transparent realtime 3D canvas
+  Characters, bicycle, door, trash bags, contact shadows
+
+Pre-rendered background plate
+  Store, interior, road, residential area, sky, lighting
+```
+
+### Runtime tiers
+
+| Tier                        | Experience                            |
+| --------------------------- | ------------------------------------- |
+| High                        | 静止背景 + リアルタイム3Dキャラクター |
+| Standard / mobile           | 端末別にレンダリングした短い動画      |
+| Reduced motion / data saver | 最終状態の静止画                      |
+
+初期表示では背景posterとHTMLを先に描画し、3DコードとGLBはLCP後に遅延読み込みします。リアルタイムアニメーションは一度だけ再生し、最終状態でレンダーループを停止します。
+
+## Technology
+
+### Current
+
+- Astro 5
+- TypeScript
+- Tailwind CSS
+- YAML content
+- Static export
+- GitHub Pages / GitHub Actions
+
+### Planned for v2
+
+- Three.js with a WebGL 2 production baseline
+- glTF / GLB character assets
+- Meshopt geometry compression
+- KTX2 / Basis Universal texture compression
+- AVIF / WebP background plates
+- WebM / MP4 fallback video
+- HTML/CSS overlay for readable and accessible content
+- `prefers-reduced-motion` and data-saving fallbacks
+- Optional scene breakdown for inspecting camera, wireframe and LOD
+
+WebGPUはHeroの必須条件にしません。技術デモとして導入する場合も、WebGL 2または静止画へフォールバックできる構成にします。
+
+## Performance budget
+
+数値は実装と実機計測を通して更新します。
+
+| Metric                       |                     Target |
+| ---------------------------- | -------------------------: |
+| LCP                          |           `<= 2.5s` at p75 |
+| INP                          |          `<= 200ms` at p75 |
+| CLS                          |            `<= 0.1` at p75 |
+| Initial Hero poster          |                 `<= 500KB` |
+| Deferred 3D assets / desktop |                   `<= 6MB` |
+| Deferred 3D assets / mobile  |                   `<= 3MB` |
+| Visible triangles            |                  `<= 120k` |
+| Draw calls                   |                    `<= 50` |
+| Canvas DPR                   |                  `1.0–1.5` |
+| Mobile animation             | stable `30fps` or fallback |
+
+Performance rules:
+
+- 3Dライブラリを初期JavaScriptへ含めない
+- Hero領域が非表示になったらレンダリングを停止する
+- タブが非表示になったらアニメーションを停止する
+- レイアウト寸法を先に確保し、読み込み後の移動を発生させない
+- MobileはDesktopの単純な切り抜きではなく、専用カメラとLODを使用する
+- 品質よりフレーム安定性を優先し、端末に応じて解像度を下げる
+
+## Asset plan
+
+### Environment
+
+- [ ] Desktop background plate
+- [ ] Tablet background plate
+- [ ] Mobile background plate
+- [ ] Foreground occlusion mask
+- [ ] Store exterior shell
+- [ ] Shallow interior shelf set
+- [ ] Billboard and display surface
+- [ ] Automatic door
+- [ ] Road, curb and contact-shadow plane
+- [ ] Distant residential matte
+
+### Characters and props
+
+- [x] MAIN RIDER design / three-view sheet
+- [x] NIGHT CARRER design / three-view sheet
+- [ ] MAIN RIDER production model and rig
+- [ ] NIGHT CARRER production model and rig
+- [ ] Bicycle model and rig
+- [ ] Trash bag props
+- [ ] Direction-checking prop
+- [ ] LOD variants
+
+### Motion
+
+- [x] Hero sequence and fixed-camera direction
+- [ ] Timing animatic
+- [ ] Rider enter / orient / turn / diagonal exit clips
+- [ ] Night Carrer door / walk / glance clips
+- [ ] Door, wheels, hair, clothing and trash-bag secondary motion
+- [ ] Reduced-motion still state
+
+## Repository
+
+```text
+src/
+  components/       Astro components
+  data/             YAML content
+  layouts/          Shared layouts
+  pages/            Routes
+  scripts/client/   Client-side behavior
+  styles/           Tokens and shared styles
+public/
+  images/           Optimized 2D assets
+  models/           Compressed GLB assets
+  textures/         KTX2 and environment textures
+  videos/           Device-specific fallback video
+docs/               Architecture, design and operation docs
+tests/visual/       Playwright visual regression tests
+```
+
+Asset directories listed above will be added only when the corresponding production assets exist. Placeholder binaries are not committed.
+
+## Development
+
+Requirements:
+
+- Node.js 18+
+- npm
+- Git
 
 ```bash
 git clone https://github.com/i7s7-ymp/i7s7-ymp.github.io.git
 cd i7s7-ymp.github.io
+git switch portfolio_v2
 npm install
 npm run dev
 ```
 
-http://localhost:3000 を開く。
+Open [http://localhost:3000](http://localhost:3000).
 
-## 🏗 Overview
-
-- Astro static export / GitHub Pages deploy
-- Content = YAML (versioned, reviewable)
-- Tailwind + tokens.css (design tokens集中)
-- 背景: 2 CSS アニメレイヤ (低彩度 / prefers-reduced-motion 対応)
-- Dark only / 最小クライアント JS ポリシー
-
-詳細は docs/ を参照。ライセンス: [MIT](LICENSE)
-
-## 🚀 Branch & Release Workflow
-
-| 種別           | 命名例                | 備考                 |
-| -------------- | --------------------- | -------------------- |
-| 機能           | `feat/short-desc`     | UI/データ追加        |
-| 修正           | `fix/issue-###`       | Issue 番号紐付け推奨 |
-| デザイン微調整 | `chore/style-bg-tune` | アニメ/トークン調整  |
-| ドキュメント   | `docs/readme-runbook` | README / ガイド更新  |
-
-main へマージで GitHub Actions が自動ビルド & Pages 反映。
-
-## � Performance / Accessibility / Quality Gates
-
-| 指標            | 目標 (参考値)        | 備考                             |
-| --------------- | -------------------- | -------------------------------- |
-| LCP             | < 2.5s (初回視認)    | 画像圧縮 / クリティカル CSS 最小 |
-| CLS             | < 0.05               | 動的挿入時は固定サイズ確保       |
-| Lighthouse Acc. | 90+                  | aria 属性・コントラスト維持      |
-| JS Bundle       | ~最小 (Astro 部分的) | 不要クライアント JS 回避         |
-
-運用ルール: 新規コンポーネントは SSR (no client hydration) がデフォルト。必要なときのみ `client:*` 指定。
-
-## 🧾 Runbook (代表シナリオ)
-
-| タスク                 | 手順概要                                                              |
-| ---------------------- | --------------------------------------------------------------------- |
-| 新しい実績カード追加   | `achievements.yml` 末尾へ追加 → Home/Achievements ページ表示確認      |
-| ソーシャルリンク順変更 | `social.yml` 並び替え → dev 確認                                      |
-| 背景色微調整           | `Layout.astro` の `.main-scroll` 基底グラデのみ編集 → スクショ添付 PR |
-| 画像追加               | `public/` へ配置 (SVG 推奨) → ページ参照                              |
-| 図差し替え             | 最適化 SVG で上書き → PR に Before/After                              |
-| README 更新            | 該当セクション編集 → `docs/` への二重記載避ける                       |
-
-## 🐞 Troubleshooting
-
-| 症状                 | 原因候補                           | 解決策                                                       |
-| -------------------- | ---------------------------------- | ------------------------------------------------------------ |
-| `npm run dev` 失敗   | 破損した npm キャッシュ / 依存破損 | `rm -rf node_modules package-lock.json && npm install`       |
-| YAML import error    | 型宣言未含有                       | `src/types/yaml.d.ts` / `tsconfig.json` の include を確認    |
-| 予期せぬ FOUC        | 背景アニメ計算コスト               | アニメ duration 延長 or opacity 減                           |
-| 文字コントラスト低下 | 背景輝度上げすぎ                   | radial alpha / sweep opacity を下げる                        |
-| Visual test 差分多発 | キャプチャ基準古い                 | 差分確認後 `npx playwright test --update-snapshots` (許容時) |
-
-## 🗑️ Removed / Deprecated
-
-| 要素                   | 状態                    | 理由                                   |
-| ---------------------- | ----------------------- | -------------------------------------- |
-| Uptime ピル            | 削除                    | 実用価値低 / ヘッダ密度削減            |
-| Geek モードトグル      | 削除 (スタイル残骸一部) | 切替頻度低 / UI シンプル化             |
-| 自動図生成パイプライン | 廃止                    | 決定性/保守性の課題 (上記ポリシー参照) |
-
-将来クリーンアップ: 未使用 `theme-geek` スタイルを段階的削除予定 (残しているのは再導入検証容易化のため)。
-
-## 🔐 Security / Dependency Updates
-
-Dependabot (未設定) 代替として月次で: `npm outdated` → minor/patch 更新 → ビルド / ビジュアルテスト → PR。
-
-## 🧭 PR Checklist (変更方針)
-
-1. 不要なクライアント JS を追加していないか
-2. トークンを使わず直値を足していないか
-3. 背景アニメ輝度/彩度が可読性を損なっていないか
-4. YAML スキーマ破壊 (既存キー削除) を行っていないか
-5. `npm run check` が success か
-6. (UI変更) スクショ / visual diff を PR に添付したか
-7. ドキュメント必要なら README 更新含めたか
-
----
-
-運用に関する不足点・自動化希望があれば Issue で提案してください。
-
-## 🔧 Configuration
-
-### 開発環境
-
-プロジェクトはDev Containerに対応しています：
+### Commands
 
 ```bash
-# VS CodeでDev Containerを開く
-code .
-# "Reopen in Container"を選択
+npm run dev          # Local development server
+npm run type-check   # Astro sync + TypeScript
+npm run lint         # ESLint
+npm run format:check # Prettier check
+npm run build        # Production build
+npm run check        # Type check + lint + format
+npm run test:visual  # Playwright visual regression
 ```
 
-### 環境変数
+## Branch workflow
 
-現在、環境変数は使用していませんが、必要に応じて`.env`ファイルを作成してください。
+| Branch         | Role                                           |
+| -------------- | ---------------------------------------------- |
+| `main`         | 現行Production。マージでGitHub Pagesへデプロイ |
+| `portfolio_v2` | V2の統合ベースブランチ                         |
+| `feat/v2-*`    | V2機能を分割して実装する作業ブランチ           |
+| `fix/v2-*`     | V2固有の修正ブランチ                           |
+| `docs/v2-*`    | V2ドキュメント更新                             |
 
-### ポート設定
+V2が公開条件を満たすまで、`main`は現行サイトとして維持します。
 
-- **開発サーバー**: `3000` (astro.config.mjsで設定)
-- **プレビューサーバー**: `4321` (Astroデフォルト)
+## Roadmap
 
-## 🚢 Deployment
+### Phase 0 — Foundation
 
-### 自動デプロイ
+- [x] `portfolio_v2`ベースブランチ
+- [x] V2 README
+- [ ] ADRとアセット命名規則
+- [ ] ページ構成とコンテンツスキーマ
 
-GitHub Actionsを使用してmainブランチへのプッシュ時に自動デプロイされます：
+### Phase 1 — Content-first UI
 
-1. コードをmainブランチにプッシュ
-2. GitHub Actionsが自動実行
-3. サイトがGitHub Pagesにデプロイ
+- [ ] V2デザイントークン
+- [ ] Header / navigation
+- [ ] Work / About / Skills / Contactの静的実装
+- [ ] 経歴・スキル・作品データの移行
+- [ ] AIチャットのポップアップ化
 
-### 手動デプロイ
+### Phase 2 — Static Hero
 
-```bash
-# ビルド
-npm run build
+- [ ] レスポンシブ背景画像
+- [ ] 固定カメラ構図
+- [ ] 03で表示されるHTMLコピー
+- [ ] 静止画だけで成立するフォールバック
 
-# 生成されたdist/フォルダをデプロイ先にアップロード
-```
+### Phase 3 — Realtime characters
 
-## 🧪 Quality Assurance
+- [ ] 3Dアセットパイプライン
+- [ ] 透明Canvas合成
+- [ ] 遮蔽マスクと接地影
+- [ ] Heroシーケンス
+- [ ] 動画フォールバック
 
-### 静的解析
+### Phase 4 — Quality
 
-```bash
-# TypeScript型チェック (astro sync + tsc)
-npm run type-check
+- [ ] 実機別LODと動的解像度
+- [ ] Core Web Vitals計測
+- [ ] アクセシビリティ監査
+- [ ] Visual regression
+- [ ] Cross-browser verification
 
-# ESLint (JavaScript/TypeScript)
-npm run lint
+### Phase 5 — Release
 
-# Prettier (フォーマット)
-npm run format:check
+- [ ] コンテンツ最終確認
+- [ ] Production asset audit
+- [ ] `portfolio_v2`から`main`への移行計画
+- [ ] Release and post-release monitoring
 
-# 全チェック実行
-npm run check
-```
+## Definition of done
 
-### CI/CD Pipeline
+- 3Dまたは動画を読み込めなくても主要情報と全導線を利用できる
+- HeroコピーがHTMLとして読み上げ・選択・検索できる
+- Keyboardのみで主要ページとAIチャットを操作できる
+- `prefers-reduced-motion`で不要な移動が停止する
+- MobileとDesktopの両方でCore Web Vitals目標を満たす
+- 主要経歴、4つのコアスキル、個人活動作品が3クリック以内に到達できる
+- `npm run check`とProduction buildが成功する
+- UI変更にVisual regressionまたは確認用スクリーンショットがある
 
-- ✅ **TypeScript型チェック**
-- ✅ **ESLintコード解析**
-- ✅ **Prettierフォーマット**
-- ✅ **Astroビルド検証**
-- ✅ **自動デプロイ**
+## Documentation
 
-## 📄 Pages Overview
+- [Architecture](docs/architecture.md)
+- [Design system](docs/design-system.md)
+- [Testing](docs/testing.md)
+- [Runbook](docs/runbook.md)
+- [Contributing](docs/contributing.md)
 
-| Page          | Route           | Description                                  |
-| ------------- | --------------- | -------------------------------------------- |
-| Home          | `/`             | プロフィール概要と最近のハイライト           |
-| Architecture  | `/support`      | クラウド / アプリケーションアーキテクチャ    |
-| Achievements  | `/achievements` | 職歴・資格・実績                             |
-| Social Media  | `/social`       | SNSリンクとコンタクト                        |
-| AI Chatbot    | `/chatbot`      | シングルスクリーンのインタラクティブチャット |
-| Design System | `/design`       | デザインユーティリティ & ガイド              |
+既存ドキュメントは現行サイトを説明しています。V2実装に合わせて段階的に更新します。
 
-## 🎨 Design System
+## License
 
-詳細ガイド: `/design` ページにライブプレビュー。
-
-### コアユーティリティ
-
-- `section-card`: 主要セクションコンテナ（グラデ + border + blur + hover scale）
-- `stat-card`: KPI/数値指標カード (section-card 継承)
-- `panel-title` / `gradient-heading-sm`: 見出し用グラデテキスト
-- `badge-pill`: タグ/ラベル表示ピル
-- `subtle-divider`: グラデーション区切り線
-- `hide-scrollbar`: スクロールは保持しつつスクロールバー非表示
-
-### カラートークン (Tailwind 拡張 `accent-*`)
-
-`pink | cyan | neon | gold | coral | blue | indigo | purple`
-
-例: `text-accent-cyan`, `from-accent-pink to-accent-cyan`, `bg-accent-neon/30`
-
-### テーマ
-
-本サイトは現在 **ダークモード固定** です。以前存在したライトモードおよびテーマトグルUI/スクリプトは削除し、スタイルは `dark` 前提で最適化されています。
-
-### 設計原則
-
-1. レイアウト枠は再利用（section-card）で統一
-2. 動的クラスは `tailwind.config.mjs` の `safelist` へ追加
-3. 未使用クラス速やか削除で CSS を最小化
-4. 色コントラストを確保し可読性維持
-5. 追加ユーティリティは `/design` ページで文書化
-
-### Chart Design Tokens (Stage5)
-
-チャート/統計可視化まわりは `src/styles/tokens.css` に集約された CSS カスタムプロパティで管理しています。ゼロレグリファクタを支える層別けは以下。
-
-| Category              | Prefix / Examples                                                                                                        | Purpose                                    |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
-| Spacing / Axis        | `--chart-axis-left`, `--bar-gap(-md/-sm)`                                                                                | 軸オフセットと群間隔のレスポンシブ制御     |
-| Bar Dimensions        | `--bar-width`, `--h` (inline var)                                                                                        | 棒幅/高さ計算用基準                        |
-| Gradients (Stops)     | `--bar-cyan-start/end`                                                                                                   | 個別色の開始/終了色定義                    |
-| Gradients (Composite) | `--bar-grad-cyan`                                                                                                        | 実際に適用される完成グラデ (fallback 付き) |
-| Shadows               | `--shadow-bar`, `--shadow-bar-hover`, `--shadow-bar-active`, `--shadow-badge-*`, `--shadow-toggle-*`, `--shadow-tooltip` | 影レイヤ統一とホバー/アクティブ差分管理    |
-| Pills / Toggles       | `--pill-bg(-hover/-active)`, `--toggle-bg(-active)`                                                                      | バッジ/トグルのガラスモーフ状態            |
-| Bar Value Tooltip     | `--bar-value-bg`, `--bar-value-border`, `--bar-value-fg`, `--bar-value-bg-alt` ほか                                      | 値ツールチップと high 状態差分             |
-| Note Panel            | `--chart-note-bg`, `--chart-note-border`, `--chart-note-fg`                                                              | 補足説明パネルの背景/枠/文字色             |
-| Grid / Axis Lines     | `--grid-line-gradient`, `--axis-x-gradient`                                                                              | 線のフェードと奥行き感                     |
-| Scrollbar             | `--scrollbar-track-bg`, `--scrollbar-thumb-bg`                                                                           | 横スクロールのダークテーマ調整             |
-| Radius Scale          | `--radius-xs/sm/md/lg/xl/pill`                                                                                           | 一貫した角丸スケール。`pill` は完全円弧    |
-| Blur Scale            | `--blur-xs/sm/md`                                                                                                        | 背景ブラー段階 (ガラス表現)                |
-| Neutral Palette (WIP) | `--neutral-*`                                                                                                            | 将来のテーマ/明度調整用占位                |
-
-利用指針:
-
-1. 直接色値/px値を書かずトークン参照する (段階的テーマ拡張が容易)
-2. 新規トークンはカテゴリーコメント直下に追加し README へ反映
-3. 既存トークン差し替え時は fallback を保持し視覚差分を最小化
-4. DOM 構造変更はトークン完備後に parity harness (support.astro 内) で構造差分ゼロを確認
-
-将来拡張 (案):
-
-- Light / High-contrast バリアントトークンセット
-- Semantic 色層 (例: `--color-positive` -> グラデマッピング) の分離
-- スクリーンショット比較自動化 (Playwright + pixelmatch) でゼロレグ CI
-
-開発時は `tokens.css` を基準に差分レビューすることで、スタイリング意図 (ローカル調整 vs グローバルテーマ拡張) を識別しやすくなります。
-
-## 🗺️ Architecture Diagram Policy
-
-本リポジトリでは以前 **PlantUML + Kroki を用いた自動図生成パイプライン** ( `scripts/gen-arch-diagrams.mjs` と `public/diagrams/generated/` ) を試験導入しましたが、以下の理由で撤廃し、手動メンテナンス方針に統一しました。
-
-- 外部 includes (C4-PlantUML / AWS Icons) の可用性とバージョン揺れによる非決定性
-- CI / ローカル差異 (PlantUML 有無・Java ランタイム) に起因する再現性低下
-- 図の表現品質を細かく調整 (余白整理 / 命名 / ローカライズ) する際に自動再生成が衝突
-- ポートフォリオ用途では “安定した最終アセット” のほうがレビューフロー簡潔
-
-### 現在の運用
-
-| ディレクトリ                 | 役割                                         |
-| ---------------------------- | -------------------------------------------- |
-| `public/diagrams/`           | 手動で最適化した最終 SVG（カードで直接参照） |
-| `public/diagrams/generated/` | (削除済) 旧自動生成成果物置き場。再作成禁止  |
-
-### コントリビューション指針
-
-1. 新規図は任意のツール（例: Excalidraw / Figma / manually edited SVG）で作成し **SVG 最適化** (不要 metadata / inline styles 最小化) を行ってから `public/diagrams/` に追加
-2. 既存図を差し替える場合は視覚差分 (主要レイアウト/要素名称) がある際に PR 説明へ “Before / After” スクリーンショットを添付
-3. `generated` サブディレクトリや PlantUML ソース (`*.puml`) を新規追加しない
-4. 自動化再導入を検討する場合は Issue を立て、決定性確保 (ローカル完全 vendor 化 / icon キャッシュ) の設計提案を添付
-
-### 追加禁止リスト (守れない場合 CI ルール化予定)
-
-- `scripts/gen-arch-diagrams.mjs` の復活
-- `public/diagrams/generated/` 以下の再作成
-- ビルド時に外部ネットワークへ依存する図生成ステップ
-
-これにより、図は “安定アセット” として扱われ、ページビルドは純粋な静的生成を維持します。
-
-## 🤝 Contributing
-
-1. フォークを作成
-2. フィーチャーブランチを作成 (`git checkout -b feature/amazing-feature`)
-3. 変更をコミット (`git commit -m 'Add amazing feature'`)
-4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
-5. Pull Requestを作成
-
-### 開発ガイドライン
-
-- TypeScriptを使用
-- ESLintルールに従う
-- Prettierでフォーマット
-- コミット前に`npm run check`を実行
-
----
-
-Built with ❤️ using [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/)
+[MIT](LICENSE)
