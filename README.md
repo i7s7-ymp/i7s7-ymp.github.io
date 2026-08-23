@@ -33,6 +33,28 @@ V2の最優先事項は、デザインそのものではなく、訪問者が短
 - **Motion with purpose**: 演出は一度再生したら停止し、閲覧と端末性能を妨げない
 - **Evidence over labels**: スキル名だけでなく、成果・事例・判断材料を併記する
 
+## Image boards
+
+以下の画像を、V2の画角、色、ライティング、人物造形、モーション設計の基準とします。画像内の文字やUIをそのまま実装するのではなく、実際のサイトではHTMLとCSSによるアクセシブルな情報表示へ置き換えます。
+
+### TOP hero
+
+![夏の夜のコンビニ前を舞台にしたPortfolio v2のTOP Hero](docs/image-boards/portfolio-v2/top-hero.png)
+
+### Fixed-camera sequence
+
+![固定カメラで描くMAIN RIDERの登場、方角確認、退出とNIGHT CARRERの登場](docs/image-boards/portfolio-v2/top-sequence.png)
+
+### Character model sheets
+
+#### MAIN RIDER
+
+![MAIN RIDERの正面、側面、背面と服装ディテール](docs/image-boards/portfolio-v2/main-rider-model-sheet.png)
+
+#### NIGHT CARRER
+
+![NIGHT CARRERの正面、側面、背面と服装ディテール](docs/image-boards/portfolio-v2/night-carrer-model-sheet.png)
+
 ## Information architecture
 
 | Route      | Purpose                                    | Primary content                   |
