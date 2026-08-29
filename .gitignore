@@ -22,3 +22,19 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Blender automatic backups
+*.blend1
+*.blend2
+*.blend3
+*.blend@
+
+# Blender local work, render outputs, and caches
+blender/work/
+blender/**/work/
+blender/cache/
+blender/**/cache/
+blender/**/sim-cache/
+blender/render-output/
+blender/**/render-output/
+blender/**/scratch/
