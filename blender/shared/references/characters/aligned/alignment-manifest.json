@@ -1,0 +1,171 @@
+{
+  "coordinate_system": {
+    "canvas_px": [
+      1024,
+      1200
+    ],
+    "center_x_px": 512,
+    "floor_y_px": 1050,
+    "pixels_per_meter": 500
+  },
+  "characters": {
+    "main-rider": {
+      "source": "assets/character-references/source/main-rider-turnaround.png",
+      "height_m": 1.74,
+      "views": {
+        "front": {
+          "view": "front",
+          "canvas_px": [
+            1024,
+            1200
+          ],
+          "center_x_px": 512,
+          "floor_y_px": 1050,
+          "height_m": 1.74,
+          "body_height_px": 870,
+          "head_reference_y_px": 180,
+          "pixels_per_meter": 500,
+          "uniform_scale_from_source": 1.167785234899329,
+          "source_anchor_x_px": 320,
+          "source_floor_y_px": 850,
+          "source_crop_px": [
+            0,
+            82,
+            640,
+            875
+          ],
+          "file": "assets/character-references/aligned/main-rider-front.png",
+          "sha256": "4009496f6b6f78a1d10bf3c2679a383d19271c60e306d33d2804b58ed4e6c795"
+        },
+        "left": {
+          "view": "left",
+          "canvas_px": [
+            1024,
+            1200
+          ],
+          "center_x_px": 512,
+          "floor_y_px": 1050,
+          "height_m": 1.74,
+          "body_height_px": 870,
+          "head_reference_y_px": 180,
+          "pixels_per_meter": 500,
+          "uniform_scale_from_source": 1.167785234899329,
+          "source_anchor_x_px": 780,
+          "source_floor_y_px": 850,
+          "source_crop_px": [
+            650,
+            82,
+            920,
+            875
+          ],
+          "file": "assets/character-references/aligned/main-rider-left.png",
+          "sha256": "87cb64b09f2662b350c0f67a84bc14f86eba2470db360ca50c8e094270a10dd1"
+        },
+        "back": {
+          "view": "back",
+          "canvas_px": [
+            1024,
+            1200
+          ],
+          "center_x_px": 512,
+          "floor_y_px": 1050,
+          "height_m": 1.74,
+          "body_height_px": 870,
+          "head_reference_y_px": 180,
+          "pixels_per_meter": 500,
+          "uniform_scale_from_source": 1.167785234899329,
+          "source_anchor_x_px": 1255,
+          "source_floor_y_px": 850,
+          "source_crop_px": [
+            940,
+            82,
+            1578,
+            875
+          ],
+          "file": "assets/character-references/aligned/main-rider-back.png",
+          "sha256": "4ecb388c243086176fecd4dfa41e335149173b87ffd1105bf7b59da4b72c31fe"
+        }
+      },
+      "alignment_preview": "assets/character-references/aligned/main-rider-alignment-check.png"
+    },
+    "night-carrier": {
+      "source": "assets/character-references/source/night-carrier-turnaround.png",
+      "height_m": 1.66,
+      "views": {
+        "front": {
+          "view": "front",
+          "canvas_px": [
+            1024,
+            1200
+          ],
+          "center_x_px": 512,
+          "floor_y_px": 1050,
+          "height_m": 1.66,
+          "body_height_px": 830,
+          "head_reference_y_px": 220,
+          "pixels_per_meter": 500,
+          "uniform_scale_from_source": 1.129251700680272,
+          "source_anchor_x_px": 300,
+          "source_floor_y_px": 840,
+          "source_crop_px": [
+            0,
+            70,
+            610,
+            865
+          ],
+          "file": "assets/character-references/aligned/night-carrier-front.png",
+          "sha256": "390cb43cbd4147c520529c07235e841e0ee39434fac2603c9597327986ecc67d"
+        },
+        "left": {
+          "view": "left",
+          "canvas_px": [
+            1024,
+            1200
+          ],
+          "center_x_px": 512,
+          "floor_y_px": 1050,
+          "height_m": 1.66,
+          "body_height_px": 830,
+          "head_reference_y_px": 220,
+          "pixels_per_meter": 500,
+          "uniform_scale_from_source": 1.129251700680272,
+          "source_anchor_x_px": 806,
+          "source_floor_y_px": 840,
+          "source_crop_px": [
+            700,
+            70,
+            950,
+            865
+          ],
+          "file": "assets/character-references/aligned/night-carrier-left.png",
+          "sha256": "92013e29f5d14c6ef90985f170cda2b33e9e2226bf62101b16fe6dd984d49ea1"
+        },
+        "back": {
+          "view": "back",
+          "canvas_px": [
+            1024,
+            1200
+          ],
+          "center_x_px": 512,
+          "floor_y_px": 1050,
+          "height_m": 1.66,
+          "body_height_px": 830,
+          "head_reference_y_px": 220,
+          "pixels_per_meter": 500,
+          "uniform_scale_from_source": 1.129251700680272,
+          "source_anchor_x_px": 1355,
+          "source_floor_y_px": 840,
+          "source_crop_px": [
+            1060,
+            70,
+            1672,
+            865
+          ],
+          "file": "assets/character-references/aligned/night-carrier-back.png",
+          "sha256": "12da7d3063bf633cd96767f8082164822308fcc28fadbfa2f871e4e83871ebe3"
+        }
+      },
+      "alignment_preview": "assets/character-references/aligned/night-carrier-alignment-check.png"
+    }
+  }
+}
