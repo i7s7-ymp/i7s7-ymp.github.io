@@ -111,21 +111,6 @@ export interface SocialData {
   links: SocialLink[];
 }
 
-export interface ChatbotData {
-  header: {
-    title: string;
-    subtitle: string;
-    statusLabel?: string;
-    icon: string;
-    iconBgClass: string;
-  };
-  model?: {
-    name?: string;
-    trainingScope?: string;
-  };
-  quickQuestions: string[];
-}
-
 export interface DesignContainer {
   name: string;
   desc: string;
