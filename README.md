@@ -234,10 +234,20 @@ public/
   textures/         KTX2 and environment textures
   videos/           Device-specific fallback video
 docs/               Architecture, design and operation docs
+blender/
+  learning/         Tracked learning milestones
+  production/       Source character and environment .blend files
+  shared/           References shared by Blender source files
 tests/visual/       Playwright visual regression tests
 ```
 
 Asset directories listed above will be added only when the corresponding production assets exist. Placeholder binaries are not committed.
+
+## Blender production
+
+Blenderの学習順序、課題ごとの合格条件、Main Rider制作の再開条件は[`docs/blender-learning-plan.md`](docs/blender-learning-plan.md)に記録しています。
+
+制作元の`.blend`は[`blender/`](blender/)でGit LFS管理し、Web配信用に最適化したGLBは`public/models/`へ分離します。作業中の連番保存、レンダー出力、Bake・simulation cacheはGitへコミットしません。
 
 ## Development
 
